@@ -33,37 +33,80 @@ public:
 
 		auto zoneServer = server->getZoneServer();
 
-		if (zoneServer == nullptr)
+		if (zoneServer == nullptr) {
+			creature->sendSystemMessage("Error: ZoneServer is null");
 			return GENERALERROR;
+		}
 
 		auto object = zoneServer->getObject(target);
-
 		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
 
+		// If galaxy-wide grouping is enabled and we have arguments, try to get player by name
+		if (galaxyWide && arguments.toString().trim().length() > 0) {
+			StringTokenizer args(arguments.toString());
+			String firstName;
+
+			if (args.hasMoreTokens()) {
+				args.getStringToken(firstName);
+
+				auto chatManager = zoneServer->getChatManager();
+
+				if (chatManager != nullptr) {
+					auto playerByName = chatManager->getPlayer(firstName);
+					if (playerByName != nullptr) {
+						object = playerByName;
+					}
+				}
+			}
+		}
+
+		// If galaxy-wide grouping is enabled and we don't have a valid object, try to get player by name from arguments
 		if (galaxyWide && (object == nullptr || (!object->isPlayerCreature() && !object->isShipObject()))) {
 			StringTokenizer args(arguments.toString());
 			String firstName;
 
-			if (args.hasMoreTokens())
+			if (args.hasMoreTokens()) {
 				args.getStringToken(firstName);
 
-			if (zoneServer == nullptr)
+				auto chatManager = zoneServer->getChatManager();
+
+				if (chatManager != nullptr) {
+					auto playerByName = chatManager->getPlayer(firstName);
+					if (playerByName != nullptr) {
+						object = playerByName;
+					} else {
+						// Player not found by name
+						StringIdChatParameter stringId;
+						stringId.setStringId("group", "no_target");
+						stringId.setTT(firstName);
+						creature->sendSystemMessage(stringId);
+						return GENERALERROR;
+					}
+				} else {
+					creature->sendSystemMessage("Error: ChatManager is null");
+					return GENERALERROR;
+				}
+			} else {
+				// No arguments provided
+				creature->sendSystemMessage("Usage: /invite <playerName> or target a player");
 				return GENERALERROR;
-
-			auto playerMan = zoneServer->getPlayerManager();
-
-			if (playerMan == nullptr)
-				return GENERALERROR;
-
-			object = playerMan->getPlayer(firstName);
+			}
 		}
 
 		auto groupManager = GroupManager::instance();
 
-		if (object == nullptr || groupManager == nullptr)
+		if (object == nullptr) {
+			creature->sendSystemMessage("Error: Target object is null");
 			return GENERALERROR;
+		}
+
+		if (groupManager == nullptr) {
+			creature->sendSystemMessage("Error: GroupManager is null");
+			return GENERALERROR;
+		}
 
 		if (!object->isPlayerCreature() && !object->isShipObject()) {
+			creature->sendSystemMessage("Error: Target is not a player or ship");
 			return GENERALERROR;
 		}
 
@@ -79,17 +122,23 @@ public:
 			player = object->asCreatureObject();
 		}
 
-		if (player == nullptr)
+		if (player == nullptr) {
+			creature->sendSystemMessage("Error: Could not get player from object");
 			return GENERALERROR;
+		}
 
 		auto invitedGhost = player->getPlayerObject();
 
-		if (invitedGhost == nullptr)
+		if (invitedGhost == nullptr) {
+			creature->sendSystemMessage("Error: Target player has no PlayerObject");
 			return GENERALERROR;
+		}
 
 		// Cannot be invite by a player that they ignore, does not apply to privileged players
-		if (!godMode && invitedGhost->isIgnoring(creature->getFirstName()))
+		if (!godMode && invitedGhost->isIgnoring(creature->getFirstName())) {
+			creature->sendSystemMessage("Error: Target player is ignoring you");
 			return GENERALERROR;
+		}
 
 		groupManager->inviteToGroup(creature, player);
 
