@@ -1500,6 +1500,31 @@ void CreatureObjectImplementation::removeSkill(Skill* skill, bool notifyClient) 
 	if (!skillList.contains(skill))
 		return;
 
+	// Check if this is the social_entertainer_novice skill being removed
+	bool isEntertainerSkill = (skill->getSkillName() == "social_entertainer_novice");
+	
+	// Check if this player is a group leader with more than 8 players
+	ManagedReference<GroupObject*> group = nullptr;
+	bool needsNewLeader = false;
+	
+	if (isEntertainerSkill && isPlayerCreature()) {
+		group = getGroup();
+		if (group != nullptr && group->getLeaderID() == getObjectID()) {
+			// Count only players in the group (excluding pets)
+			int playerCount = 0;
+			for (int i = 0; i < group->getGroupSize(); ++i) {
+				ManagedReference<CreatureObject*> member = group->getGroupMember(i);
+				if (member != nullptr && member->isPlayerCreature()) {
+					playerCount++;
+				}
+			}
+			
+			if (playerCount > 8) {
+				needsNewLeader = true;
+			}
+		}
+	}
+
 	if (notifyClient) {
 		CreatureObjectDeltaMessage1* msg =
 				new CreatureObjectDeltaMessage1(this);
@@ -1514,6 +1539,40 @@ void CreatureObjectImplementation::removeSkill(Skill* skill, bool notifyClient) 
 
 	// Some skills affect player movement, update speed and acceleration.
 	updateSpeedAndAccelerationMods();
+	
+	// Handle group leadership change if needed
+	if (needsNewLeader && group != nullptr) {
+		// Find the first group member who has the entertainer skill
+		CreatureObject* newLeader = nullptr;
+		for (int i = 0; i < group->getGroupSize(); ++i) {
+			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
+			if (member != nullptr && member->isPlayerCreature() && 
+				member->getObjectID() != getObjectID() && 
+				member->hasSkill("social_entertainer_novice")) {
+				newLeader = member;
+				break;
+			}
+		}
+		
+		if (newLeader != nullptr) {
+			// Change leadership to the first entertainer found
+			GroupManager::instance()->makeLeader(group, asCreatureObject(), newLeader);
+			
+			// Send message to the group
+			StringIdChatParameter groupMsg("group", "leader_changed_skill_lost");
+			groupMsg.setTT(newLeader->getDisplayedName());
+			group->sendSystemMessage(groupMsg);
+			
+			// Send message to the old leader
+			sendSystemMessage("@group:leader_changed_skill_lost_self");
+		} else {
+			// No entertainer found, disband the group if it has more than 8 players
+			if (group->getGroupSize() > 8) {
+				group->sendSystemMessage("@group:disbanded_no_entertainer");
+				GroupManager::instance()->disbandGroup(group, asCreatureObject());
+			}
+		}
+	}
 }
 
 void CreatureObjectImplementation::removeSkill(const String& skill,
