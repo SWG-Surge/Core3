@@ -79,11 +79,8 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"stormtrooper_squad_leader", "specforce_wilderness_operative", -226.3, 28, -4378.4, 90, 0, "", ""},
 		{"stormtrooper_squad_leader", "specforce_wilderness_operative", -12.4, 28.6, -4404.7, 181.005, 0, "", "", true},
 		{"stormtrooper_squad_leader", "specforce_wilderness_operative", -175.938, 28, -4767.14, 86.307, 0, "npc_imperial", "conversation"},
-		--{"corsec_agent", "corsec_agent", -671.712,6.15933,-4169.03,37.6923,0, "", ""},
 		{"corsec_detective", "corsec_detective", -526.1,28,-4702,-41,0, "", ""},
 		{"corsec_master_sergeant", "corsec_master_sergeant", -172.8,28,-4167.1,0,0, "", ""},
-		--{"corsec_trooper", "corsec_trooper", -662.805,9.26289,-4182.05,196.426,0, "", ""},
-		--{"corsec_detective", "corsec_detective", -672.123,5.60327,-4164.83,340.354,0, "", ""},
 		{"corsec_agent", "corsec_agent", -240.2,28,-4450.9,94,0, "", ""},
 		{"corsec_cadet", "corsec_cadet", -172.8,28.0929,-4165.5,179,0, "", ""},
 		{"corsec_captain", "corsec_captain", -528.144,28,-4699.89,132.784,0, "", ""},
@@ -97,15 +94,10 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 	patrolNpcs = {"businessman_patrol", "commoner_fat_patrol", "commoner_old_patrol", "commoner_patrol", "explorer_patrol", "miner_patrol", "noble_patrol", "scientist_patrol"},
 
 	patrolMobiles = {
-		--{patrolPoints, template, x, z, y, direction, cell, mood, combatPatrol},
-
-		--Droids
 		{"cll8_1", "cll8_binary_load_lifter", -146, 28, -4762, 0, 0, "", false},
 		{"r3_1", "r3", 158, 28, -4785, 0, 0, "", false},
 		{"r3_2", "r3", -182, 28, -4731, 293, 0, "", false},
 		{"surgical_1", "surgical_droid_21b", -25.52, 0.26, -3.5, 357, 1855535, "", false},
-
-		--NPCs
 		{"npc_1", "patrolNpc", -54, 28, -4530, 320, 0, "", false},
 		{"npc_2", "patrolNpc", -26, 28, -4558, 310, 0, "", false},
 		{"npc_3", "patrolNpc", -92, 28, -4471, 270, 0, "", false},
@@ -119,15 +111,10 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 	},
 
 	patrolPoints = {
-		--table_name = {{x, z, y, cell, delayAtNextPoint}}
-
-		--Droids
 		cll8_1 = {{-147, 28, -4775, 0, false}, {-139, 28, -4751, 0, false}, {-164, 28, -4729, 0, false}, {-145, 28, -4691, 0, false}, {-105, 28, -4665, 0, true}, {-77, 28, -4637, 0, false}, {-105, 28, -4665, 0, false}, {-145, 28, -4691, 0, false}},
 		r3_1 = {{-149, 28, -4785, 0, false}, {-196, 28, -4778, 0, false}, {-205, 28, -4755, 0, false}},
 		r3_2 = {{-178, 28, -4717, 0, false}, {-186, 28, -4702, 0, false}, {-192, 28, -4714, 0, false}, {-212, 28, -4682, 0, false}, {-182, 28, -4731, 0, false}},
 		surgical_1 = {{-25.52, 0.26, -3.48, 1855535, false}, {-11.3, 0.3, -6.5, 1855535, true}, {-11.1, 0.3, 5.6, 1855535, false}, {-30.0, 0.3, 6.0, 1855535, false}, {-29.9, 0.3, -6.0, 1855535, true}},
-
-		--NPCs
 		npc_1 = {{-40, 28, -4521, 0, true}, {-69, 28, -4548, 0, true}, {-104, 28, -4530, 0, true}},
 		npc_2 = {{-26, 28, -4558, 0, true}, {20, 28, -4599, 0 , true}, {-8, 28, -4614, 0, true}},
 		npc_3 = {{-92, 28, -4471, 0, true}, {-36, 28, -4476, 0, true}},
@@ -143,7 +130,6 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 	stationaryCommoners = {"commoner", "commoner_fat", "commoner_old"},
 	stationaryNpcs = {"artisan", "bodyguard", "bothan_diplomat", "bounty_hunter", "businessman", "commoner_technician", "contractor", "entertainer", "explorer", "farmer", "farmer_rancher", "fringer", "gambler", "info_broker", "medic", "mercenary", "miner", "noble", "official", "pilot", "rancher", "scientist", "slicer"},
 
-	--{respawn, x, z, y, direction, cell, mood}
 	stationaryMobiles = {
 		{1, -306.34, 28, -4620.82, 315, 0, ""},
 		{1, -312.404, 28, -4646.51, 242.881, 0, ""},
@@ -183,7 +169,6 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 	},
 
 	mobiles = {
-		-- Starport
 		{"info_broker",60,8.5,0.6,74.4,-77,1855672, "conversation"},
 		{"noble",60,56.669,-0.521137,33.7689,180.017,1855678, "conversation"},
 		{"contractor",300,37.163,0.639417,40.7061,180.01,1855678, "conversation"},
@@ -201,15 +186,11 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"commoner_naboo",60,17.3045,2.25,18.2968,360.011,1855477, "conversation"},
 		{"ral_mundi",60,-138.975,28,-4718.86, 180, 0, ""},
 		{"tarth_jaxx",60,-137.3, 28, -4717.8, 180, 0, ""},
-
-		-- Hotel
 		{"corellia_times_investigator",60,7.44572,1.00001,-8.00652,0,1855548, "conversation"},
 		{"agriculturalist",300,7.44572,1.00001,-6.90652,179.997,1855548, "conversation"},
 		{"artisan",60,17.2826,1.28309,-11.8404,179.994,1855549, "nervous"},
 		{"farmer_rancher",300,24.3471,1.28309,10.0336,180.007,1855549, "conversation"},
 		{"entertainer",300,24.3471,1.28309,8.93357,360.011,1855549, "conversation"},
-
-		-- Cantina
 		{"bounty_hunter",300,3.61201,-0.894992,-8.73417,135.006,8105496, "conversation"},
 		{"info_broker",300,2.80432,-0.894991,10.6543,180.012,8105496, "conversation"},
 		{"businessman",60,-7.91375,-0.894992,-4.88587,179.995,8105496, "conversation"},
@@ -220,34 +201,22 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"mercenary",300,-5.02826,-0.894991,-21.3375,60.6357,8105501, "calm"},
 		{"businessman",60,0.978477,-0.894992,21.4841,311.517,8105500, ""},
 		{"rebel_recruiter",60,-28.3633,-0.894984,0.335875,171.796,8105504, ""},
-
-		-- Guild Hall -243 -4389
 		{"trainer_brawler",0,-11,1.13306,-14,0,1855508, ""},
 		{"trainer_marksman",0,0,1.13306,-14,0,1855507, ""},
 		{"trainer_scout",0,-12,1.13306,5.5,180,1855505, ""},
 		{"junk_dealer", 0, -14.5, 1.1, 3.0, 98, 1855505, ""},
-
-		-- Guild Hall -177 -4390
 		{"trainer_artisan",0,0,1.13306,-14,0,1855517, ""},
-
-		-- Med Center
 		{"trainer_combatmedic",0,26.676,0.26,5.41823,85,1855531, ""},
 		{"trainer_doctor",0,-25.2731,0.26,-5,13,1855535, ""},
 		{"trainer_medic",0,-17.7359,0.26,-0.58142,137,1855535, ""},
 		{"trainer_medic",0,14.2688,0.26,4.66124,159,1855531, ""},
-
-		-- 3rd floor
 		{"corellia_times_investigator",60,21.5803,14.26,-8.84205,360.011,1855541, "conversation"},
 		{"artisan",60,21.5803,14.26,-7.84205,180.006,1855541, "conversation"},
-
-		-- Guild Hall 24 -4400
 		{"trainer_architect",0,11,1.13306,-14,0,1855526, ""},
 		{"trainer_armorsmith",0,-12,1.1,5,180,1855525, ""},
 		{"trainer_droidengineer",0,-11,1.13306,-14,0,1855528, ""},
 		{"trainer_merchant",0,12.1,1.1,5.8,177,1855524, ""},
 		{"trainer_weaponsmith",0,-2.5,1.13306,-8.4,91,1855527, ""},
-
-		-- Capitol
 		{"noble",60,5.22842,0.3,2.91677,0,1855463, "conversation"},
 		{"info_broker",60,5.22842,0.3,4.01677,180.005,1855463, "conversation"},
 		{"corellia_times_reporter",60,5.43518,2.27819,-27.0615,344.925,1855463, "conversation"},
@@ -268,8 +237,6 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"artisan",300,21.8079,3.22324,25.517,360.011,1855469, "conversation"},
 		{"farmer",60,37.1168,1.29422,-4.41488,0,1855470, "conversation"},
 		{"businessman",60,37.1168,1.29422,-3.41488,180.005,1855470, "conversation"},
-
-		-- Guild Hall/Theater -207 -4133
 		{"commoner_old",300,3.66172,0.6,-2.64185,180.005,2365392, "conversation"},
 		{"commoner",60,2.56172,0.6,-2.64185,135,2365392, "conversation"},
 		{"farmer",60,1.5,2.6,1.7,-90,2365397, "conversation"},
@@ -289,8 +256,6 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"theater_manager",0,21.8947,2.12814,63.5,0,2365399, ""},
 		{"farmer_rancher",60,-20.3488,2.12878,65.9854,180.006,2365400, "conversation"},
 		{"trainer_imagedesigner",0,-21.4483,2.12878,74.4461,185,2365400, ""},
-
-		-- More Misc
 		{"gadget_specialist",60,19.7425,28,-4775.49,27.4957,0, ""},
 		{"informant_npc_lvl_1",0,-33,28,-4825,45,0, ""},
 		{"informant_npc_lvl_1",0,-86,28,-4829,0,0, ""},
@@ -307,8 +272,6 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"informant_npc_lvl_1",0,-184,28,-4342,90,0, ""},
 		{"io_tsomcren",60,-140.70, 28, -4717.5, 180, 0, ""},
 		{"junk_dealer", 0, -118.06, 28, -4791.91, -120, 0, ""},
-
-		-- Trainers Outside
 		{"trainer_architect",0,-161,28,-4698,-95,0, ""},
 		{"trainer_artisan",0,-187,28,-4700,92,0, ""},
 		{"trainer_bioengineer",0,-424.092,28,-4651.85,94,0, ""},
@@ -325,8 +288,6 @@ CorelliaCoronetScreenPlay = CityScreenPlay:new {
 		{"trainer_politician",0,-218,28,-4500,0,0, ""},
 		{"trainer_ranger",0,-505,28,-4633,180,0, ""},
 		{"trainer_scout",0,-169.45,28,-4712.58,134,0, ""},
-
-		-- Chassis dealer.
 		{"chassis_dealer", 0, 0.1, 0.6, 72.9, -4, 1855672, ""},
 	}
 }
@@ -344,7 +305,6 @@ function CorelliaCoronetScreenPlay:start()
 end
 
 function CorelliaCoronetScreenPlay:spawnSceneObjects()
-	--outside starport
 	spawnSceneObject(self.planet, "object/tangible/crafting/station/public_space_station.iff", -178.575, 28, -4689.35, 0, math.rad(180) )
 end
 
@@ -386,4 +346,68 @@ function CorelliaCoronetScreenPlay:spawnMobiles()
 		self:setCustomName(pNpc, "Hunter Javeezo")
 		CreatureObject(pNpc):clearOptionBit(AIENABLED)
 	end
+
+	--Meatlump's outside
+	spawnMobile(self.planet, "meatlump_buffoon", 300, -145, 28.9, -4959.8, 63, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, -54.3, 28.2, -4963.4, -90, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, -20.1, 28, -4922.2, 109, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, 266.9, 28.5, -4656.5, -109, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, 284.5, 29, -4541.7, -175, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, 258.2, 28, -4424.1, -5, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, -365.3, 28, -4658.5, 26, 0)
+	spawnMobile(self.planet, "meatlump_buffoon", 300, -270.1, 28, -4923, -97, 0)
+	spawnMobile(self.planet, "meatlump_clod", 300, -130.2, 31.1, -4993.8, 72, 0)
+	spawnMobile(self.planet, "meatlump_clod", 300, -11.4, 28, -4920.5, 63, 0)
+	spawnMobile(self.planet, "meatlump_clod", 300, 93.4, 27.1, -4865, 60, 0)
+	spawnMobile(self.planet, "meatlump_cretin", 300, -89.4, 30.3, -4985.2, 33, 0)
+	spawnMobile(self.planet, "meatlump_cretin", 300, 188.1, 27.1, -4770.2, -99, 0)
+	spawnMobile(self.planet, "meatlump_cretin", 300, 287.1, 29.3, -4558, -95, 0)
+	spawnMobile(self.planet, "meatlump_cretin", 300, -236.2, 28.4, -4947.9, -16, 0)
+	spawnMobile(self.planet, "meatlump_fool", 300, 172.6, 27.9, -4773, -87, 0)
+	spawnMobile(self.planet, "meatlump_fool", 300, 277.9, 28.6, -4545.9, -99, 0)
+	spawnMobile(self.planet, "meatlump_fool", 300, 266.6, 28, -4408.9, 68, 0)
+	spawnMobile(self.planet, "meatlump_fool", 300, -361.8, 28, -4655, 164, 0)
+	spawnMobile(self.planet, "meatlump_fool", 300, -297.3, 28, -4918.8, -86, 0)
+	spawnMobile(self.planet, "meatlump_fool", 300, -257, 30, -4968.4, 24, 0)
+	spawnMobile(self.planet, "meatlump_loon", 300, -163, 28.2, -4949.3, 102, 0)
+	spawnMobile(self.planet, "meatlump_loon", 300, 176, 27.3, -4763.6, -7, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, -136, 28.8, -4958.5, 83, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, -72, 28, -4973.1, -77, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, 97.6, 26.6, -4867.1, 101, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, 255, 28.3, -4666.8, -51, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, 249.6, 28, -4418.9, 92, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, -366, 28, -4655, 148, 0)
+	spawnMobile(self.planet, "meatlump_oaf", 300, -308, 28, -4897.9, 64, 0)
+	spawnMobile(self.planet, "meatlump_stooge", 300, -133.5, 28.2, -4946, 72, 0)
+	spawnMobile(self.planet, "meatlump_stooge", 300, -12.6, 27.9, -4931.6, -19, 0)
+	spawnMobile(self.planet, "meatlump_stooge", 300, 90.7, 26.6, -4872.1, 73, 0)
+	spawnMobile(self.planet, "meatlump_stooge", 300, 252.9, 28.3, -4657.7, -3, 0)
+	spawnMobile(self.planet, "meatlump_stooge", 300, 293.9, 29.7, -4552.4, -93, 0)
+
+	--Ragtag's outside
+	spawnMobile(self.planet, "ragtag_kook", 300, -217.315, 28, -4927.23, 40.3799, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -213.219, 28, -4926.08, 204.867, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -225.238, 28, -4931.01, 254.658, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -212.993, 28, -4922.77, 38.0909, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -712.063, 5.13106, -4304.96, 315.72, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -719.18, 4.19027, -4309.55, 164.033, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -703.067, 2.97988, -4657.98, 93.9451, 0)
+	spawnMobile(self.planet, "ragtag_kook", 300, -711.002, 2.29761, -4657.71, 82.4599, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -396.754, 28, -4869.82, 8.29735, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -397.655, 28, -4875.17, 8.04579, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, 227.709, 28, -4494.78, 296.837, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, 229.296, 28, -4484.62, 54.5993, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, 234.249, 28, -4490.03, 258.204, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, 227.363, 28, -4490.61, 140.577, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, 177.412, 28, -4413.68, 227.101, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, 177.412, 28, -4411.68, 159.855, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -205.027, 28.3091, -3998.32, 80.3182, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -208.5, 29.2, -3999.9, 191.197, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -205.027, 29.2182, -4001.32, 192.016, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -201.8, 28.6, -4000.2, -122, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -525.124, 5.82557, -4079.84, 207.519, 0)
+	spawnMobile(self.planet, "ragtag_loon", 300, -534.124, 6.67109, -4078.84, 149.496, 0)
+	spawnMobile(self.planet, "ragtag_maniac", 300, -691.483, 7.08209, -4227.75, 29.5129, 0)
+	spawnMobile(self.planet, "ral_mundi", 60, -138.975, 28, -4718.86, 10.0036, 0)
+	spawnMobile(self.planet, "tarth_jaxx", 60, -137.464, 28, -4718.83, 342.825, 0)
 end
