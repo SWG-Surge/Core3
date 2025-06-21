@@ -1,3 +1,25 @@
+/*
+				Copyright <SWGEmu>
+	See file COPYING for copying conditions.*/
+
+#include "ConfigManager.h"
+#include <regex>
+
+using namespace sys::thread;
+
+ConfigManager::ConfigManager() {
+	setLoggingName("ConfigManager");
+#ifdef DEBUG_CONFIGMANAGER
+	setLogLevel(Logger::DEBUG);
+#else // DEBUG_CONFIGMANAGER
+	setLogLevel(Logger::INFO);
+#endif // DEBUG_CONFIGMANAGER
+}
+
+ConfigManager::~ConfigManager() {
+	clearConfigData();
+}
+
 bool ConfigManager::loadConfigData() {
 	Locker guard(&mutex);
 
@@ -86,4 +108,3 @@ bool ConfigManager::loadConfigData() {
 
 	return resultGlobal || resultCore3;
 }
-
