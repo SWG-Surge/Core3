@@ -29,7 +29,7 @@ public:
 		if (zoneServer == nullptr)
 			return GENERALERROR;
 
-		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", true);
 
 		ManagedReference<CreatureObject*> tarCreo = nullptr;
 

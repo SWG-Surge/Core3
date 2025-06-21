@@ -97,6 +97,13 @@ void GroupManager::inviteToGroup(CreatureObject* inviter, CreatureObject* target
 			// Add 1 for the player being invited
 			if (playerCount + 1 > maxGroupSize) {
 				inviter->sendSystemMessage("Cannot invite player. Only a Novice Entertainer can lead groups larger than 8.");
+				
+				// Clear any existing invitation state to prevent client confusion
+				if (target->getGroupInviterID() != 0) {
+					info(true) << "Clearing existing group invitation state for player: " << target->getDisplayedName() << " (ID: " << target->getObjectID() << ")";
+					target->updateGroupInviterID(0, true);
+				}
+				
 				return;
 			}
 		}
