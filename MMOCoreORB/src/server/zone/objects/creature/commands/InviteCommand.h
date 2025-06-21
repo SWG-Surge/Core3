@@ -36,31 +36,26 @@ public:
 		if (zoneServer == nullptr)
 			return GENERALERROR;
 
-		ManagedReference<SceneObject*> object = nullptr;
-		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+		auto object = zoneServer->getObject(target);
 
-		// If we have a target, try to get the object
-		if (target != 0) {
-			object = zoneServer->getObject(target);
-		}
+		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", true);
 
-		// If galaxy-wide grouping is enabled and we have arguments, try to get player by name
-		if (galaxyWide && arguments.toString().trim().length() > 0) {
+		if (galaxyWide && (object == nullptr || (!object->isPlayerCreature() && !object->isShipObject()))) {
 			StringTokenizer args(arguments.toString());
 			String firstName;
 
-			if (args.hasMoreTokens()) {
+			if (args.hasMoreTokens())
 				args.getStringToken(firstName);
 
-				auto chatManager = zoneServer->getChatManager();
+			if (zoneServer == nullptr)
+				return GENERALERROR;
 
-				if (chatManager != nullptr) {
-					auto playerByName = chatManager->getPlayer(firstName);
-					if (playerByName != nullptr) {
-						object = playerByName;
-					}
-				}
-			}
+			auto playerMan = zoneServer->getPlayerManager();
+
+			if (playerMan == nullptr)
+				return GENERALERROR;
+
+			object = playerMan->getPlayer(firstName);
 		}
 
 		auto groupManager = GroupManager::instance();
