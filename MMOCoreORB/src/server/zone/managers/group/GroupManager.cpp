@@ -38,6 +38,18 @@ bool GroupManager::playerIsInvitingOwnPet(CreatureObject* inviter, CreatureObjec
 	return inviter != nullptr && target != nullptr && target->isPet() && target->getCreatureLinkID() != 0 && target->getCreatureLinkID() == inviter->getObjectID();
 }
 
+int GroupManager::getMaxGroupSizeForLeader(CreatureObject* leader) {
+	if (leader == nullptr)
+		return 8; // Default max group size
+
+	// Check if the leader has social_entertainer_novice skill
+	if (leader->hasSkill("social_entertainer_novice")) {
+		return 20; // Full group size for entertainers
+	}
+
+	return 8; // Default max group size for non-entertainers
+}
+
 void GroupManager::inviteToGroup(CreatureObject* inviter, CreatureObject* target) {
 	// Pre: inviter locked
 	// Post: player invited to inviter's group and inviter locked
@@ -567,6 +579,31 @@ void GroupManager::makeLeader(GroupObject* group, CreatureObject* leader, Creatu
 	try {
 		// Check that group has the member
 		if (!group->hasMember(newLeader) || group->getLeaderID() != leader->getObjectID()) {
+			return;
+		}
+
+		// Check if the new leader can manage the current group size
+		int maxGroupSize = getMaxGroupSizeForLeader(newLeader);
+		
+		// Count only players in the group (excluding pets)
+		int playerCount = 0;
+		for (int i = 0; i < group->getGroupSize(); ++i) {
+			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
+			if (member != nullptr && member->isPlayerCreature()) {
+				playerCount++;
+			}
+		}
+		
+		if (playerCount > maxGroupSize) {
+			// Send message to the new leader
+			newLeader->sendSystemMessage("Cannot assign group leader. Only a Novice Entertainer can lead groups larger than 8.");
+			
+			// Send group-wide message
+			StringIdChatParameter groupMsg;
+			groupMsg.setStringId("group", "cannot_promote_leader");
+			groupMsg.setTT(newLeader->getDisplayedName());
+			group->sendSystemMessage(groupMsg);
+			
 			return;
 		}
 

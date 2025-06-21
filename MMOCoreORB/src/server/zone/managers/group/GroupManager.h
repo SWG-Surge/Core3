@@ -70,6 +70,7 @@ public:
 
 private:
 	bool playerIsInvitingOwnPet(CreatureObject* inviter, CreatureObject* target);
+	int getMaxGroupSizeForLeader(CreatureObject* leader);
 
 public:
 	GroupManager();
