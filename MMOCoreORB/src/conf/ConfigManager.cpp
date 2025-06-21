@@ -20,6 +20,8 @@ ConfigManager::~ConfigManager() {
 	clearConfigData();
 }
 
+#include "full/ConfigManagerMethods.cpp"
+
 bool ConfigManager::loadConfigData() {
 	Locker guard(&mutex);
 
