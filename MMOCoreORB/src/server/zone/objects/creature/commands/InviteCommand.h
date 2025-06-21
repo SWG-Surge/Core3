@@ -36,8 +36,13 @@ public:
 		if (zoneServer == nullptr)
 			return GENERALERROR;
 
-		auto object = zoneServer->getObject(target);
+		ManagedReference<SceneObject*> object = nullptr;
 		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+
+		// If we have a target, try to get the object
+		if (target != 0) {
+			object = zoneServer->getObject(target);
+		}
 
 		// If galaxy-wide grouping is enabled and we have arguments, try to get player by name
 		if (galaxyWide && arguments.toString().trim().length() > 0) {
