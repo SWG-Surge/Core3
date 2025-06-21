@@ -55,7 +55,8 @@ void GroupManager::inviteToGroup(CreatureObject* inviter, CreatureObject* target
 		ManagedReference<GroupObject*> group = inviter->getGroup();
 
 		if (targetIsPet && playerIsInvitingOwnPet(inviter, target)) {
-			if (!target->isInRange(inviter, 120)) {
+			// Only check range if galaxy-wide grouping is disabled
+			if (!galaxyWide && !target->isInRange(inviter, 120)) {
 				return;
 			}
 		} else if (group->getLeader() != inviter) {

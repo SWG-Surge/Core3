@@ -41,8 +41,10 @@ public:
 		if (pilotScno == nullptr)
 			return;
 
-		// Check again if the player is still within range and the same cell as the pilot
-		if ((player->getParentID() != pilotScno->getParentID()) || !pilotScno->isInRange(player, 7.f))
+		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+
+		// Only check range if galaxy-wide grouping is disabled
+		if (!galaxyWide && ((player->getParentID() != pilotScno->getParentID()) || !pilotScno->isInRange(player, 7.f)))
 			return;
 
 		auto pilot = pilotScno.castTo<CreatureObject*>();
