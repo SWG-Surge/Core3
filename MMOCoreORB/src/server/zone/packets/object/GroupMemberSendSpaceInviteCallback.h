@@ -39,10 +39,7 @@ public:
 		if (memberScno == nullptr || !memberScno->isPlayerCreature())
 			return;
 
-		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
-
-		// Only check range if galaxy-wide grouping is disabled
-		if (!galaxyWide && ((player->getParentID() != memberScno->getParentID()) || !memberScno->isInRange(player, 7.f)))
+		if ((player->getParentID() != memberScno->getParentID()) || !memberScno->isInRange(player, 7.f))
 			return;
 
 		auto groupMember = memberScno.castTo<CreatureObject*>();

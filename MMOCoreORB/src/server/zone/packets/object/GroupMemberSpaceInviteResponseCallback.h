@@ -16,7 +16,7 @@ class GroupMemberSpaceInviteResponseCallback : public MessageCallback {
 
 public:
 	GroupMemberSpaceInviteResponseCallback(ObjectControllerMessageCallback* objectControllerCallback) : MessageCallback(objectControllerCallback->getClient(), objectControllerCallback->getServer()),
-		objectControllerMain(objectControllerCallback), pilotID(0), decision(false) {
+		objectControllerMain(objectControllerCallback), pilotID(0), decision(0) {
 	}
 
 	void parse(Message* message) {
@@ -38,13 +38,10 @@ public:
 
 		ManagedReference<SceneObject*> pilotScno = zoneServer->getObject(pilotID);
 
-		if (pilotScno == nullptr)
+		if (pilotScno == nullptr || !pilotScno->isPlayerCreature())
 			return;
 
-		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
-
-		// Only check range if galaxy-wide grouping is disabled
-		if (!galaxyWide && ((player->getParentID() != pilotScno->getParentID()) || !pilotScno->isInRange(player, 7.f)))
+		if ((player->getParentID() != pilotScno->getParentID()) || !pilotScno->isInRange(player, 7.f))
 			return;
 
 		auto pilot = pilotScno.castTo<CreatureObject*>();
@@ -56,6 +53,5 @@ public:
 		pilot->sendMessage(responseMsg);
 	}
 };
-
 
 #endif /* GROUPMEMBERSPACEINVITERESPONSECALLBACK_H_ */
