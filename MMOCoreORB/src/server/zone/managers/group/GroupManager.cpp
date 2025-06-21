@@ -80,6 +80,26 @@ void GroupManager::inviteToGroup(CreatureObject* inviter, CreatureObject* target
 			inviter->sendSystemMessage("@group:full");
 			return;
 		}
+
+		// Check if inviting this player would exceed the leader's maximum allowed group size
+		if (!targetIsPet) {
+			int maxGroupSize = getMaxGroupSizeForLeader(inviter);
+			
+			// Count only players in the group (excluding pets)
+			int playerCount = 0;
+			for (int i = 0; i < group->getGroupSize(); ++i) {
+				ManagedReference<CreatureObject*> member = group->getGroupMember(i);
+				if (member != nullptr && member->isPlayerCreature()) {
+					playerCount++;
+				}
+			}
+			
+			// Add 1 for the player being invited
+			if (playerCount + 1 > maxGroupSize) {
+				inviter->sendSystemMessage("Cannot invite player. Only a Novice Entertainer can lead groups larger than 8.");
+				return;
+			}
+		}
 	}
 
 	// Lock the target invited creature to the inviter
