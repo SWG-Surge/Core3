@@ -4,3 +4,4 @@ luacov.stats.out
 .DS_Store
 .cache
 compile_commands.json
+MMOCoreORB/bin/custom_scripts/config.lua
