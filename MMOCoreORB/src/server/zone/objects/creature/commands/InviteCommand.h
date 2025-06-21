@@ -38,8 +38,13 @@ public:
 			return GENERALERROR;
 		}
 
-		auto object = zoneServer->getObject(target);
 		bool galaxyWide = ConfigManager::instance()->getBool("Core3.PlayerManager.GalaxyWideGrouping", false);
+		ManagedReference<SceneObject*> object = nullptr;
+
+		// First, try to get the target object if a target is selected
+		if (target != 0) {
+			object = zoneServer->getObject(target);
+		}
 
 		// If galaxy-wide grouping is enabled and we have arguments, try to get player by name
 		if (galaxyWide && arguments.toString().trim().length() > 0) {
@@ -55,12 +60,22 @@ public:
 					auto playerByName = chatManager->getPlayer(firstName);
 					if (playerByName != nullptr) {
 						object = playerByName;
+					} else {
+						// Player not found by name
+						StringIdChatParameter stringId;
+						stringId.setStringId("group", "no_target");
+						stringId.setTT(firstName);
+						creature->sendSystemMessage(stringId);
+						return GENERALERROR;
 					}
+				} else {
+					creature->sendSystemMessage("Error: ChatManager is null");
+					return GENERALERROR;
 				}
 			}
 		}
 
-		// If galaxy-wide grouping is enabled and we don't have a valid object, try to get player by name from arguments
+		// If we still don't have a valid object and galaxy-wide is enabled, try to get player by name from arguments
 		if (galaxyWide && (object == nullptr || (!object->isPlayerCreature() && !object->isShipObject()))) {
 			StringTokenizer args(arguments.toString());
 			String firstName;
@@ -96,7 +111,7 @@ public:
 		auto groupManager = GroupManager::instance();
 
 		if (object == nullptr) {
-			creature->sendSystemMessage("Error: Target object is null");
+			creature->sendSystemMessage("Error: Target object is null - no valid target found");
 			return GENERALERROR;
 		}
 
