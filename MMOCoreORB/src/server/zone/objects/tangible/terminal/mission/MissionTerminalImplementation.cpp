@@ -5,6 +5,7 @@
  *      Author: polonel
  */
 
+#include "server/zone/managers/director/DirectorManager.h"
 #include "server/zone/objects/tangible/terminal/mission/MissionTerminal.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/packets/object/ObjectMenuResponse.h"
