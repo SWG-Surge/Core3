@@ -233,7 +233,7 @@ void EntertainingSessionImplementation::startTickTask() {
 	}
 
 	if (!tickTask->isScheduled()) {
-		tickTask->schedule(10000);
+		tickTask->schedule(5000);
 	}
 }
 
@@ -873,16 +873,15 @@ void EntertainingSessionImplementation::activateEntertainerBuff(CreatureObject* 
 			return;
 		}
 
-		//1 minute minimum listen/watch time
+		//30 seconds minimum listen/watch time (reduced from 60 seconds - 50% reduction)
 		int timeElapsed = time(0) - getEntertainerBuffStartTime(creature, performanceType);
-		if (timeElapsed < 60) {
-			creature->sendSystemMessage("You must listen or watch a performer for at least 1 minute in order to gain the entertainer buffs.");
+		if (timeElapsed < 30) {
+			creature->sendSystemMessage("You must listen or watch a performer for at least 30 seconds in order to gain the entertainer buffs.");
 			return;
 		}
 
 		// Returns a % of base stat
 		int campModTemp = 100;
-
 
 		float buffStrength = getEntertainerBuffStrength(creature, performanceType) / 100.0f;
 
@@ -890,39 +889,36 @@ void EntertainingSessionImplementation::activateEntertainerBuff(CreatureObject* 
 			return;
 
 		ManagedReference<PerformanceBuff*> oldBuff = nullptr;
-		switch (performanceType) {
-		case PerformanceType::MUSIC:
-		{
-			uint32 focusBuffCRC = STRING_HASHCODE("performance_enhance_music_focus");
-			uint32 willBuffCRC = STRING_HASHCODE("performance_enhance_music_willpower");
-			oldBuff = cast<PerformanceBuff*>(creature->getBuff(focusBuffCRC));
-			if (oldBuff != nullptr && oldBuff->getBuffStrength() > buffStrength)
-				return;
+		
+		// Always give music buffs (Focus and Willpower) regardless of performance type
+		// This allows players to get both music buffs by either watching or listening
+		uint32 focusBuffCRC = STRING_HASHCODE("performance_enhance_music_focus");
+		uint32 willBuffCRC = STRING_HASHCODE("performance_enhance_music_willpower");
+		
+		oldBuff = cast<PerformanceBuff*>(creature->getBuff(focusBuffCRC));
+		if (oldBuff == nullptr || oldBuff->getBuffStrength() <= buffStrength) {
 			ManagedReference<PerformanceBuff*> focusBuff = new PerformanceBuff(creature, focusBuffCRC, buffStrength, buffDuration * 60, PerformanceBuffType::MUSIC_FOCUS);
-			ManagedReference<PerformanceBuff*> willBuff = new PerformanceBuff(creature, willBuffCRC, buffStrength, buffDuration * 60, PerformanceBuffType::MUSIC_WILLPOWER);
-
 			Locker locker(focusBuff);
 			creature->addBuff(focusBuff);
-			locker.release();
-
+		}
+		
+		oldBuff = cast<PerformanceBuff*>(creature->getBuff(willBuffCRC));
+		if (oldBuff == nullptr || oldBuff->getBuffStrength() <= buffStrength) {
+			ManagedReference<PerformanceBuff*> willBuff = new PerformanceBuff(creature, willBuffCRC, buffStrength, buffDuration * 60, PerformanceBuffType::MUSIC_WILLPOWER);
 			Locker locker2(willBuff);
 			creature->addBuff(willBuff);
-			break;
 		}
-		case PerformanceType::DANCE:
-		{
+		
+		// Also give dance buff (Mind) if the entertainer is dancing
+		if (isDancing()) {
 			uint32 mindBuffCRC = STRING_HASHCODE("performance_enhance_dance_mind");
 			oldBuff = cast<PerformanceBuff*>(creature->getBuff(mindBuffCRC));
-			if (oldBuff != nullptr && oldBuff->getBuffStrength() > buffStrength)
-				return;
-			ManagedReference<PerformanceBuff*> mindBuff = new PerformanceBuff(creature, mindBuffCRC, buffStrength, buffDuration * 60, PerformanceBuffType::DANCE_MIND);
-
-			Locker locker(mindBuff);
-			creature->addBuff(mindBuff);
-			break;
+			if (oldBuff == nullptr || oldBuff->getBuffStrength() <= buffStrength) {
+				ManagedReference<PerformanceBuff*> mindBuff = new PerformanceBuff(creature, mindBuffCRC, buffStrength, buffDuration * 60, PerformanceBuffType::DANCE_MIND);
+				Locker locker3(mindBuff);
+				creature->addBuff(mindBuff);
+			}
 		}
-		}
-
 
 	} catch(Exception& e) {
 
@@ -994,8 +990,9 @@ void EntertainingSessionImplementation::increaseEntertainerBuff(CreatureObject* 
 
 	float buffAcceleration = 1 + ((float)entertainer->getSkillMod("accelerate_entertainer_buff") / 100.f);
 
-	addEntertainerBuffDuration(patron, performance->getType(), 2.0f * buffAcceleration);
-	addEntertainerBuffStrength(patron, performance->getType(), performance->getHealShockWound());
+	// Increased duration and strength gain per tick for faster buff building
+	addEntertainerBuffDuration(patron, performance->getType(), 4.0f * buffAcceleration); // Increased from 2.0f to 4.0f
+	addEntertainerBuffStrength(patron, performance->getType(), performance->getHealShockWound() * 2.0f); // Doubled strength gain
 
 }
 

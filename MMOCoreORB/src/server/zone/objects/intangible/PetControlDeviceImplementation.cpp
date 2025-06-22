@@ -45,22 +45,6 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player, bool ini
 		return;
 	}
 
-	// Private Building Check
-	auto parent = player->getParent().get();
-
-	if (parent != nullptr && !parent->isMount() && !parent->isVehicleObject()) {
-		ManagedReference<SceneObject*> strongRef = player->getRootParent();
-
-		if (strongRef != nullptr && !strongRef->isPobShip()) {
-			ManagedReference<BuildingObject*> building = strongRef.castTo<BuildingObject*>();
-
-			if (building == nullptr || building->isPrivateStructure()) {
-				player->sendSystemMessage("@pet/pet_menu:private_house"); // You cannot call pets in a private building.
-				return;
-			}
-		}
-	}
-
 	auto zoneServer = player->getZoneServer();
 
 	if (zoneServer == nullptr) {
@@ -303,10 +287,10 @@ void PetControlDeviceImplementation::callObject(CreatureObject* player, bool ini
 		Reference<CallPetTask*> callPet = new CallPetTask(_this.getReferenceUnsafeStaticCast(), player, "call_pet");
 
 		StringIdChatParameter message("pet/pet_menu", "call_pet_delay"); // Calling pet in %DI seconds. Combat will terminate pet call.
-		message.setDI(15);
+		message.setDI(1);
 		player->sendSystemMessage(message);
 
-		player->addPendingTask("call_pet", callPet, 15 * 1000);
+		player->addPendingTask("call_pet", callPet, 1 * 1000);
 
 		if (petControlObserver == nullptr) {
 			petControlObserver = new PetControlObserver(_this.getReferenceUnsafeStaticCast());

@@ -265,8 +265,8 @@ void MissionManagerImplementation::handleMissionAccept(MissionTerminal* missionT
 		}
 	}
 
-	//Limit to two missions (only one of them can be a bounty mission)
-	if (missionCount >= 2 || (hasBountyMission && mission->getTypeCRC() == MissionTypes::BOUNTY)) {
+	//Limit to four missions (only one of them can be a bounty mission)
+	if (missionCount >= 4 || (hasBountyMission && mission->getTypeCRC() == MissionTypes::BOUNTY)) {
 		StringIdChatParameter stringId("mission/mission_generic", "too_many_missions");
 		player->sendSystemMessage(stringId);
 		return;
@@ -1117,36 +1117,12 @@ void MissionManagerImplementation::randomizeGenericBountyMission(CreatureObject*
 			ManagedReference<CreatureObject*> creature = server->getObject(target->getTargetPlayerID()).castTo<CreatureObject*>();
 			String name = "";
 
-			if (creature != nullptr && ConfigManager::instance()->getBool("Core3.MissionManager.AnonymousBountyTerminals", false)) {
-				if (creature->getFaction() == Factions::FACTIONIMPERIAL)
-					name = "Imperial Jedi";
-				else if (creature->getFaction() == Factions::FACTIONREBEL)
-					name = "Rebel Jedi";
-				else
-					name = "Neutral Jedi";
-
-				ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
-
-				int rewardCreds = 0;
-				if (ghost->getJediState() >= 4)
-					rewardCreds = 50000;
-				else
-					rewardCreds = 25000;
-
-				mission->setRewardCredits(rewardCreds);
-				int totalCreds = getRealBountyReward(creature, target);
-				int bonusCreds = totalCreds - rewardCreds;
-
-				if (bonusCreds > 0)
-					mission->setBonusCredits(bonusCreds);
-			} else {
-				if (creature != nullptr) {
-					name = creature->getFirstName() + " " + creature->getLastName();
-					name = name.trim();
-				}
-
-				mission->setRewardCredits(getRealBountyReward(creature, target));
+			if (creature != nullptr) {
+				name = creature->getFirstName() + " " + creature->getLastName();
+				name = name.trim();
 			}
+
+			mission->setRewardCredits(getRealBountyReward(creature, target));
 
 			mission->setMissionTargetName(name);
 			mission->setMissionDifficulty(75);
