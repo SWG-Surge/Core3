@@ -11,6 +11,28 @@
 #include "server/zone/objects/manufactureschematic/ingredientslots/ComponentSlot.h"
 
 //#define DEBUG_RESOURCE_LAB
+float getDegradationMultiplier(ResourceSpawn* resourceSpawn) {
+	if (resourceSpawn == nullptr)
+		return 1.0f;
+
+	int64 currentTime = System::getTime();
+	int64 despawnTime = resourceSpawn->getEndTime(); // in ms
+
+	if (currentTime < despawnTime)
+		return 1.0f;
+
+	int64 ageMillis = currentTime - despawnTime;
+	int ageMinutes = ageMillis / 60000;
+
+	if (ageMinutes <= 10)
+		return 1.0f;
+	else if (ageMinutes <= 20)
+		return 0.8f;
+	else if (ageMinutes <= 30)
+		return 0.6f;
+	else
+		return 0.5f;
+}
 
 ResourceLabratory::ResourceLabratory() {
 	setLoggingName("ResourceLabratory");
@@ -75,15 +97,23 @@ void ResourceLabratory::setInitialCraftingValues(TangibleObject* prototype, Manu
 		craftingValues->addExperimentalAttribute(attribute, group, resourceWeight->getMinValue(), resourceWeight->getMaxValue(), resourceWeight->getPrecision(), resourceWeight->isFiller(), resourceWeight->getCombineType());
 
 		for (int j = 0; j < resourceWeight->getPropertyListSize(); ++j) {
-			// Based on the script we cycle through each exp group
-			// Get the type from the type/weight
 			int type = (resourceWeight->getTypeAndWeight(j) >> 4);
-
-			// Get the calculation percentage
 			float percentage = resourceWeight->getPropertyPercentage(j);
 
-			// add to the weighted sum based on type and percentage
-			weightedSum += getWeightedValue(manufactureSchematic, type) * percentage;
+			// Pull the original stat
+			float attributeValue = getWeightedValue(manufactureSchematic, type);
+
+			// NEW: Apply degradation multiplier based on ResourceSpawn
+			float degradationMultiplier = 1.0f;
+
+			ResourceSpawn* spawn = manufactureSchematic->getResourceSpawnByAttributeType(type);
+			if (spawn != nullptr) {
+			degradationMultiplier = getDegradationMultiplier(spawn);
+			}
+
+			attributeValue *= degradationMultiplier;
+
+			weightedSum += attributeValue * percentage;
 		}
 
 		// > 0 ensures that we don't add things when there is NaN value
