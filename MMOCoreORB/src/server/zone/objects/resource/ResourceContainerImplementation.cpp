@@ -184,8 +184,8 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 }
 
 void ResourceContainerImplementation::getObjectMenuEntries(CreatureObject* player, ObjectMenuResponse* menuResponse) {
-	System::out << "[DEBUG] getObjectMenuEntries() called on ResourceContainer: " << getObjectID() << std::endl;
-	
+	System::out << "[DEBUG] getObjectMenuEntries() called on ResourceContainer: " << getObjectID() << "\n";
+
 	menuResponse->addRadialMenuItem(100, 0, "View Quality");
 }
 
