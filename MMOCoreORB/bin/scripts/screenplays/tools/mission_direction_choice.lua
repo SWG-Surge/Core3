@@ -66,30 +66,30 @@ function mission_direction_choice:showLevels(pPlayer)
 	sui.sendTo(pPlayer)
 end
 
-function  mission_direction_choice:dirSelection(pPlayer, pSui, eventIndex, args)
+function mission_direction_choice:dirSelection(pPlayer, pSui, eventIndex, args)
+    local cancelPressed = (eventIndex == 1)
 
-	local cancelPressed = (eventIndex == 1)
+    if (cancelPressed) then
+        return 
+    end
 
-	if (cancelPressed) then
-		return 
-	end
+    if (args == "-1") then
+        CreatureObject(pPlayer):sendSystemMessage("No direction was selected...")
+        return
+    end
 
-	if (args == "-1") then
-		CreatureObject(pPlayer):sendSystemMessage("No direction was selected...")
-		return
-	end
+    local selectedIndex = tonumber(args)+1
 
-	local selectedIndex = tonumber(args)+1
+    local selectedDir = tonumber(self.directions[selectedIndex].dirSelect)
+    local selectedDirDesc = self.directions[selectedIndex].dirDesc
+    
+    writeScreenPlayData(pPlayer, "mission_direction_choice", "directionChoice", selectedDir) 
+    local savedDir = readScreenPlayData(pPlayer, "mission_direction_choice", "directionChoice")
+    print("Direction selected: " .. selectedDir .. ", Saved: " .. (savedDir or "nil") .. " for player: " .. SceneObject(pPlayer):getObjectID())
 
-	local selectedDir = tonumber(self.directions[selectedIndex].dirSelect)
-	local selectedDirDesc = self.directions[selectedIndex].dirDesc
-	
-	writeScreenPlayData(pPlayer, "mission_direction_choice", "directionChoice", selectedDir) 
-
-	if (selectedDir == 0) then
-		CreatureObject(pPlayer):sendSystemMessage("Mission direction has been reset to normal randomization.")
-	else	
-		CreatureObject(pPlayer):sendSystemMessage("You have selected take mission to the " .. selectedDirDesc .. ". This choice will remain active until you choose to change or reset it.")
-	end
-
+    if (selectedDir == 0) then
+        CreatureObject(pPlayer):sendSystemMessage("Mission direction has been reset to normal randomization.")
+    else    
+        CreatureObject(pPlayer):sendSystemMessage("You have selected take mission to the " .. selectedDirDesc .. ". This choice will remain active until you choose to change or reset it.")
+    end
 end
