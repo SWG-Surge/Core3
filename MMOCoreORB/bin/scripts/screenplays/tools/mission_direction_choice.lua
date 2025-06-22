@@ -47,6 +47,8 @@ function mission_direction_choice:dirSelection(pPlayer, pSui, eventIndex, args)
 	local selectedDir = tonumber(self.directions[selectedIndex].dirSelect)
 	local selectedDesc = self.directions[selectedIndex].dirDesc
 
+    printLua("DIR DEBUG: SelectedDir = " .. selectedDir .. ", Desc = " .. selectedDesc)
+
 	writeScreenPlayData(pPlayer, "mission_direction_choice", "directionChoice", selectedDir)
 
 	if selectedDir == 0 then
