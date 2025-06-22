@@ -913,7 +913,17 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	mission->setStartPosition(startPos.getX(), startPos.getY(), zone->getZoneName());
 	mission->setCreatorName(nm->makeCreatureName());
 
-	mission->setMissionTargetName("@lair_n:" + lairTemplateObject->getName());
+	// Resolve the string ID to get the proper localized name
+	String lairNameString = "@lair_n:" + lairTemplateObject->getName();
+	UnicodeString resolvedName = StringIdManager::instance()->getStringId(lairNameString.hashCode());
+	
+	// If the string ID couldn't be resolved, fall back to the original string ID
+	if (resolvedName.isEmpty()) {
+		mission->setMissionTargetName(lairNameString);
+	} else {
+		mission->setMissionTargetName(resolvedName.toString());
+	}
+	
 	mission->setTargetTemplate(templateObject);
 	mission->setTargetOptionalTemplate(lairTemplate);
 
