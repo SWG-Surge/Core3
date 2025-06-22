@@ -181,13 +181,6 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 		spawnObject->decreaseContainerReferenceCount();
 }
 
-void ResourceContainerImplementation::sendRadialMenuTo(CreatureObject* player, ObjectMenuResponse* omr, bool isStatic) {
-    info(true) << "[DEBUG] sendRadialMenuTo called for ResourceContainer: " << getObjectID();
-    getObjectMenuEntries(player, omr);
-    omr->finish();
-    player->sendMessage(omr->clone());
-}
-
 #include "server/zone/packets/object/ObjectMenuResponse.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 
