@@ -6,7 +6,6 @@
  */
 
 #include "server/zone/managers/mission/MissionManager.h"
-#include <cmath>
 #include "server/zone/objects/tangible/terminal/mission/MissionTerminal.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/objects/creature/ai/AiAgent.h"
@@ -894,13 +893,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
     		else if (direction < 0)
         		direction += 360;
 		}
-		// Convert direction to radians (0° = north, 90° = east)
-		float radians = (360.0f - direction) * M_PI / 180.0f;
-		Vector3 playerPos = player->getWorldPosition();
-		float deltaX = distance * sin(radians); // East-West (X-axis, positive = east)
-		float deltaY = distance * cos(radians); // North-South (Y-axis, positive = north)
-		startPos.set(playerPos.getX() + deltaX, playerPos.getY() + deltaY, playerPos.getZ());
-		info("DirChoice: " + String::valueOf(dirChoice) + ", Direction: " + String::valueOf(direction) + ", Radians: " + String::valueOf(radians) + ", DeltaX: " + String::valueOf(deltaX) + ", DeltaY: " + String::valueOf(deltaY) + ", PlayerPos: (" + String::valueOf(playerPos.getX()) + ", " + String::valueOf(playerPos.getY()) + "), MissionPos: (" + String::valueOf(startPos.getX()) + ", " + String::valueOf(startPos.getY()) + ")", true);
+		tartPos = player->getWorldCoordinate((float)distance, direction, false);
 
 		if (zone->isWithinBoundaries(startPos)) {
 			float height = zone->getHeight(startPos.getX(), startPos.getY());
