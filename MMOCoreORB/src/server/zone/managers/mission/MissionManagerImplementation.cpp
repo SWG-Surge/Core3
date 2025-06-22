@@ -876,8 +876,6 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
 	distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
 
-	Vector3 startPos;
-
 	while (!foundPosition && maximumNumberOfTries-- > 0) {
     	foundPosition = true;
 
