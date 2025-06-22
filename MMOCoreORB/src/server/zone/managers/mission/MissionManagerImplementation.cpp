@@ -867,21 +867,25 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	bool foundPosition = false;
 	int maximumNumberOfTries = 20;
 
-	int direction = System::random(360); // default
+	int direction = System::random(360); // fallback default
 int storedDir = static_cast<int>(player->getScreenPlayState("mission_direction_choice"));
 
 if (storedDir > 0) {
     direction = storedDir;
-
     int dev = System::random(8);
     if (System::random(1) == 1) dev *= -1;
-
     direction = (direction + dev + 360) % 360;
 
-    player->sendSystemMessage("SERVER DEBUG: using chosen direction " + String::valueOf(direction));
+    player->sendSystemMessage("SERVER DEBUG: mission direction from SUI: " + String::valueOf(direction));
 } else {
-    player->sendSystemMessage("SERVER DEBUG: using random direction " + String::valueOf(direction));
+    player->sendSystemMessage("SERVER DEBUG: mission direction randomized: " + String::valueOf(direction));
 }
+
+int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
+distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
+
+bool foundPosition = false;
+int maximumNumberOfTries = 20;
 
 while (!foundPosition && maximumNumberOfTries-- > 0) {
     foundPosition = true;
@@ -894,6 +898,7 @@ while (!foundPosition && maximumNumberOfTries-- > 0) {
         bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
 
         if (!result || waterHeight <= height) {
+            // Check that the position is outside cities.
             SortedVector<ManagedReference<ActiveArea*>> activeAreas;
             zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
 
@@ -902,6 +907,7 @@ while (!foundPosition && maximumNumberOfTries-- > 0) {
                 if (area == nullptr) continue;
                 if (area->isCityRegion()) {
                     foundPosition = false;
+                    break;
                 }
             }
         } else {
@@ -912,7 +918,10 @@ while (!foundPosition && maximumNumberOfTries-- > 0) {
     }
 }
 
-if (!foundPosition) return;
+if (!foundPosition) {
+    return;
+}
+
 
 
 	int randTexts = System::random(34) + 1;
