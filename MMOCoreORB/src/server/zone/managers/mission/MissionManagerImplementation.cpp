@@ -966,7 +966,9 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	mission->setMissionTargetName(targetName);
 	
 	// Set a generic mission title
-	mission->setMissionTitle("mission/mission_destroy_neutral" + messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "t");
+	// Use the creature name directly as the mission title
+	mission->setMissionTitle("lair_n", lairTemplateObject->getName());
+	mission->setTitleTargetName(targetName);  // Optional, if the STF entry uses %TO
 	mission->setMissionDescription("mission/mission_destroy_neutral" +  messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "d");
 
 	switch (faction) {
