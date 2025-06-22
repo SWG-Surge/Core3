@@ -868,54 +868,52 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	int maximumNumberOfTries = 20;
 
 	int direction = System::random(360); // default
-	int storedDir = static_cast<int>(player->getScreenPlayState("mission_direction_choice"));
+int storedDir = static_cast<int>(player->getScreenPlayState("mission_direction_choice"));
 
-	if (storedDir > 0) {
-    	direction = storedDir;
+if (storedDir > 0) {
+    direction = storedDir;
 
-    	int dev = System::random(8);
-    	if (System::random(1) == 1) dev *= -1;
+    int dev = System::random(8);
+    if (System::random(1) == 1) dev *= -1;
 
-    	direction = (direction + dev + 360) % 360;
+    direction = (direction + dev + 360) % 360;
 
-    	player->sendSystemMessage("SERVER DEBUG: using chosen direction " + String::valueOf(direction));
-	} else {
-    	player->sendSystemMessage("SERVER DEBUG: using random direction " + String::valueOf(direction));
-	}
+    player->sendSystemMessage("SERVER DEBUG: using chosen direction " + String::valueOf(direction));
+} else {
+    player->sendSystemMessage("SERVER DEBUG: using random direction " + String::valueOf(direction));
+}
 
-	bool foundPosition = false;
-	int maximumNumberOfTries = 20;
+while (!foundPosition && maximumNumberOfTries-- > 0) {
+    foundPosition = true;
 
-	while (!foundPosition && maximumNumberOfTries-- > 0) {
-    	foundPosition = true;
+    startPos = player->getWorldCoordinate((float)distance, (float)direction, false);
 
-    	startPos = player->getWorldCoordinate((float)distance, (float)direction, false);
+    if (zone->isWithinBoundaries(startPos)) {
+        float height = zone->getHeight(startPos.getX(), startPos.getY());
+        float waterHeight = height * 2;
+        bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
 
-    	if (zone->isWithinBoundaries(startPos)) {
-        	float height = zone->getHeight(startPos.getX(), startPos.getY());
-        	float waterHeight = height * 2;
-        	bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
+        if (!result || waterHeight <= height) {
+            SortedVector<ManagedReference<ActiveArea*>> activeAreas;
+            zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
 
-        	if (!result || waterHeight <= height) {
-            	SortedVector<ManagedReference<ActiveArea*>> activeAreas;
-            	zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
+            for (int i = 0; i < activeAreas.size(); ++i) {
+                ActiveArea* area = activeAreas.get(i);
+                if (area == nullptr) continue;
+                if (area->isCityRegion()) {
+                    foundPosition = false;
+                }
+            }
+        } else {
+            foundPosition = false;
+        }
+    } else {
+        foundPosition = false;
+    }
+}
 
-            	for (int i = 0; i < activeAreas.size(); ++i) {
-                	ActiveArea* area = activeAreas.get(i);
-                	if (area == nullptr) continue;
-                	if (area->isCityRegion()) {
-                    	foundPosition = false;
-                	}
-            	}
-        	} else {
-            	foundPosition = false;
-        	}
-    	} else {
-        	foundPosition = false;
-    	}
-	}
+if (!foundPosition) return;
 
-	if (!foundPosition) return;
 
 	int randTexts = System::random(34) + 1;
 
