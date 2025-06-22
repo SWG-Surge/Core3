@@ -3,9 +3,9 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
-
-void ResourceContainerImplementation::sendRadialMenuTo(CreatureObject* player, ObjectMenuResponse* omr, bool isStatic);
-
+#include "server/zone/packets/object/ObjectMenuResponse.h"
+class ResourceContainerImplementation; // Forward declaration
+void ResourceContainerImplementation::sendRadialMenuTo(CreatureObject* player, ObjectMenuResponse* omr, bool isStatic); // Match implementation
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
 
