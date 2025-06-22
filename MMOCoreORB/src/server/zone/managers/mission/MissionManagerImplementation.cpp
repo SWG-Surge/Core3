@@ -867,13 +867,18 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	bool foundPosition = false;
 	int maximumNumberOfTries = 20;
 
-	int direction = System::random(360); // default fallback
+	int direction = System::random(360); // fallback
 
-	if (player->getScreenPlayState("mission_direction_choice") > 0) {
-    	direction = player->getScreenPlayState("mission_direction_choice");
+	int selected = static_cast<int>(player->getScreenPlayState("mission_direction_choice"));
+	if (selected > 0) {
+    	direction = selected;
+
+    	int dev = System::random(8);
+    	if (System::random(1) == 1) dev *= -1;
+    	direction = (direction + dev + 360) % 360;
 	}
 
-	player->sendSystemMessage("SERVER DEBUG: mission_direction_choice = " + String::valueOf(direction));
+	player->sendSystemMessage("SERVER DEBUG: final mission direction = " + String::valueOf(direction));
 
 	int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
 	distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
