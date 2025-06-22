@@ -888,17 +888,17 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
     		int isMinus = System::random(100);
     		if (isMinus > 49)
         		dev *= -1;
-    		direction = dirChoice + dev;
-    		if (direction > 360)
-        		direction -= 360;
-    		else if (direction < 0)
-        		direction += 360;
+    	direction = dirChoice + dev;
+    	if (direction > 360)
+        	direction -= 360;
+    	else if (direction < 0)
+        	direction += 360;
 		}
 		// Convert direction to radians (0° = north, 90° = east)
-		float radians = direction * M_PI / 180.0f;
+		float radians = (direction - 90.0f) * M_PI / 180.0f;
 		Vector3 playerPos = player->getWorldPosition();
-		float deltaY = distance * cos(radians); // North-South (Y-axis)
 		float deltaX = distance * sin(radians); // East-West (X-axis)
+		float deltaY = distance * cos(radians); // North-South (Y-axis)
 		startPos.set(playerPos.getX() + deltaX, playerPos.getY() + deltaY, 0);
 		info("DirChoice: " + String::valueOf(dirChoice) + ", Direction: " + String::valueOf(direction) + ", PlayerPos: (" + String::valueOf(playerPos.getX()) + ", " + String::valueOf(playerPos.getY()) + "), MissionPos: (" + String::valueOf(startPos.getX()) + ", " + String::valueOf(startPos.getY()) + ")", true);
 
