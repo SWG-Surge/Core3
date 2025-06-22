@@ -187,3 +187,41 @@ void ResourceContainerImplementation::getObjectMenuEntries(CreatureObject* playe
 	menuResponse->addRadialMenuItem(100, 0, "View Quality");
 }
 
+#include "server/zone/packets/object/ObjectMenuResponse.h"
+#include "server/zone/objects/creature/CreatureObject.h"
+
+void ResourceContainerImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
+	// Pass to parent handler if needed
+	TangibleObjectImplementation::handleObjectMenuSelect(player, selectedID);
+
+	// Custom radial menu entry
+	if (selectedID == 100) { // "View Quality"
+		if (spawnObject == nullptr) {
+			player->sendSystemMessage("This resource has no spawn object.");
+			return;
+		}
+
+		int64 currentTime = System::getTime();
+		int64 despawnTime = spawnObject->getDespawned();
+
+		if (currentTime < despawnTime) {
+			player->sendSystemMessage("This resource is still spawning and is at 100% effectiveness.");
+			return;
+		}
+
+		int64 ageMillis = currentTime - despawnTime;
+		int ageMinutes = ageMillis / 60000;
+
+		int degradePercent = 0;
+		if (ageMinutes > 120)
+			degradePercent = 50;
+		else if (ageMinutes > 90)
+			degradePercent = 40;
+		else if (ageMinutes > 60)
+			degradePercent = 20;
+
+		StringBuffer msg;
+		msg << "This resource is " << degradePercent << "% degraded (" << (100 - degradePercent) << "% effective).";
+		player->sendSystemMessage(msg.toString());
+	}
+}
