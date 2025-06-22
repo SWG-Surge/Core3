@@ -893,7 +893,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
     		else if (direction < 0)
         		direction += 360;
 		}
-		tartPos = player->getWorldCoordinate((float)distance, direction, false);
+		startPos = player->getWorldCoordinate((float)distance, direction, false);
 
 		if (zone->isWithinBoundaries(startPos)) {
 			float height = zone->getHeight(startPos.getX(), startPos.getY());
