@@ -68,6 +68,7 @@ includeFile("trainers/trainerConvHandler.lua")
 
 --Mission Terminal Direction and Difficulty
 includeFile("tools/mission_direction_choice.lua")
+includeFile("tools/mission_level_choice.lua")
 
 -- GCW
 includeFile("gcw/city_control_banners.lua")

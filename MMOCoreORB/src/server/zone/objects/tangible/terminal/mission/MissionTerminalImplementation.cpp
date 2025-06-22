@@ -12,9 +12,6 @@
 #include "server/zone/managers/city/CityManager.h"
 #include "server/zone/managers/city/CityRemoveAmenityTask.h"
 #include "server/zone/objects/player/sessions/SlicingSession.h"
-#include "server/zone/managers/director/DirectorManager.h"
-
-#include "server/zone/objects/player/PlayerObject.h"
 
 void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* menuResponse, CreatureObject* player) {
 	TerminalImplementation::fillObjectMenuResponse(menuResponse, player);
@@ -33,9 +30,9 @@ void MissionTerminalImplementation::fillObjectMenuResponse(ObjectMenuResponse* m
 	}
 
 	if (terminalType == "general") {
-		menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
-		menuResponse->addRadialMenuItem(113, 3, "Choose Mission Direction"); // <-- ADDED
-	}
+        menuResponse->addRadialMenuItem(112, 3, "Choose Mission Level");
+        menuResponse->addRadialMenuItem(113, 3, "Choose Mission Direction");
+    }
 }
 
 int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
@@ -88,24 +85,17 @@ int MissionTerminalImplementation::handleObjectMenuSelect(CreatureObject* player
 		return 0;
 
 	} else if (selectedID == 112) {
-
-		Lua* lua = DirectorManager::instance()->getLuaInstance();
-
-		Reference<LuaFunction*> mission_level_choice = lua->createFunction("mission_level_choice", "openWindow", 0);
-		*mission_level_choice << player;
-
-		mission_level_choice->callFunction();
-		return 0;
-
+    	Lua* lua = DirectorManager::instance()->getLuaInstance();
+    	Reference<LuaFunction*> mission_level_choice = lua->createFunction("mission_level_choice", "openWindow", 0);
+    	*mission_level_choice << player;
+    	mission_level_choice->callFunction();
+    	return 0;
 	} else if (selectedID == 113) {
-
-		Lua* lua = DirectorManager::instance()->getLuaInstance();
-
-		Reference<LuaFunction*> mission_direction_choice = lua->createFunction("mission_direction_choice", "openWindow", 0);
-		*mission_direction_choice << player;
-
-		mission_direction_choice->callFunction();
-		return 0;
+    	Lua* lua = DirectorManager::instance()->getLuaInstance();
+    	Reference<LuaFunction*> mission_direction_choice = lua->createFunction("mission_direction_choice", "openWindow", 0);
+    	*mission_direction_choice << player;
+    	mission_direction_choice->callFunction();
+    	return 0;
 	}
 
 	return TangibleObjectImplementation::handleObjectMenuSelect(player, selectedID);
