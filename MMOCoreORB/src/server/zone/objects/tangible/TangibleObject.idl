@@ -33,7 +33,8 @@ include server.zone.objects.cell.CellObject;
 @json
 @mock
 class TangibleObject extends SceneObject {
-	public abstract void getObjectMenuEntries(CreatureObject player, ObjectMenuResponse menuResponse);
+	@local
+	public native void getObjectMenuEntries(CreatureObject player, ObjectMenuResponse menuResponse);
 	
 	protected boolean targetable;
 
