@@ -873,7 +873,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
     	direction = player->getScreenPlayState("mission_direction_choice");
 	}
 
-	info("DEBUG: mission_direction_choice = " + String::valueOf(direction));
+	player->sendSystemMessage("SERVER DEBUG: mission_direction_choice = " + String::valueOf(direction));
 
 	int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
 	distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
