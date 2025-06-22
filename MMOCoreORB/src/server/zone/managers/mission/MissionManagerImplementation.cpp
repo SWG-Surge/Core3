@@ -867,30 +867,29 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	bool foundPosition = false;
 	int maximumNumberOfTries = 20;
 
-	int direction = System::random(360); // fallback
+	int direction = System::random(360); // default
+	int storedDir = static_cast<int>(player->getScreenPlayState("mission_direction_choice"));
 
-	int selected = static_cast<int>(player->getScreenPlayState("mission_direction_choice"));
-	if (selected > 0) {
-    	direction = selected;
+	if (storedDir > 0) {
+    	direction = storedDir;
 
     	int dev = System::random(8);
     	if (System::random(1) == 1) dev *= -1;
+
     	direction = (direction + dev + 360) % 360;
+
+    	player->sendSystemMessage("SERVER DEBUG: using chosen direction " + String::valueOf(direction));
+	} else {
+    	player->sendSystemMessage("SERVER DEBUG: using random direction " + String::valueOf(direction));
 	}
 
-	player->sendSystemMessage("SERVER DEBUG: final mission direction = " + String::valueOf(direction));
-
-	int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
-	distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
+	bool foundPosition = false;
+	int maximumNumberOfTries = 20;
 
 	while (!foundPosition && maximumNumberOfTries-- > 0) {
     	foundPosition = true;
 
-    	int dev = System::random(8);
-    	if (System::random(1) == 1) dev *= -1;
-    	int testDirection = (direction + dev + 360) % 360;
-
-    	startPos = player->getWorldCoordinate((float)distance, (float)testDirection, false);
+    	startPos = player->getWorldCoordinate((float)distance, (float)direction, false);
 
     	if (zone->isWithinBoundaries(startPos)) {
         	float height = zone->getHeight(startPos.getX(), startPos.getY());
@@ -898,7 +897,6 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
         	bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
 
         	if (!result || waterHeight <= height) {
-            	// Check that the position is outside cities.
             	SortedVector<ManagedReference<ActiveArea*>> activeAreas;
             	zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
 
@@ -917,10 +915,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
     	}
 	}
 
-
-	if (!foundPosition) {
-		return;
-	}
+	if (!foundPosition) return;
 
 	int randTexts = System::random(34) + 1;
 
