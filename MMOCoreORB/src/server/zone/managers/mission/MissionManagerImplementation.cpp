@@ -946,6 +946,26 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	else
 		missionType = "_creature";
 
+	// Get the target creature template name from the lair template
+	String targetTemplate = "";
+	const Vector<String>* mobiles = lairTemplateObject->getWeightedMobiles();
+	if (mobiles != nullptr && mobiles->size() > 0) {
+		targetTemplate = mobiles->get(0); // Get the first mobile template
+	}
+	
+	// Get the creature's display name
+	String targetName = "creature";
+	if (!targetTemplate.isEmpty()) {
+		CreatureTemplate* creatureTemplate = CreatureTemplateManager::instance()->getTemplate(targetTemplate);
+		if (creatureTemplate != nullptr) {
+			targetName = creatureTemplate->getObjectName();
+		}
+	}
+	
+	// Set the mission target name to the creature's name
+	mission->setMissionTargetName(targetName);
+	
+	// Set a generic mission title
 	mission->setMissionTitle("mission/mission_destroy_neutral" + messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "t");
 	mission->setMissionDescription("mission/mission_destroy_neutral" +  messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "d");
 
