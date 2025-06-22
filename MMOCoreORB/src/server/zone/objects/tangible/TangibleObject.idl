@@ -9,7 +9,6 @@ import system.util.SortedVector;
 import engine.log.Logger;
 include server.zone.packets.scene.AttributeListMessage;
 import server.zone.objects.creature.CreatureObject;
-include server.zone.packets.object.ObjectMenuResponse;
 import server.zone.objects.tangible.tool.repair.RepairTool;
 import server.zone.objects.area.ActiveArea;
 import server.zone.objects.tangible.threat.ThreatMap;
@@ -33,9 +32,6 @@ include server.zone.objects.cell.CellObject;
 @json
 @mock
 class TangibleObject extends SceneObject {
-	@local
-	public native void getObjectMenuEntries(CreatureObject player, ObjectMenuResponse menuResponse);
-	
 	protected boolean targetable;
 
 	protected float complexity;

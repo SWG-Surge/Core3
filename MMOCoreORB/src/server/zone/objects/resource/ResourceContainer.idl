@@ -9,7 +9,6 @@ import server.zone.objects.tangible.TangibleObject;
 include server.zone.objects.resource.ResourceSpawn;
 import server.zone.objects.creature.CreatureObject;
 include server.zone.packets.scene.AttributeListMessage;
-include server.zone.packets.object.ObjectMenuResponse;
 import server.zone.objects.scene.SceneObject;
 
 @json
@@ -133,10 +132,4 @@ class ResourceContainer extends TangibleObject {
 	public native void split(int newStackSize, CreatureObject player);
 
 	public native void combine(ResourceContainer fromContainer);
-
-	@local
-	public native void getObjectMenuEntries(CreatureObject player, ObjectMenuResponse menuResponse);
-
-	@local
-	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
 }

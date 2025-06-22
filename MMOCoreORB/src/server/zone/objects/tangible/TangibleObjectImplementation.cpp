@@ -1629,12 +1629,6 @@ TangibleObject* TangibleObject::asTangibleObject() {
 	return this;
 }
 
-#include "server/zone/packets/object/ObjectMenuResponse.h"
-
-void TangibleObjectImplementation::getObjectMenuEntries(CreatureObject* player, ObjectMenuResponse* menuResponse) {
-	// Default implementation: do nothing
-}
-
 TangibleObject* TangibleObjectImplementation::asTangibleObject() {
 	return _this.getReferenceUnsafeStaticCast();
 }

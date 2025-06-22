@@ -1,13 +1,15 @@
+/*
+				Copyright <SWGEmu>
+		See file COPYING for copying conditions.*/
+
+
 #include "server/zone/objects/resource/ResourceContainer.h"
 #include "server/zone/packets/resource/ResourceContainerObjectDeltaMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
-#include "server/zone/packets/object/ObjectMenuResponse.h"
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
-	info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
-
 	TangibleObjectImplementation::fillAttributeList(alm, object);
 
 	StringBuffer ssQuantity;
@@ -179,43 +181,4 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 
 	if (spawnObject != nullptr)
 		spawnObject->decreaseContainerReferenceCount();
-}
-
-#include "server/zone/packets/object/ObjectMenuResponse.h"
-#include "server/zone/objects/creature/CreatureObject.h"
-
-int ResourceContainerImplementation::handleObjectMenuSelect(CreatureObject* player, byte selectedID) {
-	TangibleObjectImplementation::handleObjectMenuSelect(player, selectedID);
-
-	if (selectedID == 100) {
-		if (spawnObject == nullptr) {
-			player->sendSystemMessage("This resource has no spawn object.");
-			return 0;
-		}
-
-		int64 currentTime = System::getTime();
-		int64 despawnTime = spawnObject->getDespawned();
-
-		if (currentTime < despawnTime) {
-			player->sendSystemMessage("This resource is still spawning and is at 100% effectiveness.");
-			return 0;
-		}
-
-		int64 ageMillis = currentTime - despawnTime;
-		int ageMinutes = ageMillis / 60000;
-
-		int degradePercent = 0;
-		if (ageMinutes > 120)
-			degradePercent = 50;
-		else if (ageMinutes > 90)
-			degradePercent = 40;
-		else if (ageMinutes > 60)
-			degradePercent = 20;
-
-		StringBuffer msg;
-		msg << "This resource is " << degradePercent << "% degraded (" << (100 - degradePercent) << "% effective).";
-		player->sendSystemMessage(msg.toString());
-	}
-
-	return 0;
 }
