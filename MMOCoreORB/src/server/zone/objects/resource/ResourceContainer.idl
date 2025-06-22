@@ -136,4 +136,7 @@ class ResourceContainer extends TangibleObject {
 
 	@local
 	public native void getObjectMenuEntries(CreatureObject player, ObjectMenuResponse menuResponse);
+
+	@local
+	public native int handleObjectMenuSelect(CreatureObject player, byte selectedID);
 }
