@@ -1593,7 +1593,7 @@ float getDegradationMultiplier(ResourceSpawn* resourceSpawn) {
 		return 1.0f;
 
 	int64 currentTime = System::getTime();
-	int64 despawnTime = resourceSpawn->getEndTime();  // in ms
+	int64 despawnTime = resourceSpawn->getDespawned();
 
 	if (currentTime < despawnTime)
 		return 1.0f;
