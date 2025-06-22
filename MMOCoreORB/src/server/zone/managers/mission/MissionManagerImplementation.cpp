@@ -884,8 +884,6 @@ if (storedDir > 0) {
 int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
 distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
 
-foundPosition = false;
-maximumNumberOfTries = 20;
 
 while (!foundPosition && maximumNumberOfTries-- > 0) {
     foundPosition = true;
