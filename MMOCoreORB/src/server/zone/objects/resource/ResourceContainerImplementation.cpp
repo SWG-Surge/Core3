@@ -9,7 +9,7 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 
-System::out << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID() << "\n";
+info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	TangibleObjectImplementation::fillAttributeList(alm, object);
 
