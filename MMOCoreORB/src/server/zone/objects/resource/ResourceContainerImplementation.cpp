@@ -1,13 +1,10 @@
-/*
-				Copyright <SWGEmu>
-		See file COPYING for copying conditions.*/
-
-
 #include "server/zone/objects/resource/ResourceContainer.h"
 #include "server/zone/packets/resource/ResourceContainerObjectDeltaMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
+
+void ResourceContainerImplementation::sendRadialMenuTo(CreatureObject* player, ObjectMenuResponse* omr, bool isStatic);
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
@@ -185,10 +182,11 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 		spawnObject->decreaseContainerReferenceCount();
 }
 
-void ResourceContainerImplementation::getObjectMenuEntries(CreatureObject* player, ObjectMenuResponse* menuResponse) {
-    TangibleObjectImplementation::getObjectMenuEntries(player, menuResponse);
-    info(true) << "[DEBUG] getObjectMenuEntries() called on ResourceContainer: " << getObjectID();
-    menuResponse->addRadialMenuItem(150, 0, "View Quality");
+void ResourceContainerImplementation::sendRadialMenuTo(CreatureObject* player, ObjectMenuResponse* omr, bool isStatic) {
+    info(true) << "[DEBUG] sendRadialMenuTo called for ResourceContainer: " << getObjectID();
+    getObjectMenuEntries(player, omr);
+    omr->finish();
+    player->sendMessage(omr->clone());
 }
 
 #include "server/zone/packets/object/ObjectMenuResponse.h"
