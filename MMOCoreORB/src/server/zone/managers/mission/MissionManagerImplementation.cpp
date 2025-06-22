@@ -866,41 +866,52 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 
 	bool foundPosition = false;
 	int maximumNumberOfTries = 20;
-	while (!foundPosition && maximumNumberOfTries-- > 0) {
-		foundPosition = true;
 
-		int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
-		distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
-		startPos = player->getWorldCoordinate((float)distance, (float)System::random(360), false);
+	int direction = System::random(360); // default fallback
 
-		if (zone->isWithinBoundaries(startPos)) {
-			float height = zone->getHeight(startPos.getX(), startPos.getY());
-			float waterHeight = height * 2;
-			bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
-
-			if (!result || waterHeight <= height) {
-				//Check that the position is outside cities.
-				SortedVector<ManagedReference<ActiveArea* > > activeAreas;
-
-				zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
-
-				for (int i = 0; i < activeAreas.size(); ++i) {
-					ActiveArea* area = activeAreas.get(i);
-
-					if (area == nullptr)
-						continue;
-
-					if (area->isCityRegion()) {
-						foundPosition = false;
-					}
-				}
-			} else {
-				foundPosition = false;
-			}
-		} else {
-			foundPosition = false;
-		}
+	if (player->getScreenPlayState("mission_direction_choice") > 0) {
+    	direction = player->getScreenPlayState("mission_direction_choice");
 	}
+
+	int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
+	distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
+
+	Vector3 startPos;
+
+	while (!foundPosition && maximumNumberOfTries-- > 0) {
+    	foundPosition = true;
+
+    	int dev = System::random(8);
+    	if (System::random(1) == 1) dev *= -1;
+    	int testDirection = (direction + dev + 360) % 360;
+
+    	startPos = player->getWorldCoordinate((float)distance, (float)testDirection, false);
+
+    	if (zone->isWithinBoundaries(startPos)) {
+        	float height = zone->getHeight(startPos.getX(), startPos.getY());
+        	float waterHeight = height * 2;
+        	bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
+
+        	if (!result || waterHeight <= height) {
+            	// Check that the position is outside cities.
+            	SortedVector<ManagedReference<ActiveArea*>> activeAreas;
+            	zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
+
+            	for (int i = 0; i < activeAreas.size(); ++i) {
+                	ActiveArea* area = activeAreas.get(i);
+                	if (area == nullptr) continue;
+                	if (area->isCityRegion()) {
+                    	foundPosition = false;
+                	}
+            	}
+        	} else {
+            	foundPosition = false;
+        	}
+    	} else {
+        	foundPosition = false;
+    	}
+	}
+
 
 	if (!foundPosition) {
 		return;
