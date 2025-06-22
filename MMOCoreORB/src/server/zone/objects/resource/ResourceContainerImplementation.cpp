@@ -188,7 +188,7 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 void ResourceContainerImplementation::getObjectMenuEntries(CreatureObject* player, ObjectMenuResponse* menuResponse) {
     TangibleObjectImplementation::getObjectMenuEntries(player, menuResponse);
     info(true) << "[DEBUG] getObjectMenuEntries() called on ResourceContainer: " << getObjectID();
-    menuResponse->addRadialMenuItem(100, 0, "View Quality");
+    menuResponse->addRadialMenuItem(150, 0, "View Quality");
 }
 
 #include "server/zone/packets/object/ObjectMenuResponse.h"
