@@ -11,7 +11,7 @@
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
 	info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
-	
+
 	TangibleObjectImplementation::fillAttributeList(alm, object);
 
 	StringBuffer ssQuantity;
@@ -187,7 +187,7 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 
 void ResourceContainerImplementation::getObjectMenuEntries(CreatureObject* player, ObjectMenuResponse* menuResponse) {
     TangibleObjectImplementation::getObjectMenuEntries(player, menuResponse);
-    System::out << "[DEBUG] getObjectMenuEntries() called on ResourceContainer\n";
+    info(true) << "[DEBUG] getObjectMenuEntries() called on ResourceContainer: " << getObjectID();
     menuResponse->addRadialMenuItem(100, 0, "View Quality");
 }
 
