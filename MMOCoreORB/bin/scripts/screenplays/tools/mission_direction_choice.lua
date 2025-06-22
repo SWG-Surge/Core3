@@ -15,11 +15,15 @@ mission_direction_choice = ScreenPlay:new {
 }
 
 function mission_direction_choice:start()
+    if self == nil then return end
+    self:registerScreenPlay()
 end
 
+
 function mission_direction_choice:openWindow(pPlayer)
-	if (pPlayer == nil) then return end
-	self:showDirections(pPlayer)
+    if (pPlayer == nil) then return end
+    self:start() -- register screenplay with player
+    self:showDirections(pPlayer)
 end
 
 function mission_direction_choice:showDirections(pPlayer)
