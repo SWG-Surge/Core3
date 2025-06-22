@@ -895,12 +895,12 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
         		direction += 360;
 		}
 		// Convert direction to radians (0° = north, 90° = east)
-		float radians = (direction + 90.0f) * M_PI / 180.0f;
+		float radians = (360.0f - direction) * M_PI / 180.0f;
 		Vector3 playerPos = player->getWorldPosition();
-		float deltaX = distance * cos(radians); // East-West (X-axis, positive = east)
-		float deltaY = distance * sin(radians); // North-South (Y-axis, positive = north)
-		startPos.set(playerPos.getX() + deltaX, playerPos.getY() + deltaY, 0);
-		info("DirChoice: " + String::valueOf(dirChoice) + ", Direction: " + String::valueOf(direction) + ", PlayerPos: (" + String::valueOf(playerPos.getX()) + ", " + String::valueOf(playerPos.getY()) + "), MissionPos: (" + String::valueOf(startPos.getX()) + ", " + String::valueOf(startPos.getY()) + ")", true);
+		float deltaX = distance * sin(radians); // East-West (X-axis, positive = east)
+		float deltaY = distance * cos(radians); // North-South (Y-axis, positive = north)
+startPos.set(playerPos.getX() + deltaX, playerPos.getY() + deltaY, playerPos.getZ());
+info("DirChoice: " + String::valueOf(dirChoice) + ", Direction: " + String::valueOf(direction) + ", Radians: " + String::valueOf(radians) + ", DeltaX: " + String::valueOf(deltaX) + ", DeltaY: " + String::valueOf(deltaY) + ", PlayerPos: (" + String::valueOf(playerPos.getX()) + ", " + String::valueOf(playerPos.getY()) + "), MissionPos: (" + String::valueOf(startPos.getX()) + ", " + String::valueOf(startPos.getY()) + ")", true);
 
 		if (zone->isWithinBoundaries(startPos)) {
 			float height = zone->getHeight(startPos.getX(), startPos.getY());
