@@ -51,11 +51,7 @@ function mission_direction_choice:dirSelection(pPlayer, pSui, eventIndex, args)
     local selectedDir = tonumber(self.directions[selectedIndex].dirSelect)
     local selectedDesc = self.directions[selectedIndex].dirDesc
 
-    CreatureObject(pPlayer):sendSystemMessage("DIR DEBUG: SelectedDir = " .. selectedDir .. ", Desc = " .. selectedDesc)
-
-writeScreenPlayData(pPlayer, "mission_direction_choice", "directionChoice", selectedDir)
-
-
+    CreatureObject(pPlayer):setScreenPlayState("mission_direction_choice", selectedDir)
 
 	if selectedDir == 0 then
 		CreatureObject(pPlayer):sendSystemMessage("Mission direction reset to default.")
