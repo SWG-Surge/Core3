@@ -182,3 +182,9 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 	if (spawnObject != nullptr)
 		spawnObject->decreaseContainerReferenceCount();
 }
+
+void ResourceContainerImplementation::getObjectMenuEntries(CreatureObject* player, ObjectMenuResponse* menuResponse) {
+	SceneObjectImplementation::getObjectMenuEntries(player, menuResponse);
+	menuResponse->addRadialMenuItem(100, 0, "View Quality");
+}
+
