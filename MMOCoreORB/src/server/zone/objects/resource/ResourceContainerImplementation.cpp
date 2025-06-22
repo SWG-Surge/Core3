@@ -9,8 +9,9 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 
-info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
+	info(true) << "[DEBUG] fillAttributeList() called for ResourceContainer: " << getObjectID();
+	
 	TangibleObjectImplementation::fillAttributeList(alm, object);
 
 	StringBuffer ssQuantity;
