@@ -804,35 +804,27 @@ void MissionManagerImplementation::randomizeFactionTerminalMissions(CreatureObje
 
 void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject* player, MissionObject* mission, const uint32 faction) {
 	Zone* zone = player->getZone();
-
-	if (zone == nullptr) {
+	if (zone == nullptr)
 		return;
-	}
 
 	LairSpawn* randomLairSpawn = getRandomLairSpawn(player, faction, MissionTypes::DESTROY);
-
-	if (randomLairSpawn == nullptr) {
+	if (randomLairSpawn == nullptr)
 		return;
-	}
 
 	String lairTemplate = randomLairSpawn->getLairTemplateName();
 	LairTemplate* lairTemplateObject = CreatureTemplateManager::instance()->getLairTemplate(lairTemplate.hashCode());
-
-	if (lairTemplateObject == nullptr) {
+	if (lairTemplateObject == nullptr)
 		return;
-	}
 
 	ManagedReference<PlayerObject*> targetGhost = player->getPlayerObject();
-	if (targetGhost == nullptr) {
+	if (targetGhost == nullptr)
 		return;
-	}
 
 	int playerLevel = server->getPlayerManager()->calculatePlayerLevel(player);
 	int maxDiff = randomLairSpawn->getMaxDifficulty();
 	int minDiff = randomLairSpawn->getMinDifficulty();
 	int difficultyLevel = System::random(maxDiff - minDiff) + minDiff;
 	int difficulty = (difficultyLevel - minDiff) / ((maxDiff > (minDiff + 5) ? maxDiff - minDiff : 5) / 5);
-
 	if (difficulty == 5)
 		difficulty = 4;
 
@@ -854,45 +846,42 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	}
 
 	String building = lairTemplateObject->getMissionBuilding(difficulty);
-
-	if (building.isEmpty()) {
+	if (building.isEmpty())
 		return;
-	}
 
 	SharedObjectTemplate* templateObject = TemplateManager::instance()->getTemplate(building.hashCode());
-
 	if (templateObject == nullptr || !templateObject->isSharedTangibleObjectTemplate()) {
 		error("incorrect template object in randomizeDestroyMission " + building);
 		return;
 	}
 
 	NameManager* nm = processor->getNameManager();
-
 	TerrainManager* terrain = zone->getPlanetManager()->getTerrainManager();
 
 	Vector3 startPos;
-
 	bool foundPosition = false;
 	int maximumNumberOfTries = 20;
+
 	while (!foundPosition && maximumNumberOfTries-- > 0) {
 		foundPosition = true;
 
 		int distance = destroyMissionBaseDistance + destroyMissionDifficultyDistanceFactor * difficultyLevel;
 		distance += System::random(destroyMissionRandomDistance) + System::random(destroyMissionDifficultyRandomDistance * difficultyLevel);
+
 		String dir = targetGhost->getScreenPlayData("mission_direction_choice", "directionChoice");
 		float dirChoice = dir.isEmpty() ? 0 : Float::valueOf(dir);
 		float direction = (float)System::random(360);
 		if (dirChoice > 0) {
-    		int dev = System::random(8);
-    		int isMinus = System::random(100);
-    		if (isMinus > 49)
-        		dev *= -1;
-    		direction = dirChoice + dev;
-    		if (direction > 360)
-        		direction -= 360;
-    		else if (direction < 0)
-        		direction += 360;
+			int dev = System::random(8);
+			if (System::random(1) == 1)
+				dev *= -1;
+			direction = dirChoice + dev;
+			if (direction > 360)
+				direction -= 360;
+			else if (direction < 0)
+				direction += 360;
 		}
+
 		startPos = player->getWorldCoordinate((float)distance, direction, false);
 
 		if (zone->isWithinBoundaries(startPos)) {
@@ -901,20 +890,12 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 			bool result = terrain->getWaterHeight(startPos.getX(), startPos.getY(), waterHeight);
 
 			if (!result || waterHeight <= height) {
-				//Check that the position is outside cities.
-				SortedVector<ManagedReference<ActiveArea* > > activeAreas;
-
+				SortedVector<ManagedReference<ActiveArea*>> activeAreas;
 				zone->getInRangeActiveAreas(startPos.getX(), startPos.getZ(), startPos.getY(), &activeAreas, true);
-
 				for (int i = 0; i < activeAreas.size(); ++i) {
 					ActiveArea* area = activeAreas.get(i);
-
-					if (area == nullptr)
-						continue;
-
-					if (area->isCityRegion()) {
+					if (area != nullptr && area->isCityRegion())
 						foundPosition = false;
-					}
 				}
 			} else {
 				foundPosition = false;
@@ -924,18 +905,31 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 		}
 	}
 
-	if (!foundPosition) {
+	if (!foundPosition)
 		return;
-	}
 
 	int randTexts = System::random(34) + 1;
 
 	mission->setMissionNumber(randTexts);
-
 	mission->setStartPosition(startPos.getX(), startPos.getY(), zone->getZoneName());
 	mission->setCreatorName(nm->makeCreatureName());
 
-	mission->setMissionTargetName("@lair_n:" + lairTemplateObject->getName());
+	// NEW: Get actual target name
+	String targetTemplate = "";
+	const Vector<String>* mobiles = lairTemplateObject->getWeightedMobiles();
+	if (mobiles != nullptr && mobiles->size() > 0) {
+		targetTemplate = mobiles->get(0);
+	}
+
+	String targetName = "a creature";
+	if (!targetTemplate.isEmpty()) {
+		CreatureTemplate* creatureTemplate = CreatureTemplateManager::instance()->getTemplate(targetTemplate);
+		if (creatureTemplate != nullptr) {
+			targetName = creatureTemplate->getObjectName();
+		}
+	}
+
+	mission->setMissionTargetName(targetName);
 	mission->setTargetTemplate(templateObject);
 	mission->setTargetOptionalTemplate(lairTemplate);
 
@@ -949,13 +943,14 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 
 	int factionPointsReward = randomLairSpawn->getMinDifficulty();
 	if (factionPointsReward > 32)
-	{
 		factionPointsReward = 32;
-	}
 
+	// NEW: set mission title to the lair name
+	mission->setMissionTitle("lair_n", lairTemplateObject->getName());
+
+	// Still use flavor text for mission description
 	String messageDifficulty;
 	String missionType;
-
 	if (difficulty < 2)
 		messageDifficulty = "_easy";
 	else if (difficulty == 2)
@@ -968,8 +963,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 	else
 		missionType = "_creature";
 
-	mission->setMissionTitle("mission/mission_destroy_neutral" + messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "t");
-	mission->setMissionDescription("mission/mission_destroy_neutral" +  messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "d");
+	mission->setMissionDescription("mission/mission_destroy_neutral" + messageDifficulty + missionType, "m" + String::valueOf(randTexts) + "d");
 
 	switch (faction) {
 	case Factions::FACTIONIMPERIAL:
@@ -990,6 +984,7 @@ void MissionManagerImplementation::randomizeGenericDestroyMission(CreatureObject
 
 	mission->setTypeCRC(MissionTypes::DESTROY);
 }
+
 
 void MissionManagerImplementation::randomizeGenericSurveyMission(CreatureObject* player, MissionObject* mission, const uint32 faction) {
 	int maxLevel = 50;
