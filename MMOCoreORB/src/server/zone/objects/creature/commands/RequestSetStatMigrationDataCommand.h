@@ -1,6 +1,7 @@
 /*
 				Copyright <SWGEmu>
-		See file COPYING for copying conditions.*/
+		See file COPYING for copying conditions.
+*/
 
 #ifndef REQUESTSETSTATMIGRATIONDATACOMMAND_H_
 #define REQUESTSETSTATMIGRATIONDATACOMMAND_H_
@@ -33,6 +34,11 @@ public:
 		if (!checkInvalidLocomotions(creature))
 			return INVALIDLOCOMOTION;
 
+		if (creature->isInCombat()) {
+			creature->sendSystemMessage("You cannot migrate stats while in combat.");
+			return GENERALERROR;
+		}
+
 		if (!creature->isPlayerCreature()) {
 			return GENERALERROR;
 		}
@@ -56,13 +62,13 @@ public:
 		tokenizer.setDelimeter(" ");
 
 		uint32 targetPointsTotal = 0;
-		uint32 targetAttributes[9] = {0,0,0,0,0,0,0,0,0};
+		uint32 targetAttributes[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 		for (int i = 0; tokenizer.hasMoreTokens() && i < 9; ++i) {
 			uint32 value = tokenizer.getIntToken();
 
 			if (value < getMinAttribute(creature, i) || value > getMaxAttribute(creature, i)) {
-				warning() << "Player: " << creature->getDisplayedName() << " ID: " << creature->getObjectID() <<  " --- Suspected stat migration hacking attempt.";
+				warning() << "Player: " << creature->getDisplayedName() << " ID: " << creature->getObjectID() << " --- Suspected stat migration hacking attempt.";
 				return GENERALERROR;
 			}
 
@@ -70,8 +76,6 @@ public:
 			targetPointsTotal += value;
 		}
 
-		// Here we set the stat migration target attributes.
-		// NOTE: We aren't actually migrating the stats at this point.
 		if (targetPointsTotal == getTotalAttribPoints(creature)) {
 			for (int i = 0; i < 9; ++i) {
 				session->setAttributeToModify(i, targetAttributes[i]);
@@ -83,10 +87,22 @@ public:
 			return GENERALERROR;
 		}
 
-		// Player is in the tutorial zone and is allowed to migrate stats.
-		auto zone = creature->getZone();
+		Zone* zone = creature->getZone();
 
-		if ((zone != nullptr && zone->getZoneName() == "tutorial") || privilegedPlayer) {
+		if ((zone != nullptr && (
+				zone->getZoneName() == "tutorial" ||
+				zone->getZoneName() == "tatooine" ||
+				zone->getZoneName() == "corellia" ||
+				zone->getZoneName() == "dantooine" ||
+				zone->getZoneName() == "dathomir" ||
+				zone->getZoneName() == "endor" ||
+				zone->getZoneName() == "lok" ||
+				zone->getZoneName() == "naboo" ||
+				zone->getZoneName() == "rori" ||
+				zone->getZoneName() == "talus" ||
+				zone->getZoneName() == "yavin4"
+			)) || privilegedPlayer) {
+
 			session->migrateStats();
 
 			if (privilegedPlayer) {
@@ -98,4 +114,4 @@ public:
 	}
 };
 
-#endif //REQUESTSETSTATMIGRATIONDATACOMMAND_H_
+#endif // REQUESTSETSTATMIGRATIONDATACOMMAND_H_
