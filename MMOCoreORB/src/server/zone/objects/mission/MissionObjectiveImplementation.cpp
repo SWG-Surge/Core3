@@ -245,7 +245,7 @@ void MissionObjectiveImplementation::awardReward() {
 		playerCount = group->getNumberOfPlayerMembers();
 
 #ifdef LOCKFREE_BCLIENT_BUFFERS
-	Reference<BasePacket*> pack = pmm;
+		Reference<BasePacket*> pack = pmm;
 #endif
 
 		for (int i = 0; i < group->getGroupSize(); i++) {
@@ -270,7 +270,7 @@ void MissionObjectiveImplementation::awardReward() {
 					memberPosition.setZ(0);
 				}
 
-				if (memberPosition.distanceTo(missionEndPoint) < 128) {
+				if (memberPosition.distanceTo(missionEndPoint) < 32) {
 					players.add(groupMember);
 				}
 			} else if(groupMember->isPet()) {
@@ -282,7 +282,7 @@ void MissionObjectiveImplementation::awardReward() {
 					petCount++;
 				}
 
-				if (petPosition.distanceTo(missionEndPoint) >= 128) {
+				if (petPosition.distanceTo(missionEndPoint) >= 32) {
 					if (groupMember->getFaction() != 0) {
 						petFactionOutOfRangeCount++;
 					} else {
@@ -305,13 +305,8 @@ void MissionObjectiveImplementation::awardReward() {
 		players.add(owner);
 	}
 
-	int divisor = mission->getRewardCreditsDivisor();
+	int divisor = players.size();
 	bool expanded = false;
-
-	if (playerCount > divisor) {
-		divisor = playerCount;
-		expanded = true;
-	}
 
 	if (playerCount > players.size()) {
 		owner->sendSystemMessage("@mission/mission_generic:group_too_far"); // Mission Alert! Some group members are too far away from the group to receive their reward and and are not eligible for reward.
