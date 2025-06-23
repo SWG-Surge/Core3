@@ -48,6 +48,7 @@ object_tangible_powerup_weapon_thrown_explosive = object_tangible_powerup_weapon
 	pupType = "Thrown",
 
 	baseName = "Explosive Powerup",
+	uses = 1,
 
 	primary = {
 		{"damageRadius", "Compress", "cat_pup.pup_wpn_damage_radius"},

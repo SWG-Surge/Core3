@@ -48,19 +48,18 @@ object_tangible_powerup_weapon_ranged_muzzle = object_tangible_powerup_weapon_sh
 	pupType = "Ranged",
 
 	baseName = "Muzzle",
+	uses = 500,
 
 	primary = {
-		{"mindAttackCost", "Muffled", "cat_pup.pup_wpn_attack_cost_mind"},
 		{"woundsRatio", "Polished", "cat_pup.pup_wpn_wound_chance"},
 		{"maxRangeAccuracy", "Scattered", "cat_pup.pup_wpn_range_attack_mod_max"},
-		{"maxDamage", "Tuned", "cat_pup.pup_wpn_damage_max"}
+		{"maxDamage", "Tuned", "cat_pup.pup_wpn_damage_max"},
 	},
 
 	secondary = {
 		{"pointBlankAccuracy", "Flaring", "cat_pup.pup_wpn_range_attack_mod_zero"},
 		{"maxRangeAccuracy", "Focusing", "cat_pup.pup_wpn_range_attack_mod_max"},
-		{"healthAttackCost", "Braking", "cat_pup.pup_wpn_attack_cost_health"},
-		{"minDamage", "Sighting", "cat_pup.pup_wpn_damage_min"}
+		{"minDamage", "Sighting", "cat_pup.pup_wpn_damage_min"},
 	},
 
 	numberExperimentalProperties = {1, 1, 1, 1},

@@ -68,7 +68,7 @@ object_draft_schematic_item_item_powerup_weapon_thrown_wiring = object_draft_sch
 	ingredientTemplateNames = {"craft_item_ingredients_n", "craft_item_ingredients_n"},
 	ingredientTitleNames = {"resource_one", "resource_two"},
 	ingredientSlotType = {0, 0},
-	resourceTypes = {"mineral", "mineral"},
+	resourceTypes = {"mineral", "chemical"},
 	resourceQuantities = {6, 4},
 	contribution = {100, 100},
 

@@ -48,6 +48,7 @@ object_tangible_powerup_weapon_mine_explosive = object_tangible_powerup_weapon_s
 	pupType = "Mine",
 
 	baseName = "Mine Powerup",
+	uses = 1,
 
 	primary = {
 		{"damageRadius", "Concussion", "cat_pup.pup_wpn_damage_radius"},

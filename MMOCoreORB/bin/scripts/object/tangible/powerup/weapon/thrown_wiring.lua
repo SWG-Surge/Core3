@@ -48,6 +48,7 @@ object_tangible_powerup_weapon_thrown_wiring = object_tangible_powerup_weapon_sh
 	pupType = "Thrown",
 
 	baseName = "Wiring Powerup",
+	uses = 1,
 
 	primary = {
 		{"attackSpeed", "Short-Fuse", "cat_pup.pup_wpn_attack_speed"},

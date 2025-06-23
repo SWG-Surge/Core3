@@ -180,7 +180,7 @@ void PowerupObjectImplementation::updateCraftingValues(CraftingValues* values, b
 		}
 
 		type = pupTemplate->getType().toLowerCase();
-		uses = 100; // Powerups are always 100 uses
+		uses = 500; // Powerups are now 500 uses
 
 #ifdef DEBUG_POWERUPS
 		info(true) << "Type = " << type << " Uses = " << uses;
