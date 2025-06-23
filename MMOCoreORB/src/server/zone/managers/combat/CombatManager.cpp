@@ -2555,35 +2555,26 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 
 		Locker plocker(psg);
 
-		psg->inflictDamage(psg, 0, damage * 0.2, true, true);
+		psg->inflictDamage(psg, 0, damage * 0.22, true, true);
 	}
 
-	// Standard Armor
-	ManagedReference<ArmorObject*> armor = nullptr;
+	ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
 
-	armor = getArmorObject(defender, hitLocation);
-
+	// Armor Reduction
 	if (armor != nullptr && !armor->isVulnerable(damageType)) {
 		float armorReduction = getArmorObjectReduction(armor, damageType);
-		float dmgAbsorbed = damage;
 
 		// use only the damage applied to the armor for piercing (after the PSG takes some off)
 		damage *= getArmorPiercing(armor, armorPiercing);
 
 		if (armorReduction > 0) {
 			damage *= (1.f - (armorReduction / 100.f));
-			dmgAbsorbed -= damage;
-
-			int armorMit = hitList->getArmorMitigation();
-
-			armorMit += dmgAbsorbed;
-			hitList->setArmorMitigation(armorMit);
 		}
 
 		// inflict condition damage
 		Locker alocker(armor);
 
-		armor->inflictDamage(armor, 0, damage * 0.2, true, true);
+		armor->inflictDamage(armor, 0, damage * 0.22, true, true);
 	}
 
 	return damage;
@@ -2757,7 +2748,7 @@ float CombatManager::doObjectDetonation(TangibleObject* attackerTanO, CreatureOb
 
 				Locker plocker(psgArmor, attackerTanO);
 
-				psgArmor->inflictDamage(psgArmor, 0, damage * 0.2, true, true);
+				psgArmor->inflictDamage(psgArmor, 0, damage * 0.22, true, true);
 			}
 
 			ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
@@ -2776,7 +2767,7 @@ float CombatManager::doObjectDetonation(TangibleObject* attackerTanO, CreatureOb
 				// inflict condition damage
 				Locker alocker(armor, attackerTanO);
 
-				armor->inflictDamage(armor, 0, damage * 0.2, true, true);
+				armor->inflictDamage(armor, 0, damage * 0.22, true, true);
 			}
 		}
 
