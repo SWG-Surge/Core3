@@ -49,8 +49,8 @@ shuttleportLandingTime = 5
 starportLandingTime = 5
 
 --Time, in seconds, that a shuttle is landed for
-shuttleportLandedTime = 120
-starportLandedTime = 120
+shuttleportLandedTime = 60
+starportLandedTime = 60
 
 
 corellia = {

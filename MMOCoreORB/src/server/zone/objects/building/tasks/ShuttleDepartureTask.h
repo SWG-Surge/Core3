@@ -25,9 +25,9 @@ protected:
 public:
 	ShuttleDepartureTask(CreatureObject* shuttle) : Task() {
 		shuttleObject = shuttle;
-		departedTime = 300;
-		landingTime = 11;
-		landedTime = 120;
+		departedTime = 60;
+		landingTime = 5;
+		landedTime = 60;
 		shuttleType = 0;
 
 		Logger::setLoggingName("ShuttleDepartureTask");
@@ -114,8 +114,8 @@ public:
 	}
 
 	int getLandedTime() {
-		// Landed Time is 120s for all shuttle
-		// Shuttleports = 11s	Startports = 14s
+		// Landed Time is 60s for all shuttle
+		// Shuttleports = 5s	Starports = 5s
 		int timeLanded = landedTime + landingTime;
 
 #ifdef SHUTTLE_TIMER_DEBUG
@@ -126,7 +126,7 @@ public:
 	}
 
 	int getDepartedTime() {
-		// Startport departedTime is 60s and shuttleport departedTime is 300s
+		// Starport departedTime is 60s and shuttleport departedTime is 60s
 
 #ifdef SHUTTLE_TIMER_DEBUG
 		info(true) << " Shuttle Type = " << getShuttleType() << " Setting departed time to " << departedTime << " seconds.";

@@ -184,23 +184,23 @@ void PlanetManagerImplementation::loadLuaConfig() {
 
 	// Configure shuttleport timing
 	if ((shuttleportAwayTime = lua->getGlobalInt("shuttleportAwayTime")) <= 0)
-		shuttleportAwayTime = 300;
+		shuttleportAwayTime = 60;
 
 	if ((shuttleportLandedTime = lua->getGlobalInt("shuttleportLandedTime")) <= 0)
-		shuttleportLandedTime = 120;
+		shuttleportLandedTime = 60;
 
 	if ((shuttleportLandingTime = lua->getGlobalInt("shuttleportLandingTime")) <= 0)
-		shuttleportLandingTime = 11;
+		shuttleportLandingTime = 5;
 
 	// Configure starport timing
 	if ((starportAwayTime = lua->getGlobalInt("starportAwayTime")) <= 0)
 		starportAwayTime = 60;
 
 	if ((starportLandedTime = lua->getGlobalInt("starportLandedTime")) <= 0)
-		starportLandedTime = 120;
+		starportLandedTime = 60;
 
 	if ((starportLandingTime = lua->getGlobalInt("starportLandingTime")) <= 0)
-		starportLandingTime = 14;
+		starportLandingTime = 5;
 
 #if DEBUG_TRAVEL
 	// Allow override in config-local for testing
@@ -301,7 +301,7 @@ void PlanetManagerImplementation::loadBadgeAreas(LuaObject* badges) {
 
 	uint32 hashCode = STRING_HASHCODE("object/badge_area.iff");
 
-	for (int i = 1; i <= badges->getTableSize(); ++i) {
+	for (int i = 1; i <= badges->getTableSize(); i++) {
 		lua_State* L = badges->getLuaState();
 		lua_rawgeti(L, -1, i);
 
