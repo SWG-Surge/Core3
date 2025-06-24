@@ -662,7 +662,7 @@ public:
 				}
 
 				defender->updateKnockdownRecovery();
-				defender->setPostureChangeDelay(5000);
+				defender->setPostureChangeDelay(20000 + System::random(20000));
 
 				defender->removeBuff(STRING_HASHCODE("burstrun"));
 				defender->removeBuff(STRING_HASHCODE("retreat"));
@@ -696,7 +696,7 @@ public:
 				}
 
 				defender->updatePostureUpRecovery();
-				defender->setPostureChangeDelay(2500);
+				defender->setPostureChangeDelay(20000 + System::random(20000));
 
 				defender->removeBuff(STRING_HASHCODE("burstrun"));
 				defender->removeBuff(STRING_HASHCODE("retreat"));
@@ -727,7 +727,7 @@ public:
 				}
 
 				defender->updatePostureDownRecovery();
-				defender->setPostureChangeDelay(2500);
+				defender->setPostureChangeDelay(20000 + System::random(20000));
 
 				defender->removeBuff(STRING_HASHCODE("burstrun"));
 				defender->removeBuff(STRING_HASHCODE("retreat"));
