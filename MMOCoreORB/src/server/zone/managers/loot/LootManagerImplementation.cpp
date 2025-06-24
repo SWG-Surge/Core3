@@ -21,6 +21,7 @@
 #include "templates/params/creature/CreatureAttribute.h"
 #include "server/zone/objects/ship/components/ShipComponent.h"
 #include "server/zone/objects/ship/ai/ShipAiAgent.h"
+#include "server/zone/objects/tangible/attachment/Attachment.h"
 
 // #define DEBUG_LOOT_MAN
 
@@ -251,6 +252,37 @@ void LootManagerImplementation::setCustomizationData(const LootItemTemplate* tem
 }
 
 void LootManagerImplementation::setCustomObjectName(TangibleObject* object, const LootItemTemplate* templateObject, float excMod) {
+	// Special handling for attachments - set name based on skill mods
+	if (object->isAttachment()) {
+		Attachment* attachment = cast<Attachment*>(object);
+		if (attachment != nullptr) {
+			VectorMap<String, int>* skillModifiers = attachment->getSkillMods();
+			if (skillModifiers != nullptr && skillModifiers->size() > 0) {
+				// Get the first (and usually only) skill mod
+				String modName = skillModifiers->elementAt(0).getKey();
+				
+				// Convert skill mod name to display name
+				// Remove underscores and capitalize first letter of each word
+				String displayName = modName;
+				displayName = displayName.replaceAll("_", " ");
+				
+				// Capitalize first letter of each word
+				bool capitalizeNext = true;
+				for (int i = 0; i < displayName.length(); i++) {
+					if (capitalizeNext && displayName.charAt(i) != ' ') {
+						displayName.setCharAt(i, Character::toUpperCase(displayName.charAt(i)));
+						capitalizeNext = false;
+					} else if (displayName.charAt(i) == ' ') {
+						capitalizeNext = true;
+					}
+				}
+				
+				object->setCustomObjectName(displayName, false);
+				return;
+			}
+		}
+	}
+
 	const String& customName = templateObject->getCustomObjectName();
 
 	if (!customName.isEmpty()) {
