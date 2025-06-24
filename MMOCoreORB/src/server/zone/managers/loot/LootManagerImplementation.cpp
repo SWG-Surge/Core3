@@ -1,4 +1,4 @@
-/*
+ba/*
  * LootManagerImplementation.cpp
  *
  *  Created on: Jun 20, 2011
@@ -590,7 +590,16 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 		} else if (pivot < 100) {
 			randomMods = System::random(2) + 1;
 		} else {
-			randomMods = System::random(1) + 2;
+			// Enhanced mod count for exceptional and legendary items
+			if (excMod >= exceptionalModifier) {
+				if (excMod >= legendaryModifier) {
+					randomMods = System::random(4) + 3; // 3-6 mods for legendary
+				} else {
+					randomMods = System::random(3) + 2; // 2-4 mods for exceptional
+				}
+			} else {
+				randomMods = System::random(1) + 2; // 2-3 mods for yellow
+			}
 		}
 	}
 
