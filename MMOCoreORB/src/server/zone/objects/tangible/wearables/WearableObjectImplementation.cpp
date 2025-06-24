@@ -34,15 +34,15 @@ void WearableObjectImplementation::fillAttributeList(AttributeListMessage* alm, 
 		String statname = "cat_skill_mod_bonus.@stat_n:" + key;
 		int value = wearableSkillMods.get(key);
 
-		if (value > 0)
+		if (value > 0) {
 			alm->insertAttribute(statname, value);
+		}
 	}
 
 	//Anti Decay Kit
 	if (hasAntiDecayKit() && !isArmorObject()){
 		alm->insertAttribute("@veteran_new:antidecay_examine_title", "@veteran_new:antidecay_examine_text");
 	}
-
 }
 
 void WearableObjectImplementation::updateCraftingValues(CraftingValues* values, bool initialUpdate) {

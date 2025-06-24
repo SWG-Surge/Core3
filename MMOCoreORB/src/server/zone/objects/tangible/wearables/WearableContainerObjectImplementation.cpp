@@ -29,8 +29,9 @@ void WearableContainerObjectImplementation::fillAttributeList(AttributeListMessa
 		String statname = "cat_skill_mod_bonus.@stat_n:" + key;
 		int value = wearableSkillMods.get(key);
 
-		if (value > 0)
+		if (value > 0) {
 			alm->insertAttribute(statname, value);
+		}
 	}
 }
 
