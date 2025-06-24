@@ -85,4 +85,7 @@ class Attachment extends TangibleObject {
 	public VectorMap<string, int> getSkillMods() {
 		return skillModifiers;
 	}
+
+	@dirty
+	public native string getDisplayedName();
 }

@@ -12,6 +12,7 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
+#include "system/lang/Character.h"
 
 void AttachmentImplementation::initializeMembers() {
 	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
@@ -104,4 +105,32 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 		name.deleteAll();
 	}
+}
+
+String AttachmentImplementation::getDisplayedName() const {
+	// If we have skill mods, create a name based on the first skill mod
+	if (skillModifiers.size() > 0) {
+		String modName = skillModifiers.elementAt(0).getKey();
+		
+		// Convert skill mod name to display name
+		// Remove underscores and capitalize first letter of each word
+		String displayName = modName;
+		displayName = displayName.replaceAll("_", " ");
+		
+		// Capitalize first letter of each word
+		bool capitalizeNext = true;
+		for (int i = 0; i < displayName.length(); i++) {
+			if (capitalizeNext && displayName.charAt(i) != ' ') {
+				displayName.setCharAt(i, Character::toUpperCase(displayName.charAt(i)));
+				capitalizeNext = false;
+			} else if (displayName.charAt(i) == ' ') {
+				capitalizeNext = true;
+			}
+		}
+		
+		return displayName;
+	}
+	
+	// Fall back to default behavior
+	return TangibleObjectImplementation::getDisplayedName();
 }
