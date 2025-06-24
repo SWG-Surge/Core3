@@ -4642,6 +4642,7 @@ float AiAgentImplementation::getReducedResist(float value) {
 	}
 
 	int totalHAM = 0;
+	int totalWounds = 0;
 	int i = 0;
 
 	// Get total of max HAM pools
@@ -4650,21 +4651,23 @@ float AiAgentImplementation::getReducedResist(float value) {
 		i += 3;
 	}
 
-	// Total damage that was not resisted by armor
-	int unmitigatedDamage = getUnmitigatedDamage();
+	// Get total wounds across all HAM pools
+	for (int j = 0; j <= 8; j++) {
+		totalWounds += getWounds(j);
+	}
 
-	// Damage not prevented by armor resists compared to totalHAM
-	float percentUnmitigated = unmitigatedDamage / (float)totalHAM;
+	// Wounds compared to totalHAM
+	float percentWounded = totalWounds / (float)totalHAM;
 
 #ifdef DEBUG_RESIST_DECAY
-	info (true) << " Value of HAM mitigated = " << mitigatedAmount;
+	info (true) << " Value of HAM wounded = " << totalWounds;
 #endif
 
-	// Decay resists when mitigated damage is greater than 25% totalHAM
-	if (percentUnmitigated > 0.25f) {
-		// Reduce resists 2% for every 1% of damage mitigated by armor valued greater than 25% of totalHAM.
+	// Decay resists when wounds are greater than 25% totalHAM
+	if (percentWounded > 0.25f) {
+		// Reduce resists 2% for every 1% of wounds above 25% of totalHAM.
 		// Reduction Range is from 75% to 50% of totalHAM. totaling a max 50% reduction of resists
-		float reduction = (percentUnmitigated - 0.25f) * 2.f;
+		float reduction = (percentWounded - 0.25f) * 2.f;
 
 		// Resists never drop below 50%
 		reduction = 1.f - (reduction > 0.50f ? 0.50f : reduction);
@@ -4672,7 +4675,7 @@ float AiAgentImplementation::getReducedResist(float value) {
 		newValue = (value * reduction);
 
 #ifdef DEBUG_RESIST_DECAY
-		info(true) << "getReducedResist: totalHAM = " << totalHAM << " Resist Mitigation = " << unmitigatedDamage << " Start value: " << value << " New Value = " << newValue << " Reduction percent = " << reduction;
+		info(true) << "getReducedResist: totalHAM = " << totalHAM << " Total Wounds = " << totalWounds << " Start value: " << value << " New Value = " << newValue << " Reduction percent = " << reduction;
 #endif
 	}
 

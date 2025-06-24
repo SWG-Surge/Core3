@@ -45,7 +45,7 @@ object_tangible_food_crafted_dessert_pyollian_cake = object_tangible_food_crafte
 	templateType = CONSUMABLE,
 
 	duration = 1,
-	filling = 10,
+	filling = 0,
 	nutrition = 10,
 
 	effectType = 3, -- Event Based Buff

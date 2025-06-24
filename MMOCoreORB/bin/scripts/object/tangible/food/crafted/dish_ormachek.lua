@@ -44,7 +44,7 @@
 object_tangible_food_crafted_dish_ormachek = object_tangible_food_crafted_shared_dish_ormachek:new {
 	templateType = CONSUMABLE,
 
-	duration = 11,
+	duration = 3600,
 	filling = 10,
 	nutrition = 10,
 
@@ -56,7 +56,7 @@ object_tangible_food_crafted_dish_ormachek = object_tangible_food_crafted_shared
 	flavorMin = 11,
 	flavorMax = 25,
 	nutritionMin = 3,
-	nutritionMax = 5,
+	nutritionMax = 100,
 	quantityMin = 1,
 	quantityMax = 1,
 
