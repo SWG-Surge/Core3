@@ -749,20 +749,15 @@ void AuctionManagerImplementation::addSaleItem(CreatureObject* player, uint64 ob
 			costReduction = .60f;
 		}
 
-		// Calculate fee as percentage of sale price
-		int baseFee = (price * SALESFEE) / 100;
-
 		if (item->isPremiumAuction()) {
-			// Premium auctions cost 16% (2x regular fee)
-			int premiumFee = (price * 16) / 100;
-			TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * premiumFee, false);
-			player->subtractBankCredits(costReduction * premiumFee);
-			str.setDI(costReduction * premiumFee);
+			TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * (SALESFEE * 5), false);
+			player->subtractBankCredits(costReduction * (SALESFEE * 5));
+			str.setDI(costReduction * (SALESFEE * 5));
 
 		} else {
-			TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * baseFee, false);
-			player->subtractBankCredits(costReduction * baseFee);
-			str.setDI(costReduction * baseFee);
+			TransactionLog trx(player, TrxCode::BAZAARSYSTEM, costReduction * SALESFEE, false);
+			player->subtractBankCredits(costReduction * SALESFEE);
+			str.setDI(costReduction * SALESFEE);
 		}
 
 		player->sendSystemMessage(str);
@@ -881,8 +876,6 @@ int AuctionManagerImplementation::checkSaleItem(CreatureObject* player, SceneObj
 		if (price > MAXBAZAARPRICE)
 			return ItemSoldMessage::INVALIDSALEPRICE;
 
-		// Calculate fee as percentage of sale price
-		int baseFee = (price * SALESFEE) / 100;
 		float costReduction = 1;
 
 		if (player->hasSkill("crafting_merchant_sales_01")) {
@@ -893,10 +886,10 @@ int AuctionManagerImplementation::checkSaleItem(CreatureObject* player, SceneObj
 			costReduction = .60f;
 		}
 
-		if (player->getBankCredits() < (int)(costReduction * baseFee))
+		if (player->getBankCredits() < (int)(costReduction * SALESFEE))
 			return ItemSoldMessage::NOTENOUGHCREDITS;
 
-		if (premium && player->getBankCredits() < (int)(costReduction * ((price * 16) / 100)))
+		if (premium && player->getBankCredits() < (int)(costReduction * (SALESFEE * 5)))
 			return ItemSoldMessage::NOTENOUGHCREDITS;
 	}
 

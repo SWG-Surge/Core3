@@ -12,8 +12,6 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
-#include "server/zone/managers/auction/AuctionManager.h"
-#include "server/zone/managers/auction/AuctionsMap.h"
 
 void AttachmentImplementation::initializeMembers() {
 	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
@@ -94,19 +92,6 @@ void AttachmentImplementation::updateCraftingValues(CraftingValues* values, bool
 void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, CreatureObject* object) {
 	TangibleObjectImplementation::fillAttributeList(msg, object);
 
-	// Check if this attachment is currently in the auction system
-	bool isInAuction = false;
-	ZoneServer* zoneServer = object->getZoneServer();
-	if (zoneServer != nullptr) {
-		AuctionManager* auctionManager = zoneServer->getAuctionManager();
-		if (auctionManager != nullptr) {
-			AuctionsMap* auctionMap = auctionManager->getAuctionMap();
-			if (auctionMap != nullptr) {
-				isInAuction = auctionMap->containsItem(getObjectID());
-			}
-		}
-	}
-
 	StringBuffer name;
 
 	for (int i = 0; i < skillModifiers.size(); i++) {
@@ -115,13 +100,7 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 
 		name << "cat_skill_mod_bonus.@stat_n:" << key;
 
-		if (isInAuction) {
-			// When examining from auction, show only the skill mod name without the value
-			msg->insertAttribute(name.toString(), "");
-		} else {
-			// Normal examination shows the value
-			msg->insertAttribute(name.toString(), value);
-		}
+		msg->insertAttribute(name.toString(), value);
 
 		name.deleteAll();
 	}
