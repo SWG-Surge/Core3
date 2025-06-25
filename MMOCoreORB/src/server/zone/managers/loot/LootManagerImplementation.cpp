@@ -450,11 +450,10 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
 // Dynamically name clothing/armor attachments
 if (prototype != nullptr && (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT || prototype->getGameObjectType() == SceneObjectType::ARMORATTACHMENT)) {
-    HashTable<String, int>* mods = prototype->getSkillMods();
+    const VectorMap<String, int>* mods = prototype->getSkillModMap();
 
-    if (mods != nullptr && !mods->isEmpty()) {
-        String firstMod;
-        mods->getKeys()->get(0, firstMod);
+    if (mods != nullptr && mods->size() > 0) {
+        String firstMod = mods->elementAt(0).getKey();
 
         firstMod.replaceAll("_", " ");
         String namedMod;
@@ -467,14 +466,14 @@ if (prototype != nullptr && (prototype->getGameObjectType() == SceneObjectType::
         }
 
         if (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
-            prototype->setCustomName(namedMod + " [CA]");
-        else
-            prototype->setCustomName(namedMod + " [AA]");
+            prototype->setCustomObjectName(namedMod + " [CA]");
+                else
+            prototype->setCustomObjectName(namedMod + " [AA]");
     }
 }
 
 return prototype;
-
+}
 
 TangibleObject* LootManagerImplementation::createLootResource(const String& resourceDataName, const String& resourceZoneName) {
 	auto lootItemTemplate = lootGroupMap->getLootItemTemplate(resourceDataName);
