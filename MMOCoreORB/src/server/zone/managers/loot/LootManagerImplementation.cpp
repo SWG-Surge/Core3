@@ -448,8 +448,10 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
 
-if (prototype != nullptr && (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT || prototype->getGameObjectType() == SceneObjectType::ARMORATTACHMENT)) {
-    const VectorMap<String, int>* mods = prototype->getSkillMods();
+auto attachment = cast<Attachment*>(prototype);
+
+if (attachment != nullptr) {
+    const VectorMap<String, int>* mods = attachment->getSkillMods();
 
     if (mods != nullptr && mods->size() > 0) {
         String firstMod = mods->elementAt(0).getKey();
@@ -464,13 +466,12 @@ if (prototype != nullptr && (prototype->getGameObjectType() == SceneObjectType::
                 namedMod += c;
         }
 
-        if (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
-            prototype->setCustomObjectName(namedMod + " [CA]", true);
+        if (attachment->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
+            attachment->setCustomObjectName(namedMod + " [CA]", true);
         else
-            prototype->setCustomObjectName(namedMod + " [AA]", true);
+            attachment->setCustomObjectName(namedMod + " [AA]", true);
     }
 }
-
 
 return prototype;
 }
