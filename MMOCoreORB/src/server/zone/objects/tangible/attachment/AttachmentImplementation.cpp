@@ -119,16 +119,23 @@ String AttachmentImplementation::getDisplayedName() const {
 		
 		// Capitalize first letter of each word
 		bool capitalizeNext = true;
+		String result = "";
+		
 		for (int i = 0; i < displayName.length(); i++) {
-			if (capitalizeNext && displayName.charAt(i) != ' ') {
-				displayName.setCharAt(i, Character::toUpperCase(displayName.charAt(i)));
+			char currentChar = displayName.charAt(i);
+			
+			if (capitalizeNext && currentChar != ' ') {
+				result += Character::toUpperCase(currentChar);
 				capitalizeNext = false;
-			} else if (displayName.charAt(i) == ' ') {
+			} else if (currentChar == ' ') {
+				result += currentChar;
 				capitalizeNext = true;
+			} else {
+				result += currentChar;
 			}
 		}
 		
-		return displayName;
+		return result;
 	}
 	
 	// Fall back to default behavior
