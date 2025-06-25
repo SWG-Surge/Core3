@@ -23,6 +23,8 @@
 #include "server/zone/objects/ship/ai/ShipAiAgent.h"
 #include "server/zone/objects/tangible/attachment/Attachment.h"
 
+
+TangibleObject* createShipComponent(TransactionLog& trx, const LootItemTemplate* itemTemplate);
 // #define DEBUG_LOOT_MAN
 
 void LootManagerImplementation::initialize() {
