@@ -107,7 +107,7 @@ void AttachmentImplementation::fillAttributeList(AttributeListMessage* msg, Crea
 	}
 }
 
-String AttachmentImplementation::getDisplayedName() const {
+String AttachmentImplementation::getDisplayedName() {
 	// If we have skill mods, create a name based on the first skill mod
 	if (skillModifiers.size() > 0) {
 		String modName = skillModifiers.elementAt(0).getKey();

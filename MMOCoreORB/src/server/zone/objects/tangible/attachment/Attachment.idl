@@ -87,5 +87,5 @@ class Attachment extends TangibleObject {
 	}
 
 	@dirty
-	public native string getDisplayedName() const;
+	public native string getDisplayedName();
 }
