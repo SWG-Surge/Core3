@@ -448,7 +448,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
 
-auto attachment = cast<Attachment*>(prototype);
+ManagedReference<Attachment*> attachment = prototype.castTo<Attachment*>();
 
 if (attachment != nullptr) {
     const VectorMap<String, int>* mods = attachment->getSkillMods();
