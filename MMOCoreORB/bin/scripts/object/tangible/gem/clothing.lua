@@ -45,4 +45,12 @@ object_tangible_gem_clothing = object_tangible_gem_shared_clothing:new {
 
 }
 
+function object_tangible_gem_clothing:getCustomObjectName()
+    local mods = self:getSkillMods()
+    for modName, _ in pairs(mods) do
+        return modName:gsub("_", " "):gsub("(%l)(%w*)", function(a,b) return a:upper()..b end)
+    end
+    return "Clothing Attachment"
+end
+
 ObjectTemplates:addTemplate(object_tangible_gem_clothing, "object/tangible/gem/clothing.iff")
