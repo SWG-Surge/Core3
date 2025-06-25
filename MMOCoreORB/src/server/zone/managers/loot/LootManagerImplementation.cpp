@@ -21,10 +21,7 @@
 #include "templates/params/creature/CreatureAttribute.h"
 #include "server/zone/objects/ship/components/ShipComponent.h"
 #include "server/zone/objects/ship/ai/ShipAiAgent.h"
-#include "server/zone/objects/tangible/attachment/Attachment.h"
 
-
-TangibleObject* createShipComponent(TransactionLog& trx, const LootItemTemplate* itemTemplate);
 // #define DEBUG_LOOT_MAN
 
 void LootManagerImplementation::initialize() {
@@ -450,32 +447,35 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
 
-ManagedReference<Attachment*> attachment = prototype.castTo<Attachment*>();
-
-if (attachment != nullptr) {
-    const VectorMap<String, int>* mods = attachment->getSkillMods();
-
-    if (mods != nullptr && mods->size() > 0) {
-        String firstMod = mods->elementAt(0).getKey();
-
-        firstMod.replaceAll("_", " ");
-        String namedMod;
-        for (int i = 0; i < firstMod.length(); ++i) {
-            char c = firstMod.charAt(i);
-            if (i == 0 || firstMod.charAt(i - 1) == ' ')
-                namedMod += Character::toUpperCase(c);
-            else
-                namedMod += c;
-        }
-
-        if (attachment->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
-            attachment->setCustomObjectName(namedMod + " [CA]", true);
-        else
-            attachment->setCustomObjectName(namedMod + " [AA]", true);
-    }
+	return prototype;
 }
 
-return prototype;
+TangibleObject* LootManagerImplementation::createShipComponent(TransactionLog& trx, const LootItemTemplate* itemTemplate) {
+	if (itemTemplate == nullptr || !itemTemplate->isShipComponent()) {
+		return nullptr;
+	}
+
+	uint32 templateCRC = itemTemplate->getDirectObjectTemplate().hashCode();
+
+	if (templateCRC == 0) {
+		return nullptr;
+	}
+
+	ManagedReference<ShipComponent*> prototype = zoneServer->createObject(templateCRC, 2).castTo<ShipComponent*>();
+
+	if (prototype == nullptr) {
+		return nullptr;
+	}
+
+	Locker objLocker(prototype);
+
+	setCustomizationData(itemTemplate, prototype);
+	setCustomObjectName(prototype, itemTemplate, 0.f);
+
+	auto lootValues = LootValues(itemTemplate, 0, 1.f);
+	prototype->updateCraftingValues(&lootValues, true);
+
+	return prototype;
 }
 
 TangibleObject* LootManagerImplementation::createLootResource(const String& resourceDataName, const String& resourceZoneName) {
@@ -590,16 +590,7 @@ void LootManagerImplementation::setSkillMods(TangibleObject* prototype, const Lo
 		} else if (pivot < 100) {
 			randomMods = System::random(2) + 1;
 		} else {
-			// Enhanced mod count for exceptional and legendary items
-			if (excMod >= exceptionalModifier) {
-				if (excMod >= legendaryModifier) {
-					randomMods = System::random(4) + 3; // 3-6 mods for legendary
-				} else {
-					randomMods = System::random(3) + 2; // 2-4 mods for exceptional
-				}
-			} else {
-				randomMods = System::random(1) + 2; // 2-3 mods for yellow
-			}
+			randomMods = System::random(1) + 2;
 		}
 	}
 
