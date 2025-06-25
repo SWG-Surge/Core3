@@ -13,7 +13,6 @@
 #include "server/zone/managers/loot/LootManager.h"
 #include "server/zone/managers/loot/LootValues.h"
 #include "system/lang/Character.h"
-#include "server/zone/managers/skill/SkillModManager.h"
 
 void AttachmentImplementation::initializeMembers() {
 	if (gameObjectType == SceneObjectType::CLOTHINGATTACHMENT) {
@@ -141,14 +140,4 @@ String AttachmentImplementation::getDisplayedName() {
 	
 	// Fall back to default behavior
 	return TangibleObjectImplementation::getDisplayedName();
-}
-
-void AttachmentImplementation::addSkillMod(int type, String name, int value, bool notifyClient) {
-	// For attachments, add skill mods to our skillModifiers map
-	if (type == SkillModManager::WEARABLE) {
-		skillModifiers.put(name, value);
-	} else {
-		// For other types, use the default behavior
-		TangibleObjectImplementation::addSkillMod(type, name, value, notifyClient);
-	}
 }

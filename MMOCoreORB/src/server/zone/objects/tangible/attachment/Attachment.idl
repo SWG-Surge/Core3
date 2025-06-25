@@ -88,6 +88,4 @@ class Attachment extends TangibleObject {
 
 	@dirty
 	public native string getDisplayedName();
-
-	public native void addSkillMod(int type, string name, int value, boolean notifyClient = true);
 }
