@@ -448,36 +448,33 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
 
-	return prototype;
+// Dynamically name clothing/armor attachments
+if (prototype != nullptr && (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT || prototype->getGameObjectType() == SceneObjectType::ARMORATTACHMENT)) {
+    HashTable<String, int>* mods = prototype->getSkillMods();
+
+    if (mods != nullptr && !mods->isEmpty()) {
+        String firstMod;
+        mods->getKeys()->get(0, firstMod);
+
+        firstMod.replaceAll("_", " ");
+        String namedMod;
+        for (int i = 0; i < firstMod.length(); ++i) {
+            char c = firstMod.charAt(i);
+            if (i == 0 || firstMod.charAt(i - 1) == ' ')
+                namedMod += Character::toUpperCase(c);
+            else
+                namedMod += c;
+        }
+
+        if (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
+            prototype->setCustomName(namedMod + " [CA]");
+        else
+            prototype->setCustomName(namedMod + " [AA]");
+    }
 }
 
-TangibleObject* LootManagerImplementation::createShipComponent(TransactionLog& trx, const LootItemTemplate* itemTemplate) {
-	if (itemTemplate == nullptr || !itemTemplate->isShipComponent()) {
-		return nullptr;
-	}
+return prototype;
 
-	uint32 templateCRC = itemTemplate->getDirectObjectTemplate().hashCode();
-
-	if (templateCRC == 0) {
-		return nullptr;
-	}
-
-	ManagedReference<ShipComponent*> prototype = zoneServer->createObject(templateCRC, 2).castTo<ShipComponent*>();
-
-	if (prototype == nullptr) {
-		return nullptr;
-	}
-
-	Locker objLocker(prototype);
-
-	setCustomizationData(itemTemplate, prototype);
-	setCustomObjectName(prototype, itemTemplate, 0.f);
-
-	auto lootValues = LootValues(itemTemplate, 0, 1.f);
-	prototype->updateCraftingValues(&lootValues, true);
-
-	return prototype;
-}
 
 TangibleObject* LootManagerImplementation::createLootResource(const String& resourceDataName, const String& resourceZoneName) {
 	auto lootItemTemplate = lootGroupMap->getLootItemTemplate(resourceDataName);
