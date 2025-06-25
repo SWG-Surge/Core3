@@ -447,7 +447,35 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
 
-	return prototype;
+	
+    // Dynamically name clothing/armor attachments
+    ManagedReference<Attachment*> attachment = prototype.castTo<Attachment*>();
+
+    if (attachment != nullptr) {
+        const VectorMap<String, int>* mods = attachment->getSkillMods();
+
+        if (mods != nullptr && mods->size() > 0) {
+            String firstMod = mods->elementAt(0).getKey();
+
+            firstMod.replaceAll("_", " ");
+            String namedMod;
+            for (int i = 0; i < firstMod.length(); ++i) {
+                char c = firstMod.charAt(i);
+                if (i == 0 || firstMod.charAt(i - 1) == ' ')
+                    namedMod += Character::toUpperCase(c);
+                else
+                    namedMod += c;
+            }
+
+            if (attachment->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
+                attachment->setCustomObjectName(namedMod + " [CA]", true);
+            else
+                attachment->setCustomObjectName(namedMod + " [AA]", true);
+        }
+    }
+
+
+    return prototype;
 }
 
 TangibleObject* LootManagerImplementation::createShipComponent(TransactionLog& trx, const LootItemTemplate* itemTemplate) {
