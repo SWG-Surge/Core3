@@ -7,6 +7,8 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage3.h"
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
+#include "server/zone/managers/stringid/StringIdManager.h"
+
 
 void ResourceContainerImplementation::initializeTransientMembers() {
     TangibleObjectImplementation::initializeTransientMembers();
