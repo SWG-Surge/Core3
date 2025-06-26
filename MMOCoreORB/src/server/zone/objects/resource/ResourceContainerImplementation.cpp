@@ -8,11 +8,6 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 
-class ResourceContainerImplementation : public TangibleObject {
-public:
-    virtual String getDisplayedName() const override;
-};
-
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
     TangibleObjectImplementation::fillAttributeList(alm, object);
 
@@ -193,5 +188,5 @@ String ResourceContainerImplementation::getDisplayedName() const {
     if (spawnObject != nullptr)
         return spawnObject->getName();
     else
-        return TangibleObject::getDisplayedName();
+        return TangibleObjectImplementation::getDisplayedName();
 }
