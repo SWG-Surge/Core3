@@ -447,6 +447,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	info(true) << " ---------- LootManagerImplementation::createLootObject -- COMPLETE ----------";
 #endif
 
+	
     // Dynamically name clothing/armor attachments
     ManagedReference<Attachment*> attachment = prototype.castTo<Attachment*>();
 
@@ -455,22 +456,15 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
         if (mods != nullptr && mods->size() > 0) {
             String firstMod = mods->elementAt(0).getKey();
-            firstMod = firstMod.toLowerCase();
 
+            firstMod.replaceAll("_", " ");
             String namedMod;
-            bool capitalize = true;
-
             for (int i = 0; i < firstMod.length(); ++i) {
                 char c = firstMod.charAt(i);
-                if (capitalize && c >= 'a' && c <= 'z') {
-                    namedMod += String::valueOf((char)(c - 32)); // uppercase
-                    capitalize = false;
-                } else if (c == '_') {
-                    namedMod += ' ';
-                    capitalize = true;
-                } else {
+                if (i == 0 || firstMod.charAt(i - 1) == ' ')
+                    namedMod += Character::toUpperCase(c);
+                else
                     namedMod += c;
-                }
             }
 
             if (attachment->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
@@ -479,6 +473,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
                 attachment->setCustomObjectName(namedMod + " [AA]", true);
         }
     }
+
 
     return prototype;
 }
