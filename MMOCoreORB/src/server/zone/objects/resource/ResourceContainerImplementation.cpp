@@ -12,8 +12,13 @@ void ResourceContainerImplementation::initializeTransientMembers() {
 	TangibleObjectImplementation::initializeTransientMembers();
 
 	if (spawnObject != nullptr) {
-		setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false);
-		setCustomObjectName(spawnObject->getName(), true);
+		String resourceName = spawnObject->getName();
+        String resourceClass = spawnObject->getType();
+        String displayName = resourceName + " (" + StringId("craft_resource_ingredients_n", resourceClass).toString() + ")";
+
+        setObjectName(StringId("craft_resource_ingredients_n", resourceClass), false);
+        setCustomObjectName(displayName, true);
+
 	}
 }
 
