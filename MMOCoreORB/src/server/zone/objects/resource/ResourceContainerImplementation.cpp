@@ -35,9 +35,6 @@ void ResourceContainerImplementation::initializeTransientMembers() {
     }
 }
 
-// (same formatting logic should be used in setQuantity and split methods)
-
-
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
     TangibleObjectImplementation::fillAttributeList(alm, object);
 
