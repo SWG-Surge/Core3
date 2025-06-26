@@ -77,9 +77,11 @@ void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify
     }
 
     if (spawnObject != nullptr) {
-	setCustomObjectName(spawnObject->getName(), true);
-	setObjectName(spawnObject->getType()->getNameStringId(), false);
+	setCustomObjectName(spawnObject->getName(), true); // Item Name
+	setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false); // Item Type
 }
+
+
 
 
     if(!doNotify)
