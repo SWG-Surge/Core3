@@ -11,11 +11,17 @@
 
 String formatFallbackClassName(const String& resourceClass) {
     String formatted = resourceClass.replaceAll("_", " ");
+
     if (formatted.indexOf(" ") != -1) {
         String first = formatted.subString(0, formatted.indexOf(" "));
         String second = formatted.subString(formatted.indexOf(" ") + 1);
-        formatted = second + " " + first;
+        String lowerSecond = second.toLowerCase();
+
+        if (!(lowerSecond.endsWith("ium") || lowerSecond.endsWith("ate") || lowerSecond.endsWith("wood"))) {
+            formatted = second + " " + first;
+        }
     }
+
     return formatted;
 }
 
@@ -34,6 +40,7 @@ void ResourceContainerImplementation::initializeTransientMembers() {
         setCustomObjectName(displayName, true);
     }
 }
+
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
     TangibleObjectImplementation::fillAttributeList(alm, object);
