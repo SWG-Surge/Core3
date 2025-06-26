@@ -457,22 +457,22 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
         if (mods != nullptr && mods->size() > 0) {
             String firstMod = mods->elementAt(0).getKey();
 
-            firstMod.replaceAll("_", " ");
-            String namedMod;
-            for (int i = 0; i < firstMod.length(); ++i) {
-                char c = firstMod.charAt(i);
-                if (i == 0 || firstMod.charAt(i - 1) == ' ')
-                    namedMod += Character::toUpperCase(c);
-                else
-                    namedMod += c;
-            }
+            // Convert to lowercase then capitalize each word
+			firstMod = firstMod.toLowerCase();
 
-            if (attachment->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT)
-                attachment->setCustomObjectName(namedMod + " [CA]", true);
-            else
-                attachment->setCustomObjectName(namedMod + " [AA]", true);
-        }
-    }
+			String namedMod;
+			bool capitalize = true;
+
+			for (int i = 0; i < firstMod.length(); ++i) {
+    			char c = firstMod.charAt(i);
+    			if (capitalize && c >= 'a' && c <= 'z') {
+        			namedMod += Character::toUpperCase(c);
+        			capitalize = false;
+    			} else {
+        			namedMod += c;
+        			capitalize = (c == ' ');
+    			}
+			}
 
 
     return prototype;
