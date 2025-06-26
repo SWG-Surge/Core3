@@ -456,10 +456,8 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
         if (mods != nullptr && mods->size() > 0) {
             String firstMod = mods->elementAt(0).getKey();
 
-            // Convert to lowercase then capitalize each word
-            firstMod = firstMod.toLowerCase();
-
-            String namedMod;
+            // Convert to readable format (title-case, spaces instead of underscores)
+            String namedMod = "";
             bool capitalize = true;
 
             for (int i = 0; i < firstMod.length(); ++i) {
@@ -475,7 +473,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
                     namedMod += String::valueOf((char)(c - 32)); // uppercase
                     capitalize = false;
                 } else {
-                    namedMod += c;
+                    namedMod += String::valueOf(c).toLowerCase();
                 }
             }
 
@@ -488,6 +486,7 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
     return prototype;
 }
+
 
 TangibleObject* LootManagerImplementation::createShipComponent(TransactionLog& trx, const LootItemTemplate* itemTemplate) {
 	if (itemTemplate == nullptr || !itemTemplate->isShipComponent()) {
