@@ -9,7 +9,6 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 #include "server/zone/managers/stringid/StringIdManager.h"
 
-
 void ResourceContainerImplementation::initializeTransientMembers() {
     TangibleObjectImplementation::initializeTransientMembers();
 
@@ -20,8 +19,7 @@ void ResourceContainerImplementation::initializeTransientMembers() {
         String resolvedClassName = StringIdManager::instance()->getStringId(classNameId).toString();
         String displayName = resourceName + " (" + resolvedClassName + ")";
 
-
-        setObjectName(StringId("craft_resource_ingredients_n", resourceClass), false);
+        setObjectName(classNameId, false);
         setCustomObjectName(displayName, true);
     }
 }
@@ -95,12 +93,17 @@ void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify
     }
 
     if (spawnObject != nullptr) {
-	setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false); // sets type e.g. “Ditanium Steel”
-	setCustomObjectName(spawnObject->getName(), true);  // sets name e.g. “Hogitoian” (but NOT stored in DB)
-}
+        String resourceName = spawnObject->getName();
+        String resourceClass = spawnObject->getType();
+        StringId classNameId("craft_resource_ingredients_n", resourceClass);
+        String resolvedClassName = StringIdManager::instance()->getStringId(classNameId).toString();
+        String displayName = resourceName + " (" + resolvedClassName + ")";
 
+        setObjectName(classNameId, false);
+        setCustomObjectName(displayName, true);
+    }
 
-    if(!doNotify)
+    if (!doNotify)
         return;
 
     ResourceContainerObjectDeltaMessage3* rcnod3 =
@@ -116,24 +119,30 @@ void ResourceContainerImplementation::split(int newStackSize) {
     if (getQuantity() <= newStackSize)
         return;
 
-    if(newStackSize > getQuantity())
+    if (newStackSize > getQuantity())
         newStackSize = getQuantity();
 
     ManagedReference<SceneObject*> sceneParent = cast<SceneObject*>(parent.get().get());
 
     Locker locker(spawnObject);
 
-ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
+    ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
 
-locker.release();
+    locker.release();
 
-if (newResource != nullptr && spawnObject != nullptr) {
-	newResource->setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false);
-	newResource->setCustomObjectName(spawnObject->getName(), true);
-}
+    if (newResource != nullptr && spawnObject != nullptr) {
+        String resourceName = spawnObject->getName();
+        String resourceClass = spawnObject->getType();
+        StringId classNameId("craft_resource_ingredients_n", resourceClass);
+        String resolvedClassName = StringIdManager::instance()->getStringId(classNameId).toString();
+        String displayName = resourceName + " (" + resolvedClassName + ")";
 
-if (newResource == nullptr)
-	return;
+        newResource->setObjectName(classNameId, false);
+        newResource->setCustomObjectName(displayName, true);
+    }
+
+    if (newResource == nullptr)
+        return;
 
     Locker rlocker(newResource);
 
@@ -142,7 +151,7 @@ if (newResource == nullptr)
         return;
     }
 
-    if(sceneParent->transferObject(newResource, -1, true)) {
+    if (sceneParent->transferObject(newResource, -1, true)) {
         sceneParent->broadcastObject(newResource, true);
 
         setQuantity(getQuantity() - newStackSize);
@@ -170,6 +179,17 @@ void ResourceContainerImplementation::split(int newStackSize, CreatureObject* pl
     if (newResource == nullptr)
         return;
 
+    if (newResource != nullptr && spawnObject != nullptr) {
+        String resourceName = spawnObject->getName();
+        String resourceClass = spawnObject->getType();
+        StringId classNameId("craft_resource_ingredients_n", resourceClass);
+        String resolvedClassName = StringIdManager::instance()->getStringId(classNameId).toString();
+        String displayName = resourceName + " (" + resolvedClassName + ")";
+
+        newResource->setObjectName(classNameId, false);
+        newResource->setCustomObjectName(displayName, true);
+    }
+
     Locker rlocker(newResource);
 
     if (newResource->getSpawnObject() == nullptr) {
@@ -177,7 +197,7 @@ void ResourceContainerImplementation::split(int newStackSize, CreatureObject* pl
         return;
     }
 
-    if(inventory->transferObject(newResource, -1, true)) {
+    if (inventory->transferObject(newResource, -1, true)) {
         newResource->sendTo(player, true);
 
         setQuantity(getQuantity() - newStackSize);
@@ -206,8 +226,8 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 }
 
 String ResourceContainerImplementation::getDisplayedName() {
-	if (spawnObject != nullptr)
-		return spawnObject->getName();
-	else
-		return TangibleObjectImplementation::getDisplayedName();
+    if (spawnObject != nullptr)
+        return spawnObject->getName();
+    else
+        return TangibleObjectImplementation::getDisplayedName();
 }
