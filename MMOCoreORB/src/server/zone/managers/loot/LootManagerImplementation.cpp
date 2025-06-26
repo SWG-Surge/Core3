@@ -464,12 +464,18 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 
             for (int i = 0; i < firstMod.length(); ++i) {
                 char c = firstMod.charAt(i);
+
+                if (c == '_') {
+                    namedMod += ' ';
+                    capitalize = true;
+                    continue;
+                }
+
                 if (capitalize && c >= 'a' && c <= 'z') {
-                    namedMod += Character::toUpperCase(c);
+                    namedMod += String::valueOf((char)(c - 32)); // uppercase
                     capitalize = false;
                 } else {
                     namedMod += c;
-                    capitalize = (c == ' ');
                 }
             }
 
