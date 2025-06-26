@@ -77,9 +77,10 @@ void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify
     }
 
     if (spawnObject != nullptr) {
-	setCustomObjectName(spawnObject->getName(), true);
-	setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false);
+	setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false); // sets type e.g. “Ditanium Steel”
+	setCustomObjectName(spawnObject->getName(), true);  // sets name e.g. “Hogitoian” (but NOT stored in DB)
 }
+
 
     if(!doNotify)
         return;
