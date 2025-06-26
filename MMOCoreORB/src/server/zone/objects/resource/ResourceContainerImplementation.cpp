@@ -1,7 +1,6 @@
 /*
-				Copyright <SWGEmu>
-		See file COPYING for copying conditions.*/
-
+                Copyright <SWGEmu>
+        See file COPYING for copying conditions.*/
 
 #include "server/zone/objects/resource/ResourceContainer.h"
 #include "server/zone/packets/resource/ResourceContainerObjectDeltaMessage3.h"
@@ -10,175 +9,177 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
-	TangibleObjectImplementation::fillAttributeList(alm, object);
+    TangibleObjectImplementation::fillAttributeList(alm, object);
 
-	StringBuffer ssQuantity;
-	ssQuantity << stackQuantity << "/" << ResourceContainer::MAXSIZE;
+    StringBuffer ssQuantity;
+    ssQuantity << stackQuantity << "/" << ResourceContainer::MAXSIZE;
 
-	alm->insertAttribute("resource_name", getSpawnName());
-	alm->insertAttribute("resource_contents", ssQuantity);
+    alm->insertAttribute("resource_name", getSpawnName());
+    alm->insertAttribute("resource_contents", ssQuantity);
 
-	if (spawnObject != nullptr)
-		spawnObject->fillAttributeList(alm, object);
-	else
-		object->sendSystemMessage("error resource container has no spawn object");
+    if (spawnObject != nullptr)
+        spawnObject->fillAttributeList(alm, object);
+    else
+        object->sendSystemMessage("error resource container has no spawn object");
 }
 
 void ResourceContainerImplementation::sendBaselinesTo(SceneObject* player) {
-	debug("sending rnco baselines");
+    debug("sending rnco baselines");
 
-	BaseMessage* rnco3 = new ResourceContainerObjectMessage3(_this.getReferenceUnsafeStaticCast());
-	player->sendMessage(rnco3);
+    BaseMessage* rnco3 = new ResourceContainerObjectMessage3(_this.getReferenceUnsafeStaticCast());
+    player->sendMessage(rnco3);
 
-	BaseMessage* rnco6 = new ResourceContainerObjectMessage6(_this.getReferenceUnsafeStaticCast());
-	player->sendMessage(rnco6);
+    BaseMessage* rnco6 = new ResourceContainerObjectMessage6(_this.getReferenceUnsafeStaticCast());
+    player->sendMessage(rnco6);
 }
 
 void ResourceContainerImplementation::setUseCount(uint32 newQuantity, bool notifyClient) {
-	setQuantity(newQuantity, notifyClient);
+    setQuantity(newQuantity, notifyClient);
 }
 
 void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify, bool ignoreMax, bool destroyEmpty) {
-	Locker _locker(_this.getReferenceUnsafeStaticCast());
-	ManagedReference<SceneObject*> parent = getParent().get();
-	stackQuantity = quantity;
+    Locker _locker(_this.getReferenceUnsafeStaticCast());
+    ManagedReference<SceneObject*> parent = getParent().get();
+    stackQuantity = quantity;
 
-	if (destroyEmpty && stackQuantity < 1) {
-		if (parent != nullptr) {
-			destroyObjectFromWorld(true);
-		}
+    if (destroyEmpty && stackQuantity < 1) {
+        if (parent != nullptr) {
+            destroyObjectFromWorld(true);
+        }
 
-		destroyObjectFromDatabase(true);
-		return;
-	}
+        destroyObjectFromDatabase(true);
+        return;
+    }
 
-	int newStackSize = 0;
+    int newStackSize = 0;
 
-	if (!ignoreMax && stackQuantity > ResourceContainer::MAXSIZE) {
+    if (!ignoreMax && stackQuantity > ResourceContainer::MAXSIZE) {
+        newStackSize = stackQuantity - ResourceContainer::MAXSIZE;
+        stackQuantity = ResourceContainer::MAXSIZE;
+    }
 
-		newStackSize = stackQuantity - ResourceContainer::MAXSIZE;
-		stackQuantity = ResourceContainer::MAXSIZE;
-	}
+    if (newStackSize > 0) {
+        if (parent != nullptr) {
+            Locker locker(spawnObject);
 
-	if (newStackSize > 0) {
-		if (parent != nullptr) {
+            Reference<ResourceContainer*> harvestedResource = spawnObject->createResource(newStackSize);
 
-			Locker locker(spawnObject);
+            locker.release();
 
-			Reference<ResourceContainer*> harvestedResource = spawnObject->createResource(newStackSize);
+            Locker clocker(harvestedResource, _this.getReferenceUnsafeStaticCast());
 
-			locker.release();
+            if (parent->transferObject(harvestedResource, -1, true)) {
+                parent->broadcastObject(harvestedResource, true);
+            } else {
+                harvestedResource->destroyObjectFromDatabase(true);
+            }
+        }
+    }
 
-			Locker clocker(harvestedResource, _this.getReferenceUnsafeStaticCast());
+    if (spawnObject != nullptr) {
+        setCustomObjectName(spawnObject->getName(), true);
+        setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getClassName()), false);
+    }
 
-			if (parent->transferObject(harvestedResource, -1, true)) {
-				parent->broadcastObject(harvestedResource, true);
-			} else {
-				harvestedResource->destroyObjectFromDatabase(true);
-			}
-		}
-	}
+    if(!doNotify)
+        return;
 
-	if(!doNotify)
-		return;
+    ResourceContainerObjectDeltaMessage3* rcnod3 =
+            new ResourceContainerObjectDeltaMessage3(_this.getReferenceUnsafeStaticCast());
 
-	ResourceContainerObjectDeltaMessage3* rcnod3 =
-			new ResourceContainerObjectDeltaMessage3(_this.getReferenceUnsafeStaticCast());
+    rcnod3->updateQuantity();
+    rcnod3->close();
 
-	rcnod3->updateQuantity();
-	rcnod3->close();
-
-	broadcastMessage(rcnod3, true);
+    broadcastMessage(rcnod3, true);
 }
 
 void ResourceContainerImplementation::split(int newStackSize) {
-	if (getQuantity() <= newStackSize)
-		return;
+    if (getQuantity() <= newStackSize)
+        return;
 
-	if(newStackSize > getQuantity())
-		newStackSize = getQuantity();
+    if(newStackSize > getQuantity())
+        newStackSize = getQuantity();
 
-	ManagedReference<SceneObject*> sceneParent = cast<SceneObject*>(parent.get().get());
+    ManagedReference<SceneObject*> sceneParent = cast<SceneObject*>(parent.get().get());
 
-	if (sceneParent == nullptr)
-		return;
+    if (sceneParent == nullptr)
+        return;
 
-	Locker locker(spawnObject);
+    Locker locker(spawnObject);
 
-	ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
+    ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
 
-	locker.release();
+    locker.release();
 
-	if(newResource == nullptr)
-		return;
+    if(newResource == nullptr)
+        return;
 
-	Locker rlocker(newResource);
+    Locker rlocker(newResource);
 
-	if (newResource->getSpawnObject() == nullptr) {
-		newResource->destroyObjectFromDatabase(true);
-		return;
-	}
+    if (newResource->getSpawnObject() == nullptr) {
+        newResource->destroyObjectFromDatabase(true);
+        return;
+    }
 
-	if(sceneParent->transferObject(newResource, -1, true)) {
-		sceneParent->broadcastObject(newResource, true);
+    if(sceneParent->transferObject(newResource, -1, true)) {
+        sceneParent->broadcastObject(newResource, true);
 
-		setQuantity(getQuantity() - newStackSize);
-	} else {
-		StringBuffer errorMessage;
-		errorMessage << "Unable to split resource in container type: " << sceneParent->getGameObjectType() << " " << sceneParent->getDisplayedName();
-		error(errorMessage.toString());
+        setQuantity(getQuantity() - newStackSize);
+    } else {
+        StringBuffer errorMessage;
+        errorMessage << "Unable to split resource in container type: " << sceneParent->getGameObjectType() << " " << sceneParent->getDisplayedName();
+        error(errorMessage.toString());
 
-		newResource->destroyObjectFromDatabase(true);
-	}
+        newResource->destroyObjectFromDatabase(true);
+    }
 }
 
 void ResourceContainerImplementation::split(int newStackSize, CreatureObject* player) {
+    ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
 
-	ManagedReference<SceneObject*> inventory = player->getSlottedObject("inventory");
+    if (inventory == nullptr)
+        return;
 
-	if (inventory == nullptr)
-		return;
+    Locker locker(spawnObject);
 
-	Locker locker(spawnObject);
+    ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
 
-	ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
+    locker.release();
 
-	locker.release();
+    if (newResource == nullptr)
+        return;
 
-	if (newResource == nullptr)
-		return;
+    Locker rlocker(newResource);
 
-	Locker rlocker(newResource);
+    if (newResource->getSpawnObject() == nullptr) {
+        newResource->destroyObjectFromDatabase(true);
+        return;
+    }
 
-	if (newResource->getSpawnObject() == nullptr) {
-		newResource->destroyObjectFromDatabase(true);
-		return;
-	}
+    if(inventory->transferObject(newResource, -1, true)) {
+        newResource->sendTo(player, true);
 
-	if(inventory->transferObject(newResource, -1, true)) {
-		newResource->sendTo(player, true);
-
-		setQuantity(getQuantity() - newStackSize);
-	} else {
-		error("Unable to split resource to player: " + player->getFirstName());
-		newResource->destroyObjectFromDatabase(true);
-	}
+        setQuantity(getQuantity() - newStackSize);
+    } else {
+        error("Unable to split resource to player: " + player->getFirstName());
+        newResource->destroyObjectFromDatabase(true);
+    }
 }
 
 void ResourceContainerImplementation::combine(ResourceContainer* fromContainer) {
-	Locker _locker(_this.getReferenceUnsafeStaticCast());
-	Locker clocker(fromContainer, _this.getReferenceUnsafeStaticCast());
+    Locker _locker(_this.getReferenceUnsafeStaticCast());
+    Locker clocker(fromContainer, _this.getReferenceUnsafeStaticCast());
 
-	setQuantity(getQuantity() + fromContainer->getQuantity());
-	fromContainer->setQuantity(0);
+    setQuantity(getQuantity() + fromContainer->getQuantity());
+    fromContainer->setQuantity(0);
 
-	fromContainer->destroyObjectFromWorld(true);
-	fromContainer->destroyObjectFromDatabase(true);
+    fromContainer->destroyObjectFromWorld(true);
+    fromContainer->destroyObjectFromDatabase(true);
 }
 
 void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyContainedObjects) {
-	TangibleObjectImplementation::destroyObjectFromDatabase(destroyContainedObjects);
+    TangibleObjectImplementation::destroyObjectFromDatabase(destroyContainedObjects);
 
-	if (spawnObject != nullptr)
-		spawnObject->decreaseContainerReferenceCount();
+    if (spawnObject != nullptr)
+        spawnObject->decreaseContainerReferenceCount();
 }
