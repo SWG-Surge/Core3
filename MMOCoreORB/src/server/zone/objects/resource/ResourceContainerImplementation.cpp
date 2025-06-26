@@ -8,6 +8,11 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 
+class ResourceContainerImplementation : public TangibleObject {
+public:
+    virtual String getDisplayedName() const override;
+};
+
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
     TangibleObjectImplementation::fillAttributeList(alm, object);
 
@@ -77,12 +82,9 @@ void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify
     }
 
     if (spawnObject != nullptr) {
-	setCustomObjectName(spawnObject->getName(), true); // Item Name
-	setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false); // Item Type
-}
-
-
-
+        setCustomObjectName(spawnObject->getName(), true);
+        setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false);
+    }
 
     if(!doNotify)
         return;
@@ -185,4 +187,11 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
 
     if (spawnObject != nullptr)
         spawnObject->decreaseContainerReferenceCount();
+}
+
+String ResourceContainerImplementation::getDisplayedName() const {
+    if (spawnObject != nullptr)
+        return spawnObject->getName();
+    else
+        return TangibleObject::getDisplayedName();
 }
