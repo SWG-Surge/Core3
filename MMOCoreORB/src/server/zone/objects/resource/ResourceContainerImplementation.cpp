@@ -204,7 +204,7 @@ void ResourceContainerImplementation::split(int newStackSize, CreatureObject* pl
         String resourceClass = spawnObject->getType();
         StringId classNameId("craft_resource_ingredients_n", resourceClass);
         UnicodeString resolvedClassNameUS = StringIdManager::instance()->getStringId(classNameId);
-        String resolvedClassName = resolvedClassNameUS.isEmpty() ? resourceClass : resolvedClassNameUS.toString();
+        String resolvedClassName = resolvedClassNameUS.isEmpty() ? formatFallbackClassName(resourceClass) : resolvedClassNameUS.toString();
         String displayName = resourceName + " (" + resolvedClassName + ")";
 
         newResource->setObjectName(classNameId, false);
