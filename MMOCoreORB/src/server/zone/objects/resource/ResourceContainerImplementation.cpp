@@ -109,9 +109,13 @@ ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(n
 
 locker.release();
 
+if (newResource != nullptr && spawnObject != nullptr) {
+	newResource->setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false);
+	newResource->setCustomObjectName(spawnObject->getName(), true);
+}
+
 if (newResource == nullptr)
 	return;
-
 
     Locker rlocker(newResource);
 
