@@ -132,4 +132,6 @@ class ResourceContainer extends TangibleObject {
 	public native void split(int newStackSize, CreatureObject player);
 
 	public native void combine(ResourceContainer fromContainer);
+
+	public native string getDisplayedName() const;
 }
