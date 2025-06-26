@@ -12,8 +12,8 @@
 String formatFallbackClassName(const String& resourceClass) {
     String formatted = resourceClass.replaceAll("_", " ");
     if (formatted.indexOf(" ") != -1) {
-        String first = formatted.substring(0, formatted.indexOf(" "));
-        String second = formatted.substring(formatted.indexOf(" ") + 1);
+        String first = formatted.subString(0, formatted.indexOf(" "));
+        String second = formatted.subString(formatted.indexOf(" ") + 1);
         formatted = second + " " + first;
     }
     return formatted;
@@ -34,6 +34,9 @@ void ResourceContainerImplementation::initializeTransientMembers() {
         setCustomObjectName(displayName, true);
     }
 }
+
+// (same formatting logic should be used in setQuantity and split methods)
+
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
     TangibleObjectImplementation::fillAttributeList(alm, object);
@@ -108,7 +111,7 @@ void ResourceContainerImplementation::setQuantity(uint32 quantity, bool doNotify
         String resourceClass = spawnObject->getType();
         StringId classNameId("craft_resource_ingredients_n", resourceClass);
         UnicodeString resolvedClassNameUS = StringIdManager::instance()->getStringId(classNameId);
-        String resolvedClassName = resolvedClassNameUS.isEmpty() ? resourceClass : resolvedClassNameUS.toString();
+        String resolvedClassName = resolvedClassNameUS.isEmpty() ? formatFallbackClassName(resourceClass) : resolvedClassNameUS.toString();
         String displayName = resourceName + " (" + resolvedClassName + ")";
 
         setObjectName(classNameId, false);
