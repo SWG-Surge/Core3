@@ -16,7 +16,8 @@ void ResourceContainerImplementation::initializeTransientMembers() {
         String resourceName = spawnObject->getName();
         String resourceClass = spawnObject->getType();
         StringId classNameId("craft_resource_ingredients_n", resourceClass);
-        String resolvedClassName = StringIdManager::instance()->getStringId(classNameId).toString();
+        UnicodeString resolvedClassNameUS = StringIdManager::instance()->getStringId(classNameId);
+        String resolvedClassName = resolvedClassNameUS.isEmpty() ? resourceClass : resolvedClassNameUS.toString();
         String displayName = resourceName + " (" + resolvedClassName + ")";
 
         setObjectName(classNameId, false);
