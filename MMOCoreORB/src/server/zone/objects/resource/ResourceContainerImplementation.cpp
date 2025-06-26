@@ -8,6 +8,15 @@
 #include "server/zone/packets/resource/ResourceContainerObjectMessage6.h"
 #include "server/zone/objects/creature/CreatureObject.h"
 
+void ResourceContainerImplementation::initializeTransientMembers() {
+	TangibleObjectImplementation::initializeTransientMembers();
+
+	if (spawnObject != nullptr) {
+		setObjectName(StringId("craft_resource_ingredients_n", spawnObject->getType()), false);
+		setCustomObjectName(spawnObject->getName(), true);
+	}
+}
+
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
     TangibleObjectImplementation::fillAttributeList(alm, object);
 

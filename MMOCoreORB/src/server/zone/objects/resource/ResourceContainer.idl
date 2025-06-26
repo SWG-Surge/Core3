@@ -25,11 +25,8 @@ class ResourceContainer extends TangibleObject {
 		setLoggingName("ResourceContainer");
 	}
 
-	public void initializeTransientMembers() {
-		super.initializeTransientMembers();
-
-		Logger.setLoggingName("ResourceContainer");
-	}
+	@local
+public native void initializeTransientMembers();
 
 	/**
 	 * Destroys this object from database
