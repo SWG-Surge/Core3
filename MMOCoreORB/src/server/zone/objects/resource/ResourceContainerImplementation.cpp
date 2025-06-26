@@ -184,9 +184,9 @@ void ResourceContainerImplementation::destroyObjectFromDatabase(bool destroyCont
         spawnObject->decreaseContainerReferenceCount();
 }
 
-String ResourceContainerImplementation::getDisplayedName() const {
-    if (spawnObject != nullptr)
-        return spawnObject->getName();
-    else
-        return TangibleObjectImplementation::getDisplayedName();
+String ResourceContainerImplementation::getDisplayedName() {
+	if (spawnObject != nullptr)
+		return spawnObject->getName();
+	else
+		return TangibleObjectImplementation::getDisplayedName();
 }
