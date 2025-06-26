@@ -8,8 +8,8 @@ kliknik_gland = {
 	craftingValues = {
 		{"mindamage",20,40,0},
 		{"maxdamage",50,100,0},
-		{"woundchance",10,20,0},
-		{"useCount",1,11,0}
+		{"woundchance",15,30,0},
+		{"useCount",4,20,0}
 	},
 	customizationStringNames = {},
 	customizationValues = {}

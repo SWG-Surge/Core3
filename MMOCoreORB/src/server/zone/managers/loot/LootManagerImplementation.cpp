@@ -401,10 +401,27 @@ TangibleObject* LootManagerImplementation::createLootObject(TransactionLog& trx,
 	float chance = LootValues::getLevelRankValue(Math::max(level - 50, 0), 0.f, 0.35f) * levelChance;
 	float excMod = baseModifier;
 
-	if (System::random(legendaryChance) <= chance) {
-		excMod = legendaryModifier;
-	} else if (System::random(exceptionalChance) <= chance) {
-		excMod = exceptionalModifier;
+	// Check if this item should be allowed to roll quality (yellow, exceptional, legendary)
+	bool allowQualityRoll = true;
+	
+	// Prevent quality rolls on junk loot
+	if (templateObject->getJunkDealerTypeNeeded() > 0) {
+		allowQualityRoll = false;
+	}
+	
+	// Prevent quality rolls on clothing and armor attachments
+	if (prototype->getGameObjectType() == SceneObjectType::CLOTHINGATTACHMENT || 
+		prototype->getGameObjectType() == SceneObjectType::ARMORATTACHMENT) {
+		allowQualityRoll = false;
+	}
+
+	// Only roll for quality if allowed
+	if (allowQualityRoll) {
+		if (System::random(legendaryChance) <= chance) {
+			excMod = legendaryModifier;
+		} else if (System::random(exceptionalChance) <= chance) {
+			excMod = exceptionalModifier;
+		}
 	}
 
 #ifdef DEBUG_LOOT_MAN

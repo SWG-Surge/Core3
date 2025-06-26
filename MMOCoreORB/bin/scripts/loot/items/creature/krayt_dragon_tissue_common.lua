@@ -6,9 +6,10 @@ krayt_dragon_tissue_common = {
 	customObjectName = "",
 	directObjectTemplate = "object/tangible/component/weapon/blaster_power_handler_enhancement_krayt.iff",
 	craftingValues = {
+		{"mindamage",15,30,0},
 		{"maxdamage",30,60,0},
 		{"attackspeed",-0.3,-0.6,2},
-		{"useCount",1,11,0},
+		{"useCount",4,16,0},
 	},
 	customizationStringNames = {},
 	customizationValues = {}
