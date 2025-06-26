@@ -103,17 +103,15 @@ void ResourceContainerImplementation::split(int newStackSize) {
 
     ManagedReference<SceneObject*> sceneParent = cast<SceneObject*>(parent.get().get());
 
-    if (sceneParent == nullptr)
-        return;
-
     Locker locker(spawnObject);
 
-    ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
+ManagedReference<ResourceContainer*> newResource = spawnObject->createResource(newStackSize);
 
-    locker.release();
+locker.release();
 
-    if(newResource == nullptr)
-        return;
+if (newResource == nullptr)
+	return;
+
 
     Locker rlocker(newResource);
 
