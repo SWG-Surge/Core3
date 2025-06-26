@@ -133,5 +133,5 @@ class ResourceContainer extends TangibleObject {
 
 	public native void combine(ResourceContainer fromContainer);
 
-	public native string getDisplayedName() const;
+	public native string getDisplayedName();
 }
