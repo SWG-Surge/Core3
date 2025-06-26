@@ -9,17 +9,16 @@
 #include "server/zone/objects/creature/CreatureObject.h"
 
 void ResourceContainerImplementation::initializeTransientMembers() {
-	TangibleObjectImplementation::initializeTransientMembers();
+    TangibleObjectImplementation::initializeTransientMembers();
 
-	if (spawnObject != nullptr) {
-		String resourceName = spawnObject->getName();
+    if (spawnObject != nullptr) {
+        String resourceName = spawnObject->getName();
         String resourceClass = spawnObject->getType();
         String displayName = resourceName + " (" + StringId("craft_resource_ingredients_n", resourceClass).toString() + ")";
 
         setObjectName(StringId("craft_resource_ingredients_n", resourceClass), false);
         setCustomObjectName(displayName, true);
-
-	}
+    }
 }
 
 void ResourceContainerImplementation::fillAttributeList(AttributeListMessage* alm, CreatureObject* object) {
