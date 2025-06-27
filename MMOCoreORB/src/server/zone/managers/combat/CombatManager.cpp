@@ -1167,6 +1167,11 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 	if (attacker->isPlayerCreature() && defender->isPlayerCreature() && !data.isForceAttack())
 		damage *= 0.25;
 
+	// Pet PvE Damage Boost - 50% increase for pets attacking non-player targets
+	if (attacker->isPet() && !defender->isPlayerCreature() && !data.isForceAttack()) {
+		damage *= 1.5f; // 50% damage boost for pets in PvE only
+	}
+
 	if (damage < 1)
 		damage = 1;
 
@@ -1212,6 +1217,11 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 
 	if (!data.isForceAttack() && weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
 		damage *= 1.25;
+
+	// Pet PvE Damage Boost - 50% increase for pets attacking non-player targets
+	if (attacker->isPet() && !data.isForceAttack()) {
+		damage *= 1.5f; // 50% damage boost for pets in PvE only
+	}
 
 	debug() << "damage to be dealt is " << damage;
 
@@ -1741,6 +1751,12 @@ void CombatManager::applyDots(CreatureObject* attacker, CreatureObject* defender
 		debug() << "entering addDotState with dotType:" << dotType;
 
 		float damMod = attacker->isAiAgent() ? cast<AiAgent*>(attacker)->getSpecialDamageMult() : 1.f;
+		
+		// Pet PvE Damage Boost - 50% increase for pet DOTs against non-player targets
+		if (attacker->isPet() && !defender->isPlayerCreature()) {
+			damMod *= 1.5f; // 50% damage boost for pet DOTs in PvE only
+		}
+		
 		defender->addDotState(attacker, dotType, data.getCommand()->getNameCRC(), effect.isDotDamageofHit() ? damageToApply * effect.getPrimaryPercent() / 100.0f : effect.getDotStrength() * damMod, pool, effect.getDotDuration(), potency, resist,
 							  effect.isDotDamageofHit() ? damageToApply * effect.getSecondaryPercent() / 100.0f : effect.getDotStrength() * damMod);
 	}
