@@ -29,12 +29,10 @@ rebel_medic_poi = Creature:new {
 	diet = HERBIVORE,
 
 	templates = {
-		"object/mobile/dressed_rebel_medic_bith_female_01.iff",
-		"object/mobile/dressed_rebel_medic_bothan_male_01.iff",
-		"object/mobile/dressed_rebel_medic_human_female_01.iff",
-		"object/mobile/dressed_rebel_medic_moncal_male_01.iff",
-		"object/mobile/dressed_rebel_medic_rodian_female_01.iff",
-		"object/mobile/dressed_rebel_medic_sullustan_male_01.iff"},
+		"object/mobile/dressed_rebel_medic3_moncal_female_01.iff",
+		"object/mobile/dressed_rebel_medic2_21b_01.iff",
+		"object/mobile/dressed_rebel_medic1_bothan_male_01.iff"
+	},
 	lootGroups = {
 		{
 			groups = {

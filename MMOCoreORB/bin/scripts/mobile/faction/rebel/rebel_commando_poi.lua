@@ -29,12 +29,13 @@ rebel_commando_poi = Creature:new {
 	diet = HERBIVORE,
 
 	templates = {
-		"object/mobile/dressed_rebel_commando_bith_female_01.iff",
-		"object/mobile/dressed_rebel_commando_bothan_male_01.iff",
 		"object/mobile/dressed_rebel_commando_human_female_01.iff",
+		"object/mobile/dressed_rebel_commando_human_male_01.iff",
 		"object/mobile/dressed_rebel_commando_moncal_male_01.iff",
-		"object/mobile/dressed_rebel_commando_rodian_female_01.iff",
-		"object/mobile/dressed_rebel_commando_sullustan_male_01.iff"},
+		"object/mobile/dressed_rebel_commando_rodian_male_01.iff",
+		"object/mobile/dressed_rebel_commando_twilek_female_01.iff",
+		"object/mobile/dressed_rebel_commando_zabrak_female_01.iff"
+	},
 	lootGroups = {
 		{
 			groups = {

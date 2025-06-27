@@ -29,12 +29,13 @@ rebel_scout_poi = Creature:new {
 	diet = HERBIVORE,
 
 	templates = {
-		"object/mobile/dressed_rebel_scout_bith_female_01.iff",
 		"object/mobile/dressed_rebel_scout_bothan_male_01.iff",
 		"object/mobile/dressed_rebel_scout_human_female_01.iff",
-		"object/mobile/dressed_rebel_scout_moncal_male_01.iff",
-		"object/mobile/dressed_rebel_scout_rodian_female_01.iff",
-		"object/mobile/dressed_rebel_scout_sullustan_male_01.iff"},
+		"object/mobile/dressed_rebel_scout_human_female_02.iff",
+		"object/mobile/dressed_rebel_scout_human_male_01.iff",
+		"object/mobile/dressed_rebel_scout_rodian_male_01.iff",
+		"object/mobile/dressed_rebel_scout_zabrak_female_01.iff"
+	},
 	lootGroups = {
 		{
 			groups = {

@@ -34,7 +34,8 @@ rebel_corporal_poi = Creature:new {
 		"object/mobile/dressed_rebel_corporal_human_female_01.iff",
 		"object/mobile/dressed_rebel_corporal_moncal_male_01.iff",
 		"object/mobile/dressed_rebel_corporal_rodian_female_01.iff",
-		"object/mobile/dressed_rebel_corporal_sullustan_male_01.iff"},
+		"object/mobile/dressed_rebel_corporal_sullustan_male_01.iff"
+	},
 	lootGroups = {
 		{
 			groups = {

@@ -29,12 +29,13 @@ rebel_high_general_poi = Creature:new {
 	diet = HERBIVORE,
 
 	templates = {
-		"object/mobile/dressed_rebel_high_general_bith_female_01.iff",
-		"object/mobile/dressed_rebel_high_general_bothan_male_01.iff",
 		"object/mobile/dressed_rebel_high_general_human_female_01.iff",
+		"object/mobile/dressed_rebel_high_general_human_male_01.iff",
+		"object/mobile/dressed_rebel_high_general_human_male_02.iff",
 		"object/mobile/dressed_rebel_high_general_moncal_male_01.iff",
-		"object/mobile/dressed_rebel_high_general_rodian_female_01.iff",
-		"object/mobile/dressed_rebel_high_general_sullustan_male_01.iff"},
+		"object/mobile/dressed_rebel_high_general_old_twilek_female_01.iff",
+		"object/mobile/dressed_rebel_high_general_sullustan_male_01.iff"
+	},
 	lootGroups = {
 		{
 			groups = {
