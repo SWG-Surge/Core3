@@ -99,6 +99,7 @@ public:
 
 	Vector<uint32> defaultMeleeAttacks;
 	Vector<uint32> defaultRangedAttacks;
+	bool isGlovesOnly = true; // Gloves override all hit location armor protection
 
 private:
 	void initializeDefaultAttacks();

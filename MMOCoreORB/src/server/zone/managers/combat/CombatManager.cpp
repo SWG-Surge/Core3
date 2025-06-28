@@ -2321,6 +2321,15 @@ float CombatManager::getDefenderToughnessModifier(CreatureObject* defender, int 
 */
 
 ArmorObject* CombatManager::getArmorObject(CreatureObject* defender, uint8 hitLocation) const {
+	if (isGlovesOnly) {
+		SceneObject* gloves = defender->getSlottedObject("gloves");
+
+		if (gloves != nullptr && gloves->isArmorObject()) {
+			info(true) << "Using gloves for armor protection (hitLocation=" << (int)hitLocation << ")";
+			return cast<ArmorObject*>(gloves);
+		}
+	}
+
 	Vector<ManagedReference<ArmorObject*>> armor = defender->getWearablesDeltaVector()->getArmorAtHitLocation(hitLocation);
 
 	if (armor.isEmpty())
