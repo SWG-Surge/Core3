@@ -9,7 +9,9 @@ public:
 	StructureMaintenancePaymentChoiceSuiCallback(ZoneServer* serv) : SuiCallback(serv) {}
 
 	void run(CreatureObject* creature, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) override {
-		if (creature == nullptr || suiBox == nullptr || eventIndex == 0)
+		Logger::console.info("DEBUG: StructureMaintenancePaymentChoiceSuiCallback::run called with eventIndex = " + String::valueOf(eventIndex));
+        
+        if (creature == nullptr || suiBox == nullptr || eventIndex == 0)
 			return;
 
 		ManagedReference<SceneObject*> usingObject = suiBox->getUsingObject();
