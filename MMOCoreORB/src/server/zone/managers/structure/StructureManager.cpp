@@ -1209,10 +1209,10 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 
 	ManagedReference<SuiListBox*> box = new SuiListBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
 	box->setUsingObject(structure);
-	box->setPromptTitle("@player_structure:pay_maint_title"); // "Pay Maintenance"
-	box->setPromptText("@player_structure:choose_payment_source"); // "Choose a source to pay from:"
-	box->addMenuItem("@player_structure:pay_with_cash"); // index 0
-	box->addMenuItem("@player_structure:pay_with_bank"); // index 1
+	box->setPromptTitle("Structure Maintenance");
+	box->setPromptText("Select a payment method:");
+	box->addMenuItem("Pay with Cash"); // index 0
+	box->addMenuItem("Pay with Bank"); // index 1
 	box->setCancelButton(true, "@cancel");
 	box->setOkButton(true, "@ok");
 	box->setCallback(new StructureMaintenancePaymentChoiceSuiCallback(server));
