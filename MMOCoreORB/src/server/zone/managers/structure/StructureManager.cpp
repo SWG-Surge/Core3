@@ -1354,24 +1354,41 @@ void StructureManager::payMaintenance(StructureObject* structure, CreatureObject
 		return;
 	}
 
-	int cash = creature->getCashCredits();
+	int bank = creature->getBankCredits();
+int cash = creature->getCashCredits();
 
-	if (cash < amount) {
-		creature->sendSystemMessage("@player_structure:insufficient_funds"); // You have insufficient funds to make this deposit.
-		return;
-	}
+if (bank < amount) {
+    int diff = amount - bank;
 
-	StringIdChatParameter params("base_player", "prose_pay_success"); // You successfully make a payment of %DI credits to %TT.
-	params.setTT(structure->getDisplayedName());
-	params.setDI(amount);
+    if (diff > cash) {
+        creature->sendSystemMessage("@player_structure:insufficient_funds");
+        return;
+    }
 
-	creature->sendSystemMessage(params);
+    StringIdChatParameter params("base_player", "prose_pay_success");
+    params.setTT(structure->getDisplayedName());
+    params.setDI(amount);
+    creature->sendSystemMessage(params);
 
-	{
-		TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
-		creature->subtractCashCredits(amount);
-		structure->addMaintenance(amount);
-	}
+    TransactionLog trxBank(creature, structure, TrxCode::STRUCTUREMAINTANENCE, bank, false);
+    creature->subtractBankCredits(bank);
+    structure->addMaintenance(bank);
+
+    TransactionLog trxCash(creature, structure, TrxCode::STRUCTUREMAINTANENCE, diff, true);
+    trxCash.groupWith(trxBank);
+    creature->subtractCashCredits(diff);
+    structure->addMaintenance(diff);
+} else {
+    StringIdChatParameter params("base_player", "prose_pay_success");
+    params.setTT(structure->getDisplayedName());
+    params.setDI(amount);
+    creature->sendSystemMessage(params);
+
+    TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, false);
+    creature->subtractBankCredits(amount);
+    structure->addMaintenance(amount);
+}
+
 
 	if (!ConfigManager::instance()->getBool("Core3.StructureMaintenanceTask.AllowBankPayments", true)) {
 		creature->sendSystemMessage("Maintenance will not be pulled from your bank if it runs out.");
