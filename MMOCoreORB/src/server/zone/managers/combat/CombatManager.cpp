@@ -1167,11 +1167,6 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 	if (attacker->isPlayerCreature() && defender->isPlayerCreature() && !data.isForceAttack())
 		damage *= 0.25;
 
-	// Pet PvE Damage Boost - 50% increase for pets attacking non-player targets
-	if (attacker->isPet() && !defender->isPlayerCreature() && !data.isForceAttack()) {
-		damage *= 1.5f; // 50% damage boost for pets in PvE only
-	}
-
 	if (damage < 1)
 		damage = 1;
 
@@ -1217,11 +1212,6 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 
 	if (!data.isForceAttack() && weapon->getAttackType() == SharedWeaponObjectTemplate::MELEEATTACK)
 		damage *= 1.25;
-
-	// Pet PvE Damage Boost - 50% increase for pets attacking non-player targets
-	if (attacker->isPet() && !data.isForceAttack()) {
-		damage *= 1.5f; // 50% damage boost for pets in PvE only
-	}
 
 	debug() << "damage to be dealt is " << damage;
 
@@ -1751,12 +1741,6 @@ void CombatManager::applyDots(CreatureObject* attacker, CreatureObject* defender
 		debug() << "entering addDotState with dotType:" << dotType;
 
 		float damMod = attacker->isAiAgent() ? cast<AiAgent*>(attacker)->getSpecialDamageMult() : 1.f;
-		
-		// Pet PvE Damage Boost - 50% increase for pet DOTs against non-player targets
-		if (attacker->isPet() && !defender->isPlayerCreature()) {
-			damMod *= 1.5f; // 50% damage boost for pet DOTs in PvE only
-		}
-		
 		defender->addDotState(attacker, dotType, data.getCommand()->getNameCRC(), effect.isDotDamageofHit() ? damageToApply * effect.getPrimaryPercent() / 100.0f : effect.getDotStrength() * damMod, pool, effect.getDotDuration(), potency, resist,
 							  effect.isDotDamageofHit() ? damageToApply * effect.getSecondaryPercent() / 100.0f : effect.getDotStrength() * damMod);
 	}
@@ -2325,7 +2309,7 @@ ArmorObject* CombatManager::getArmorObject(CreatureObject* defender, uint8 hitLo
 		SceneObject* gloves = defender->getSlottedObject("gloves");
 
 		if (gloves != nullptr && gloves->isArmorObject()) {
-			info(true) << "Using gloves for armor protection (hitLocation=" << (int)hitLocation << ")";
+			info(true) << "[Armor] Using gloves for protection (hitLocation=" << (int)hitLocation << ")";
 			return cast<ArmorObject*>(gloves);
 		}
 	}
@@ -2460,8 +2444,9 @@ int CombatManager::getArmorVehicleReduction(VehicleObject* defender, int damageT
 int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* weapon, CreatureObject* defender, DefenderHitList* hitList, float damage, int hitLocation, const CreatureAttackData& data) const {
 	int damageType = 0, armorPiercing = 1;
 
-	if (hitList == nullptr)
+	if (hitList == nullptr) {
 		return 0;
+	}
 
 	if (!data.isForceAttack()) {
 		damageType = weapon->getDamageType();
@@ -2485,78 +2470,6 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 			if (!defender->isPet())
 				defender->addUnmitigatedDamage(damage);
 		}
-
-		return damage;
-	} else if (defender->isVehicleObject()) {
-		float armorReduction = getArmorVehicleReduction(cast<VehicleObject*>(defender), damageType);
-
-		if (armorReduction >= 0)
-			damage *= getArmorPiercing(cast<VehicleObject*>(defender), armorPiercing);
-
-		if (armorReduction > 0)
-			damage *= (1.f - (armorReduction / 100.f));
-
-		return damage;
-	}
-
-	// Armor mitigation for players
-	ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
-
-	if (armor != nullptr && !armor->isVulnerable(damageType)) {
-		float armorReduction = getArmorObjectReduction(armor, damageType);
-
-		// Apply armor piercing
-		damage *= getArmorPiercing(armor, armorPiercing);
-
-		if (armorReduction > 0) {
-			damage *= (1.f - (armorReduction / 100.f));
-			info(true) << "[ArmorMitigation] " << armor->getCustomObjectName().toString()
-			           << " mitigated " << armorReduction << "% at hitLocation=" << (int)hitLocation;
-		}
-
-		// inflict condition damage
-		if (armor != nullptr) {
-			float reductionFactor = 0.22f;
-			if (isGlovesOnly)
-				reductionFactor *= 0.25f;
-
-			Locker alocker(armor);
-			armor->inflictDamage(armor, 0, damage * reductionFactor, true, true);
-		}
-	}
-
-	return damage;
-}
-
-	// [PLACEHOLDER FOR PSG AND JEDI FORCE SHIELD STUFF...]
-
-	ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
-
-	if (armor != nullptr && !armor->isVulnerable(damageType)) {
-		float armorReduction = getArmorObjectReduction(armor, damageType);
-
-		// Apply armor piercing
-		damage *= getArmorPiercing(armor, armorPiercing);
-
-		if (armorReduction > 0) {
-			damage *= (1.f - (armorReduction / 100.f));
-			info(true) << "[ArmorMitigation] " << armor->getCustomObjectName().toString()
-			           << " mitigated " << armorReduction << "% at hitLocation=" << (int)hitLocation;
-		}
-
-		// inflict condition damage
-		if (armor != nullptr) {
-			float reductionFactor = 0.22f;
-			if (isGlovesOnly)
-				reductionFactor *= 0.25f;
-
-			Locker alocker(armor);
-			armor->inflictDamage(armor, 0, damage * reductionFactor, true, true);
-		}
-	}
-
-	return damage;
-}
 
 		return damage;
 	} else if (defender->isVehicleObject()) {
@@ -2651,26 +2564,39 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 
 		Locker plocker(psg);
 
-		psg->inflictDamage(psg, 0, damage * 0.22, true, true);
+		psg->inflictDamage(psg, 0, damage * 0.2, true, true);
 	}
 
-	ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
+	// Standard Armor
+	ManagedReference<ArmorObject*> armor = nullptr;
 
-	// Armor Reduction
+	armor = getArmorObject(defender, hitLocation);
+
 	if (armor != nullptr && !armor->isVulnerable(damageType)) {
 		float armorReduction = getArmorObjectReduction(armor, damageType);
+		float dmgAbsorbed = damage;
 
 		// use only the damage applied to the armor for piercing (after the PSG takes some off)
 		damage *= getArmorPiercing(armor, armorPiercing);
 
 		if (armorReduction > 0) {
 			damage *= (1.f - (armorReduction / 100.f));
+			dmgAbsorbed -= damage;
+
+			int armorMit = hitList->getArmorMitigation();
+
+			armorMit += dmgAbsorbed;
+			hitList->setArmorMitigation(armorMit);
 		}
 
 		// inflict condition damage
-		Locker alocker(armor);
+		float reductionFactor = 0.22f;
+		if (isGlovesOnly)
+			reductionFactor *= 0.25f;
 
-		armor->inflictDamage(armor, 0, damage * 0.22, true, true);
+		Locker alocker(armor);
+		armor->inflictDamage(armor, 0, damage * reductionFactor, true, true);
+
 	}
 
 	return damage;
@@ -2844,7 +2770,7 @@ float CombatManager::doObjectDetonation(TangibleObject* attackerTanO, CreatureOb
 
 				Locker plocker(psgArmor, attackerTanO);
 
-				psgArmor->inflictDamage(psgArmor, 0, damage * 0.22, true, true);
+				psgArmor->inflictDamage(psgArmor, 0, damage * 0.2, true, true);
 			}
 
 			ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
@@ -2863,7 +2789,7 @@ float CombatManager::doObjectDetonation(TangibleObject* attackerTanO, CreatureOb
 				// inflict condition damage
 				Locker alocker(armor, attackerTanO);
 
-				armor->inflictDamage(armor, 0, damage * 0.22, true, true);
+				armor->inflictDamage(armor, 0, damage * 0.2, true, true);
 			}
 		}
 
