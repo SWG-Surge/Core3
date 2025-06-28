@@ -1207,7 +1207,7 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	if (ghost == nullptr)
 		return;
 
-	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
+	ManagedReference<SuiListBox*> box = new SuiListBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
 	box->setUsingObject(structure);
 	box->setPromptTitle("Pay Maintenance");
 	box->setPromptText("Choose a source to pay from:");
