@@ -11,7 +11,7 @@ public:
 	void run(CreatureObject* creature, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) override {
 		Logger::console.info("DEBUG: StructureMaintenancePaymentChoiceSuiCallback::run called with eventIndex = " + String::valueOf(eventIndex));
 
-		if (creature == nullptr || suiBox == nullptr || eventIndex == 0)
+		if (creature == nullptr || suiBox == nullptr || eventIndex != 1)
 			return;
 
 		ManagedReference<SceneObject*> usingObject = suiBox->getUsingObject();

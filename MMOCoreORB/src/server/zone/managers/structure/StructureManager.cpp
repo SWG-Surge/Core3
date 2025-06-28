@@ -1211,8 +1211,8 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	box->setUsingObject(structure);
 	box->setPromptTitle("@player_structure:pay_maint_title"); // "Pay Maintenance"
 	box->setPromptText("@player_structure:choose_payment_source"); // "Choose a source to pay from:"
-	box->addMenuItem("@player_structure:pay_with_cash");
-	box->addMenuItem("@player_structure:pay_with_bank");
+	box->addMenuItem("@player_structure:pay_with_cash"); // index 0
+	box->addMenuItem("@player_structure:pay_with_bank"); // index 1
 	box->setCancelButton(true, "@cancel");
 	box->setOkButton(true, "@ok");
 	box->setCallback(new StructureMaintenancePaymentChoiceSuiCallback(server));
@@ -1220,7 +1220,6 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	ghost->addSuiBox(box);
 	creature->sendMessage(box->generateMessage());
 }
-
 
 void StructureManager::promptWithdrawMaintenance(StructureObject* structure, CreatureObject* creature) {
 	if (!structure->isGuildHall()) {

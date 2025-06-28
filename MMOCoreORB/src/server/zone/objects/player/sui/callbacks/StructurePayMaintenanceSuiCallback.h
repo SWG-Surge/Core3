@@ -14,13 +14,11 @@ public:
 	StructurePayMaintenanceSuiCallback(ZoneServer* serv, bool useBank = false) : SuiCallback(serv), useBank(useBank) {}
 
 	void run(CreatureObject* creature, SuiBox* sui, uint32 eventIndex, Vector<UnicodeString>* args) override {
-		bool cancelPressed = (eventIndex == 1);
-
-		if (!sui->isTransferBox() || cancelPressed || args->size() < 2)
+		if (!sui->isTransferBox() || args == nullptr || args->size() < 2)
 			return;
 
 		int amount = Integer::valueOf(args->get(1).toString());
-		if (amount < 0)
+		if (amount <= 0)
 			return;
 
 		ManagedReference<SceneObject*> obj = sui->getUsingObject().get();
