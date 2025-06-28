@@ -6,7 +6,9 @@
 
 class StructureMaintenancePaymentChoiceSuiCallback : public SuiCallback {
 public:
-	StructureMaintenancePaymentChoiceSuiCallback(ZoneServer* serv) : SuiCallback(serv) {}
+	bool useBank;
+	StructurePayMaintenanceSuiCallback(ZoneServer* serv) : SuiCallback(serv) {}
+
 
 	void run(CreatureObject* creature, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) override {
 		if (creature == nullptr || suiBox == nullptr || eventIndex == 0)
