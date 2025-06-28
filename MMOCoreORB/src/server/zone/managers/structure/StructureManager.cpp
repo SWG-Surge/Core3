@@ -1197,7 +1197,7 @@ void StructureManager::promptPayUncondemnMaintenance(CreatureObject* creature, S
 }
 
 void StructureManager::promptPayMaintenance(StructureObject* structure, CreatureObject* creature, SceneObject* terminal) {
-	int availableCredits = creature->getCashCredits() + creature->getBankCredits();
+	int availableCredits = creature->getCashCredits();
 
 	if (availableCredits <= 0) {
 		creature->sendSystemMessage("@player_structure:no_money"); // You do not have any money to pay maintenance.
@@ -1219,7 +1219,7 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	sui->setPromptTitle("@player_structure:select_amount"); // Select Amount
 	sui->setUsingObject(structure);
 	sui->setPromptText("@player_structure:select_maint_amount \n@player_structure:current_maint_pool " + String::valueOf(surplusMaintenance));
-	sui->addFrom("@player_structure:available", String::valueOf(availableCredits), String::valueOf(availableCredits), "1");
+	sui->addFrom("@player_structure:total_funds", String::valueOf(availableCredits), String::valueOf(availableCredits), "1");
 	sui->addTo("@player_structure:to_pay", "0", "0", "1");
 
 	ghost->addSuiBox(sui);
@@ -1354,41 +1354,24 @@ void StructureManager::payMaintenance(StructureObject* structure, CreatureObject
 		return;
 	}
 
-	int bank = creature->getBankCredits();
-int cash = creature->getCashCredits();
+	int cash = creature->getCashCredits();
 
-if (bank < amount) {
-    int diff = amount - bank;
+	if (cash < amount) {
+		creature->sendSystemMessage("@player_structure:insufficient_funds"); // You have insufficient funds to make this deposit.
+		return;
+	}
 
-    if (diff > cash) {
-        creature->sendSystemMessage("@player_structure:insufficient_funds");
-        return;
-    }
+	StringIdChatParameter params("base_player", "prose_pay_success"); // You successfully make a payment of %DI credits to %TT.
+	params.setTT(structure->getDisplayedName());
+	params.setDI(amount);
 
-    StringIdChatParameter params("base_player", "prose_pay_success");
-    params.setTT(structure->getDisplayedName());
-    params.setDI(amount);
-    creature->sendSystemMessage(params);
+	creature->sendSystemMessage(params);
 
-    TransactionLog trxBank(creature, structure, TrxCode::STRUCTUREMAINTANENCE, bank, false);
-    creature->subtractBankCredits(bank);
-    structure->addMaintenance(bank);
-
-    TransactionLog trxCash(creature, structure, TrxCode::STRUCTUREMAINTANENCE, diff, true);
-    trxCash.groupWith(trxBank);
-    creature->subtractCashCredits(diff);
-    structure->addMaintenance(diff);
-} else {
-    StringIdChatParameter params("base_player", "prose_pay_success");
-    params.setTT(structure->getDisplayedName());
-    params.setDI(amount);
-    creature->sendSystemMessage(params);
-
-    TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, false);
-    creature->subtractBankCredits(amount);
-    structure->addMaintenance(amount);
-}
-
+	{
+		TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
+		creature->subtractCashCredits(amount);
+		structure->addMaintenance(amount);
+	}
 
 	if (!ConfigManager::instance()->getBool("Core3.StructureMaintenanceTask.AllowBankPayments", true)) {
 		creature->sendSystemMessage("Maintenance will not be pulled from your bank if it runs out.");

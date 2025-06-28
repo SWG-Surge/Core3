@@ -662,34 +662,46 @@ int StructureObjectImplementation::getDecayPercentage() {
 }
 
 void StructureObjectImplementation::payMaintenance(int maintenance, CreditObject* creditObj, bool cashFirst) {
+	//Pay maintenance.
+
 	auto structure = _this.getReferenceUnsafeStaticCast();
+	int payedSoFar;
+	if (cashFirst) {
+		if (creditObj->getCashCredits() >= maintenance) {
+			TransactionLog trx(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, maintenance, true);
+			creditObj->subtractCashCredits(maintenance);
+			addMaintenance(maintenance);
+		} else {
+			payedSoFar = creditObj->getCashCredits();
 
-	int bank = creditObj->getBankCredits();
-	int cash = creditObj->getCashCredits();
+			TransactionLog trxCash(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, payedSoFar, true);
+			creditObj->subtractCashCredits(payedSoFar);
+			addMaintenance(payedSoFar);
 
-	if (bank < maintenance) {
-		int diff = maintenance - bank;
-
-		if (diff > cash) {
-			// Not enough funds — do NOT apply maintenance
-			return;
+			TransactionLog trxBank(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, maintenance - payedSoFar, false);
+			trxBank.groupWith(trxCash);
+			creditObj->subtractBankCredits(maintenance - payedSoFar);
+			addMaintenance(maintenance - payedSoFar);
 		}
-
-		TransactionLog trxBank(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, bank, false);
-		creditObj->subtractBankCredits(bank);
-		addMaintenance(bank);
-
-		TransactionLog trxCash(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, diff, true);
-		trxCash.groupWith(trxBank);
-		creditObj->subtractCashCredits(diff);
-		addMaintenance(diff);
 	} else {
-		TransactionLog trx(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, maintenance, false);
-		creditObj->subtractBankCredits(maintenance);
-		addMaintenance(maintenance);
+		if (creditObj->getBankCredits() >= maintenance) {
+			TransactionLog trx(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, maintenance, false);
+			creditObj->subtractBankCredits(maintenance);
+			addMaintenance(maintenance);
+		} else {
+			payedSoFar = creditObj->getBankCredits();
+
+			TransactionLog trxCash(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, payedSoFar, false);
+			creditObj->subtractBankCredits(payedSoFar);
+			addMaintenance(payedSoFar);
+
+			TransactionLog trxBank(creditObj, structure, TrxCode::STRUCTUREMAINTANENCE, maintenance - payedSoFar, true);
+			trxBank.groupWith(trxCash);
+			creditObj->subtractCashCredits(maintenance - payedSoFar);
+			addMaintenance(maintenance - payedSoFar);
+		}
 	}
 }
-
 
 bool StructureObjectImplementation::isCampStructure() const {
 	return templateObject->isCampStructureTemplate();
