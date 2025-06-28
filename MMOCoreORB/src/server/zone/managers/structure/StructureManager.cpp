@@ -1219,7 +1219,7 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	sui->setPromptTitle("@player_structure:select_amount"); // Select Amount
 	sui->setUsingObject(structure);
 	sui->setPromptText("@player_structure:select_maint_amount \n@player_structure:current_maint_pool " + String::valueOf(surplusMaintenance));
-	sui->addFrom("@player_structure:total_funds", String::valueOf(availableCredits), String::valueOf(availableCredits), "1");
+	sui->addFrom("@player_structure:available", String::valueOf(availableCredits), "0", "1");
 	sui->addTo("@player_structure:to_pay", "0", "0", "1");
 
 	ghost->addSuiBox(sui);
