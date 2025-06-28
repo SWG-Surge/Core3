@@ -1201,7 +1201,7 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	if (creature == nullptr || structure == nullptr)
 		return;
 
-	info(true) << "DEBUG: promptPayMaintenance called";
+	Logger::console.info("DEBUG: promptPayMaintenance called");
 
 	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 	if (ghost == nullptr)
@@ -1209,17 +1209,18 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 
 	ManagedReference<SuiListBox*> box = new SuiListBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
 	box->setUsingObject(structure);
-	box->setPromptTitle("@player_structure:pay_maint_title");
-	box->setPromptText("@player_structure:choose_payment_source");
+	box->setPromptTitle("@player_structure:pay_maint_title"); // "Pay Maintenance"
+	box->setPromptText("@player_structure:choose_payment_source"); // "Choose a source to pay from:"
 	box->addMenuItem("@player_structure:pay_with_cash");
 	box->addMenuItem("@player_structure:pay_with_bank");
-	box->setOkButton(true, "@ok");
 	box->setCancelButton(true, "@cancel");
+	box->setOkButton(true, "@ok");
 	box->setCallback(new StructureMaintenancePaymentChoiceSuiCallback(server));
-	
+
 	ghost->addSuiBox(box);
 	creature->sendMessage(box->generateMessage());
 }
+
 
 void StructureManager::promptWithdrawMaintenance(StructureObject* structure, CreatureObject* creature) {
 	if (!structure->isGuildHall()) {
