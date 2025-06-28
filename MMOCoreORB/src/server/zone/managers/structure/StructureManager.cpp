@@ -1447,11 +1447,6 @@ void StructureManager::openMaintenancePaymentTransfer(StructureObject* structure
 	int surplusMaintenance = (int)floor((float)structure->getSurplusMaintenance());
 	int availableCredits = useBank ? creature->getBankCredits() : creature->getCashCredits();
 
-	if (availableCredits <= 0) {
-		creature->sendSystemMessage("@player_structure:no_money");
-		return;
-	}
-
 	ManagedReference<SuiTransferBox*> sui = new SuiTransferBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
 	sui->setCallback(new StructurePayMaintenanceSuiCallback(server, useBank));
 	sui->setPromptTitle("@player_structure:select_amount");
