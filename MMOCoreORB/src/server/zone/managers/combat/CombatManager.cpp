@@ -1627,11 +1627,12 @@ int CombatManager::applyDamage(CreatureObject* attacker, WeaponObject* weapon, T
 	// Apply Jedi armor penalty
 	CreatureObject* creoDefender = defender->asCreatureObject();
 	if (creoDefender != nullptr) {
-		if ((creoDefender->hasSkill("force_title_jedi_rank_00") || creoDefender->hasSkill("force_title_jedi_rank_01")) &&
-			creoDefender->isWearingArmor()) {
-				damage *= 5.0f;
-		}
+	if ((creoDefender->hasSkill("force_title_jedi_rank_00") || creoDefender->hasSkill("force_title_jedi_rank_01")) &&
+		creoDefender->getWearablesDeltaVector()->isWearingArmor()) {
+		damage *= 5.0f;
 	}
+}
+
 
 	float damageMultiplier = data.getDamageMultiplier();
 
