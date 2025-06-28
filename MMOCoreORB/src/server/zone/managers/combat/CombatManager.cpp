@@ -2482,6 +2482,8 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 
 		if (armorReduction > 0) {
 			damage *= (1.f - (armorReduction / 100.f));
+		info(true) << "[ArmorMitigation] " << armor->getCustomObjectName().toString()
+           << " mitigated " << armorReduction << "% at hitLocation=" << (int)hitLocation;
 
 			if (!defender->isPet())
 				defender->addUnmitigatedDamage(damage);
