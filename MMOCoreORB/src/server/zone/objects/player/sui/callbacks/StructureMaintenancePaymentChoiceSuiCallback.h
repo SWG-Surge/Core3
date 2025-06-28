@@ -10,18 +10,21 @@ public:
 
 	void run(CreatureObject* creature, SuiBox* suiBox, uint32 eventIndex, Vector<UnicodeString>* args) override {
 		Logger::console.info("DEBUG: StructureMaintenancePaymentChoiceSuiCallback::run called with eventIndex = " + String::valueOf(eventIndex));
-        
-        if (creature == nullptr || suiBox == nullptr || eventIndex == 0)
+
+		if (creature == nullptr || suiBox == nullptr || eventIndex == 0)
 			return;
 
 		ManagedReference<SceneObject*> usingObject = suiBox->getUsingObject();
 		if (usingObject == nullptr || !usingObject->isStructureObject())
 			return;
 
+		if (args == nullptr || args->size() == 0)
+			return;
+
+		int selection = Integer::valueOf(args->get(0).toString());
+		bool useBank = (selection == 1); // 0 = cash, 1 = bank
+
 		StructureObject* structure = cast<StructureObject*>(usingObject.get());
-
-		bool useBank = (eventIndex == 2); // 1 = OK = cash, 2 = Cancel = bank
-
 		StructureManager::instance()->openMaintenancePaymentTransfer(structure, creature, useBank);
 	}
 
