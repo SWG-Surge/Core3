@@ -16,8 +16,10 @@
 
 class StructurePayMaintenanceSuiCallback : public SuiCallback {
 public:
-	StructurePayMaintenanceSuiCallback(ZoneServer* serv) : SuiCallback(serv) {
+	bool useBank;
+	StructurePayMaintenanceSuiCallback(ZoneServer* serv, bool useBank = false) : SuiCallback(serv), useBank(useBank) {
 	}
+
 
 	void run(CreatureObject* creature, SuiBox* sui, uint32 eventIndex, Vector<UnicodeString>* args) {
 		bool cancelPressed = (eventIndex == 1);
@@ -48,7 +50,32 @@ public:
 		//Creature is already locked (done in handleSuiEventNotification in SuiManager).
 		Locker _lock(structure, creature);
 
-		StructureManager::instance()->payMaintenance(structure, creature, amount);
+		if (amount > 0) {
+	if (useBank) {
+		if (creature->getBankCredits() < amount) {
+			creature->sendSystemMessage("@player_structure:insufficient_funds");
+			return;
+		}
+
+		TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
+		creature->subtractBankCredits(amount);
+	} else {
+		if (creature->getCashCredits() < amount) {
+			creature->sendSystemMessage("@player_structure:insufficient_funds");
+			return;
+		}
+
+		TransactionLog trx(creature, structure, TrxCode::STRUCTUREMAINTANENCE, amount, true);
+		creature->subtractCashCredits(amount);
+	}
+
+	structure->addMaintenance(amount);
+
+	StringIdChatParameter msg("base_player", "prose_pay_success"); // "You successfully make a payment of %DI credits to %TT."
+	msg.setDI(amount);
+	msg.setTT(structure->getDisplayedName());
+
+	creature->sendSystemMessage(msg);
 	}
 };
 

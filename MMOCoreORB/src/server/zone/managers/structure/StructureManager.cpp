@@ -50,6 +50,7 @@
 #include "server/zone/objects/player/FactionStatus.h"
 #include "templates/building/CampStructureTemplate.h"
 #include "templates/customization/CustomizationIdManager.h"
+#include "server/zone/objects/player/sui/callbacks/StructureMaintenancePaymentChoiceSuiCallback.h"
 
 namespace StorageManagerNamespace {
 int indexCallback(DB* secondary, const DBT* key, const DBT* data, DBT* result) {
@@ -1197,33 +1198,24 @@ void StructureManager::promptPayUncondemnMaintenance(CreatureObject* creature, S
 }
 
 void StructureManager::promptPayMaintenance(StructureObject* structure, CreatureObject* creature, SceneObject* terminal) {
-	int availableCredits = creature->getCashCredits();
-
-	if (availableCredits <= 0) {
-		creature->sendSystemMessage("@player_structure:no_money"); // You do not have any money to pay maintenance.
+	if (creature == nullptr || structure == nullptr)
 		return;
-	}
 
 	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
-
 	if (ghost == nullptr)
 		return;
 
-	// Get the most up to date maintenance count.
-	structure->updateStructureStatus();
+	ManagedReference<SuiMessageBox*> box = new SuiMessageBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
+	box->setUsingObject(structure);
+	box->setPromptTitle("@player_structure:pay_maint_title"); // "Pay Maintenance"
+	box->setPromptText("@player_structure:choose_payment_source"); // "Choose a source to pay from:"
+	box->setCancelButton(true, "@cancel");
+	box->addMenuItem("@player_structure:pay_with_cash"); // "Cash"
+	box->addMenuItem("@player_structure:pay_with_bank"); // "Bank"
+	box->setCallback(new StructureMaintenancePaymentChoiceSuiCallback(server));
 
-	int surplusMaintenance = (int)floor((float)structure->getSurplusMaintenance());
-
-	ManagedReference<SuiTransferBox*> sui = new SuiTransferBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
-	sui->setCallback(new StructurePayMaintenanceSuiCallback(server));
-	sui->setPromptTitle("@player_structure:select_amount"); // Select Amount
-	sui->setUsingObject(structure);
-	sui->setPromptText("@player_structure:select_maint_amount \n@player_structure:current_maint_pool " + String::valueOf(surplusMaintenance));
-	sui->addFrom("@player_structure:total_funds", String::valueOf(availableCredits), String::valueOf(availableCredits), "1");
-	sui->addTo("@player_structure:to_pay", "0", "0", "1");
-
-	ghost->addSuiBox(sui);
-	creature->sendMessage(sui->generateMessage());
+	ghost->addSuiBox(box);
+	creature->sendMessage(box->generateMessage());
 }
 
 void StructureManager::promptWithdrawMaintenance(StructureObject* structure, CreatureObject* creature) {
@@ -1440,4 +1432,34 @@ bool StructureManager::isInStructureFootprint(StructureObject* structure, float 
 	BoundaryRectangle structureFootprint(x0, y0, x1, y1);
 
 	return structureFootprint.containsPoint(positionX, positionY);
+}
+
+void StructureManager::openMaintenancePaymentTransfer(StructureObject* structure, CreatureObject* creature, bool useBank) {
+	if (creature == nullptr || structure == nullptr)
+		return;
+
+	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
+	if (ghost == nullptr)
+		return;
+
+	structure->updateStructureStatus();
+
+	int surplusMaintenance = (int)floor((float)structure->getSurplusMaintenance());
+	int availableCredits = useBank ? creature->getBankCredits() : creature->getCashCredits();
+
+	if (availableCredits <= 0) {
+		creature->sendSystemMessage("@player_structure:no_money");
+		return;
+	}
+
+	ManagedReference<SuiTransferBox*> sui = new SuiTransferBox(creature, SuiWindowType::STRUCTURE_MANAGE_MAINTENANCE);
+	sui->setCallback(new StructurePayMaintenanceSuiCallback(server, useBank));
+	sui->setPromptTitle("@player_structure:select_amount");
+	sui->setUsingObject(structure);
+	sui->setPromptText("@player_structure:select_maint_amount \n@player_structure:current_maint_pool " + String::valueOf(surplusMaintenance));
+	sui->addFrom("@player_structure:total_funds", String::valueOf(availableCredits), String::valueOf(availableCredits), "1");
+	sui->addTo("@player_structure:to_pay", "0", "0", "1");
+
+	ghost->addSuiBox(sui);
+	creature->sendMessage(sui->generateMessage());
 }

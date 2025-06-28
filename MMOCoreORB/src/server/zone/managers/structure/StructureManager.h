@@ -151,6 +151,7 @@ public:
 	 * @param terminal The terminal used in the process. Defaults to null.
 	 */
 	void promptPayMaintenance(StructureObject* structure, CreatureObject* creature, SceneObject* terminal = nullptr);
+	void openMaintenancePaymentTransfer(StructureObject* structure, CreatureObject* creature, bool useBank);
 
 	/**
 	 * Sends the transfer box prompting for maintenance to be withdrawn.
