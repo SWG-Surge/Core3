@@ -1201,6 +1201,8 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	if (creature == nullptr || structure == nullptr)
 		return;
 
+	info(true) << "DEBUG: promptPayMaintenance called";
+
 	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 	if (ghost == nullptr)
 		return;
