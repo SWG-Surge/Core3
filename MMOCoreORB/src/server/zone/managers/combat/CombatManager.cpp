@@ -2482,12 +2482,53 @@ int CombatManager::getArmorReduction(TangibleObject* attacker, WeaponObject* wea
 
 		if (armorReduction > 0) {
 			damage *= (1.f - (armorReduction / 100.f));
-		info(true) << "[ArmorMitigation] " << armor->getCustomObjectName().toString()
-           << " mitigated " << armorReduction << "% at hitLocation=" << (int)hitLocation;
 
 			if (!defender->isPet())
 				defender->addUnmitigatedDamage(damage);
 		}
+
+		return damage;
+	} else if (defender->isVehicleObject()) {
+		float armorReduction = getArmorVehicleReduction(cast<VehicleObject*>(defender), damageType);
+
+		if (armorReduction >= 0)
+			damage *= getArmorPiercing(cast<VehicleObject*>(defender), armorPiercing);
+
+		if (armorReduction > 0)
+			damage *= (1.f - (armorReduction / 100.f));
+
+		return damage;
+	}
+
+	// [PLACEHOLDER FOR PSG AND JEDI FORCE SHIELD STUFF...]
+
+	ManagedReference<ArmorObject*> armor = getArmorObject(defender, hitLocation);
+
+	if (armor != nullptr && !armor->isVulnerable(damageType)) {
+		float armorReduction = getArmorObjectReduction(armor, damageType);
+
+		// Apply armor piercing
+		damage *= getArmorPiercing(armor, armorPiercing);
+
+		if (armorReduction > 0) {
+			damage *= (1.f - (armorReduction / 100.f));
+			info(true) << "[ArmorMitigation] " << armor->getCustomObjectName().toString()
+			           << " mitigated " << armorReduction << "% at hitLocation=" << (int)hitLocation;
+		}
+
+		// inflict condition damage
+		if (armor != nullptr) {
+			float reductionFactor = 0.22f;
+			if (isGlovesOnly)
+				reductionFactor *= 0.25f;
+
+			Locker alocker(armor);
+			armor->inflictDamage(armor, 0, damage * reductionFactor, true, true);
+		}
+	}
+
+	return damage;
+}
 
 		return damage;
 	} else if (defender->isVehicleObject()) {
