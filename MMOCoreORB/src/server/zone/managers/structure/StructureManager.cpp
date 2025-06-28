@@ -1211,8 +1211,10 @@ void StructureManager::promptPayMaintenance(StructureObject* structure, Creature
 	box->setUsingObject(structure);
 	box->setPromptTitle("Pay Maintenance");
 	box->setPromptText("Choose a source to pay from:");
-	box->setOkButton(true, "Cash");
-	box->setCancelButton(true, "Bank");
+	box->setOkButton(true, "@ok");
+	box->setCancelButton(true, "@cancel");
+	box->addMenuItem("@player_structure:pay_with_cash");
+	box->addMenuItem("@player_structure:pay_with_bank");
 	box->setCallback(new StructureMaintenancePaymentChoiceSuiCallback(server));
 
 	ghost->addSuiBox(box);
