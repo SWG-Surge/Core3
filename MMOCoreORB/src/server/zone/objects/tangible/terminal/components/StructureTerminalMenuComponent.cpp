@@ -209,7 +209,7 @@ int StructureTerminalMenuComponent::handleObjectMenuSelect(SceneObject* sceneObj
 			creature->executeObjectControllerAction(0x18FC1726, structureObject->getObjectID(), ""); //destroyStructure
 			break;
 		case 129:
-			creature->executeObjectControllerAction(0xE7E35B30, structureObject->getObjectID(), ""); //payMaintenance
+			structureManager->promptPayMaintenance(structureObject, creature, terminal);
 			break;
 		case 70:
 			structureManager->promptWithdrawMaintenance(structureObject, creature);
