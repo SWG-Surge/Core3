@@ -67,7 +67,7 @@ object_draft_schematic_clothing_clothing_armor_ris_gloves = object_draft_schemat
    ingredientTitleNames = {"auxilary_coverage", "body", "liner", "hardware_and_attachments", "binding_and_reinforcement", "padding", "armor", "load_bearing_harness", "reinforcement"},
    ingredientSlotType = {0, 0, 0, 0, 0, 0, 1, 1, 1},
    resourceTypes = {"armophous_vendusii", "fuel_petrochem_solid_known", "fiberplast_talus", "aluminum_chromium", "copper_platinite", "hide_wooly_rori", "object/tangible/component/armor/shared_armor_segment_ris.iff", "object/tangible/component/clothing/shared_synthetic_cloth.iff", "object/tangible/component/armor/shared_scale_giant_dune_kimogila.iff"},
-   resourceQuantities = {150, 75, 65, 50, 40, 30, 1, 1, 1},
+   resourceQuantities = {775, 400, 335, 270, 220, 160, 4, 4, 4},
    contribution = {100, 100, 100, 100, 100, 100, 100, 100, 100},
 
 
