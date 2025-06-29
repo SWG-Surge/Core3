@@ -64,7 +64,17 @@ function VillageJediManagerCommon.isVillageEligible(pPlayer)
 		return false
 	end
 
-	return VillageJediManagerCommon.hasJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_HAS_VILLAGE_ACCESS) and QuestManager.hasCompletedQuest(pPlayer, QuestManager.quests.FS_VILLAGE_ELDER)
+	-- Check if player has completed the normal Village progression
+	local hasNormalAccess = VillageJediManagerCommon.hasJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_HAS_VILLAGE_ACCESS) and QuestManager.hasCompletedQuest(pPlayer, QuestManager.quests.FS_VILLAGE_ELDER)
+	
+	-- Check if player is Force sensitive (Jedi state = 1)
+	local pGhost = CreatureObject(pPlayer):getPlayerObject()
+	local isForceSensitive = false
+	if (pGhost ~= nil) then
+		isForceSensitive = PlayerObject(pGhost):isJedi()
+	end
+	
+	return hasNormalAccess or isForceSensitive
 end
 
 -- Check if the player has the jedi progression screen play state.
