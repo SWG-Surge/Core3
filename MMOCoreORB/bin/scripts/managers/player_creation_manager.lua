@@ -59,7 +59,7 @@ professionSpecificItems = {
 	social_entertainer = { slitherhorn }
 }
 
-commonStartingItems = { marojMelon, survivalKnife, x31Speeder, placeholderDatapad }
+commonStartingItems = { marojMelon, survivalKnife, x31Speeder }
 
 -- Function to set up Force-sensitive state for new characters
 function setupForceSensitiveState(pPlayer)

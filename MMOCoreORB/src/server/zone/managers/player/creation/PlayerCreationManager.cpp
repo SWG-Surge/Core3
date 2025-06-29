@@ -551,12 +551,6 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 
 	JediManager::instance()->onPlayerCreated(playerCreature);
 
-	// Set up Force-sensitive state for new characters
-	Lua* lua = DirectorManager::instance()->getLuaInstance();
-	Reference<LuaFunction*> setupFSState = lua->createFunction("setupForceSensitiveState", 0);
-	*setupFSState << playerCreature;
-	setupFSState->callFunction();
-
 	// Welcome Mail
 	chatManager->sendMail("system", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
 
