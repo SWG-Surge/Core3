@@ -25,6 +25,7 @@
 #include "server/zone/managers/jedi/JediManager.h"
 #include "server/zone/objects/transaction/TransactionLog.h"
 #include "server/zone/managers/player/creation/SendJtlRecruitment.h"
+#include "server/zone/managers/director/DirectorManager.h"
 
 PlayerCreationManager::PlayerCreationManager() : Logger("PlayerCreationManager") {
 	setLogging(false);
@@ -549,6 +550,12 @@ bool PlayerCreationManager::createCharacter(ClientCreateCharacterCallback* callb
 	client->addCharacter(playerCreature->getObjectID(), zoneServer.get()->getGalaxyID());
 
 	JediManager::instance()->onPlayerCreated(playerCreature);
+
+	// Set up Force-sensitive state for new characters
+	Lua* lua = DirectorManager::instance()->getLuaInstance();
+	Reference<LuaFunction*> setupFSState = lua->createFunction("setupForceSensitiveState", 0);
+	*setupFSState << playerCreature;
+	setupFSState->callFunction();
 
 	// Welcome Mail
 	chatManager->sendMail("system", "@newbie_tutorial/newbie_mail:welcome_subject", "@newbie_tutorial/newbie_mail:welcome_body", playerCreature->getFirstName());
