@@ -129,7 +129,7 @@ function Glowing:showVillageAccessPopup(pPlayer)
 	-- Also create a waypoint to the Village immediately
 	local pGhost = CreatureObject(pPlayer):getPlayerObject()
 	if (pGhost ~= nil) then
-		PlayerObject(pGhost):addWaypoint("dathomir", "Village of Aurilia", "Village of Aurilia - Jedi Training", 5306, -4145, WAYPOINTGREEN, true, true, 0)
+		PlayerObject(pGhost):addWaypoint("dathomir", "Village of Aurilia", "Village of Aurilia - Jedi Training", 5306, 0, -4145, WAYPOINTGREEN, true, true, 0)
 	end
 end
 
@@ -139,26 +139,10 @@ function Glowing:showVillagePopupDelayed(pPlayer)
 		return
 	end
 
-	local pGhost = CreatureObject(pPlayer):getPlayerObject()
-	if (pGhost == nil) then
-		return
-	end
-
-	-- Create popup message using the simpler "noCallback" approach
-	local sui = SuiMessageBox.new("Glowing", "noCallback")
-	sui.setTitle("Force Sensitivity Awakened")
-	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
-	sui.setOkButtonText("Understood")
-	sui.setForceCloseDistance(0)
-	
-	-- Send the popup to the player
-	PlayerObject(pGhost):addSuiBox(sui)
-	CreatureObject(pPlayer):sendMessage(sui.generateMessage())
-end
-
--- Callback function for the Village popup
-function Glowing:noCallback(pPlayer, pSui, eventIndex, args)
-	-- Popup was closed, no action needed
+	-- Send a system message instead of a popup to avoid conflicts
+	CreatureObject(pPlayer):sendSystemMessage("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.")
+	CreatureObject(pPlayer):sendSystemMessage("You now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.")
+	CreatureObject(pPlayer):sendSystemMessage("Location: Dathomir (5306, -4145)")
 end
 
 -- Register observer on the player for observing badge awards.

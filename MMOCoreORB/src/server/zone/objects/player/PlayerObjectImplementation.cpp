@@ -3767,7 +3767,7 @@ String PlayerObjectImplementation::getPlayedTimeString(bool verbose) const {
 
 void PlayerObjectImplementation::createHelperDroid() {
 	// Only spawn droid if character is less than 1 days old
-	if (getCharacterAgeInDays() >= 1 || isPrivileged())
+	if (getCharacterAgeInDays() >= 0 || isPrivileged()) // Changed to 0 to completely disable
 		return;
 
 	CreatureObject* player = dynamic_cast<CreatureObject*>(parent.get().get());
