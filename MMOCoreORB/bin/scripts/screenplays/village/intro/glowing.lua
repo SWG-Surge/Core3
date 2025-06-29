@@ -123,13 +123,29 @@ function Glowing:showVillageAccessPopup(pPlayer)
 		return
 	end
 
+	-- Create a delayed event to show the popup after any helper droid popups
+	createEvent(3000, "Glowing", "showVillagePopupDelayed", pPlayer)
+	
+	-- Also create a waypoint to the Village immediately
+	local pGhost = CreatureObject(pPlayer):getPlayerObject()
+	if (pGhost ~= nil) then
+		PlayerObject(pGhost):addWaypoint("dathomir", "Village of Aurilia", "Village of Aurilia - Jedi Training", 5306, -4145, WAYPOINTGREEN, true, true, 0)
+	end
+end
+
+-- Delayed function to show the popup
+function Glowing:showVillagePopupDelayed(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
 	local pGhost = CreatureObject(pPlayer):getPlayerObject()
 	if (pGhost == nil) then
 		return
 	end
 
-	-- Create popup message using proper SWGEmu SuiMessageBox syntax
-	local sui = SuiMessageBox.new("Glowing", "villagePopupCallback")
+	-- Create popup message using the simpler "noCallback" approach
+	local sui = SuiMessageBox.new("Glowing", "noCallback")
 	sui.setTitle("Force Sensitivity Awakened")
 	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
 	sui.setOkButtonText("Understood")
@@ -138,13 +154,10 @@ function Glowing:showVillageAccessPopup(pPlayer)
 	-- Send the popup to the player
 	PlayerObject(pGhost):addSuiBox(sui)
 	CreatureObject(pPlayer):sendMessage(sui.generateMessage())
-	
-	-- Also create a waypoint to the Village
-	PlayerObject(pGhost):addWaypoint("dathomir", "Village of Aurilia", "Village of Aurilia - Jedi Training", 5306, -4145, WAYPOINTGREEN, true, true, 0)
 end
 
 -- Callback function for the Village popup
-function Glowing:villagePopupCallback(pPlayer, pSui, eventIndex, args)
+function Glowing:noCallback(pPlayer, pSui, eventIndex, args)
 	-- Popup was closed, no action needed
 end
 
