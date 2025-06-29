@@ -64,42 +64,35 @@ commonStartingItems = { marojMelon, survivalKnife, x31Speeder, placeholderDatapa
 -- Function to set up Force-sensitive state for new characters
 function setupForceSensitiveState(pPlayer)
 	if (pPlayer == nil) then
+		print("setupForceSensitiveState: pPlayer is nil")
 		return
 	end
 
 	local pGhost = CreatureObject(pPlayer):getPlayerObject()
 	
 	if (pGhost == nil) then
+		print("setupForceSensitiveState: pGhost is nil")
 		return
 	end
+
+	print("setupForceSensitiveState: Setting up Force-sensitive state for " .. CreatureObject(pPlayer):getFirstName())
 
 	-- Set Jedi state to 1 (Force sensitive)
 	if (not PlayerObject(pGhost):isJedi()) then
 		PlayerObject(pGhost):setJediState(1)
+		print("setupForceSensitiveState: Set Jedi state to 1")
+	else
+		print("setupForceSensitiveState: Player already has Jedi state")
 	end
-
-	-- Set progression states as if intro is completed
-	VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_GLOWING)
-	VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_HAS_CRYSTAL)
-	VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_HAS_VILLAGE_ACCESS)
-
-	-- Complete intro quests
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.OLD_MAN_INITIAL)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.OLD_MAN_FORCE_CRYSTAL)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.TWO_MILITARY)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.LOOT_DATAPAD_1)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.GOT_DATAPAD)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_THEATER_CAMP)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.GOT_DATAPAD_2)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.LOOT_DATAPAD_2)
-	QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_VILLAGE_ELDER)
 
 	-- Give Force crystal
 	local pInventory = SceneObject(pPlayer):getSlottedObject("inventory")
 	if (pInventory ~= nil) then
 		giveItem(pInventory, "object/tangible/loot/quest/force_sensitive/force_crystal.iff", -1)
+		print("setupForceSensitiveState: Gave Force crystal")
+	else
+		print("setupForceSensitiveState: Could not get inventory")
 	end
 
-	-- Set intro step to completed (VILLAGE = 8)
-	writeScreenPlayData(pPlayer, "VillageJediProgression", "FsIntroStep", 8)
+	print("setupForceSensitiveState: Basic setup complete for " .. CreatureObject(pPlayer):getFirstName())
 end
