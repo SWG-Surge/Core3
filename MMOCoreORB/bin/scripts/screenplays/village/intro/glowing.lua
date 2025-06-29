@@ -128,8 +128,8 @@ function Glowing:showVillageAccessPopup(pPlayer)
 		return
 	end
 
-	-- Create popup message
-	local sui = SuiMessageBox.new("Glowing", "noCallback")
+	-- Create popup message using proper SWGEmu SuiMessageBox syntax
+	local sui = SuiMessageBox.new("Glowing", "villagePopupCallback")
 	sui.setTitle("Force Sensitivity Awakened")
 	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
 	sui.setOkButtonText("Understood")
@@ -139,8 +139,13 @@ function Glowing:showVillageAccessPopup(pPlayer)
 	PlayerObject(pGhost):addSuiBox(sui)
 	CreatureObject(pPlayer):sendMessage(sui.generateMessage())
 	
-	-- Also send a system message for immediate feedback
-	CreatureObject(pPlayer):sendSystemMessage("You feel the Force awaken within you! Seek out the Village of Aurilia on Dathomir to begin your Jedi journey.")
+	-- Also create a waypoint to the Village
+	PlayerObject(pGhost):addWaypoint("dathomir", "Village of Aurilia", "Village of Aurilia - Jedi Training", 5306, -4145, WAYPOINTGREEN, true, true, 0)
+end
+
+-- Callback function for the Village popup
+function Glowing:villagePopupCallback(pPlayer, pSui, eventIndex, args)
+	-- Popup was closed, no action needed
 end
 
 -- Register observer on the player for observing badge awards.
