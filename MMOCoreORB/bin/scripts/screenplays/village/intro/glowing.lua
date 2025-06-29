@@ -137,7 +137,7 @@ function Glowing:showVillageAccessPopup(pPlayer)
 	
 	-- Send the popup to the player
 	PlayerObject(pGhost):addSuiBox(sui)
-	pPlayer:sendMessage(sui.generateMessage())
+	CreatureObject(pPlayer):sendMessage(sui.generateMessage())
 	
 	-- Also send a system message for immediate feedback
 	CreatureObject(pPlayer):sendSystemMessage("You feel the Force awaken within you! Seek out the Village of Aurilia on Dathomir to begin your Jedi journey.")
