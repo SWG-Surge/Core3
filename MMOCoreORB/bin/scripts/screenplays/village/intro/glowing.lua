@@ -111,7 +111,36 @@ function Glowing:completeVillageIntro(pPlayer)
 	awardSkill(pPlayer, "force_title_jedi_novice")
 	print("Glowing: Awarded force_title_jedi_novice skill")
 	
+	-- Show popup notification to the player
+	self:showVillageAccessPopup(pPlayer)
+	
 	print("Glowing: Village intro auto-completed for " .. CreatureObject(pPlayer):getFirstName())
+end
+
+-- Function to show popup notification about Village access
+function Glowing:showVillageAccessPopup(pPlayer)
+	if (pPlayer == nil) then
+		return
+	end
+
+	local pGhost = CreatureObject(pPlayer):getPlayerObject()
+	if (pGhost == nil) then
+		return
+	end
+
+	-- Create popup message
+	local sui = SuiMessageBox.new("Glowing", "noCallback")
+	sui.setTitle("Force Sensitivity Awakened")
+	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
+	sui.setOkButtonText("Understood")
+	sui.setForceCloseDistance(0)
+	
+	-- Send the popup to the player
+	PlayerObject(pGhost):addSuiBox(sui)
+	pPlayer:sendMessage(sui.generateMessage())
+	
+	-- Also send a system message for immediate feedback
+	CreatureObject(pPlayer):sendSystemMessage("You feel the Force awaken within you! Seek out the Village of Aurilia on Dathomir to begin your Jedi journey.")
 end
 
 -- Register observer on the player for observing badge awards.
