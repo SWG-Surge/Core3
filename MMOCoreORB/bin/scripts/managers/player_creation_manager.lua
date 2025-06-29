@@ -85,6 +85,24 @@ function setupForceSensitiveState(pPlayer)
 		print("setupForceSensitiveState: Player already has Jedi state")
 	end
 
+	-- Try to set Village progression states
+	local success, result = pcall(function()
+		-- Try to require the module
+		local VillageJediManagerCommon = require("managers.jedi.village_jedi_manager_common")
+		
+		-- Set progression states as if intro is completed
+		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 1) -- VILLAGE_JEDI_PROGRESSION_GLOWING
+		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 2) -- VILLAGE_JEDI_PROGRESSION_HAS_CRYSTAL
+		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 4) -- VILLAGE_JEDI_PROGRESSION_HAS_VILLAGE_ACCESS
+		
+		print("setupForceSensitiveState: Set Village progression states")
+		return true
+	end)
+	
+	if not success then
+		print("setupForceSensitiveState: Could not set Village progression states: " .. tostring(result))
+	end
+
 	-- Give Force crystal
 	local pInventory = SceneObject(pPlayer):getSlottedObject("inventory")
 	if (pInventory ~= nil) then
