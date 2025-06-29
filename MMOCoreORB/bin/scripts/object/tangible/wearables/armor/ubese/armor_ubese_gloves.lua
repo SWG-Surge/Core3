@@ -56,6 +56,8 @@ object_tangible_wearables_armor_ubese_armor_ubese_gloves = object_tangible_weara
 				"object/creature/player/sullustan_female.iff",
 				"object/creature/player/twilek_male.iff",
 				"object/creature/player/twilek_female.iff",
+				"object/creature/player/wookiee_male.iff",
+				"object/creature/player/wookiee_female.iff",
 				"object/creature/player/zabrak_male.iff",
 				"object/creature/player/zabrak_female.iff",
 				"object/mobile/vendor/aqualish_female.iff",
