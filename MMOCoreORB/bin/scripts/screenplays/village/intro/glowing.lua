@@ -139,10 +139,16 @@ function Glowing:showVillagePopupDelayed(pPlayer)
 		return
 	end
 
-	-- Send a system message instead of a popup to avoid conflicts
-	CreatureObject(pPlayer):sendSystemMessage("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.")
-	CreatureObject(pPlayer):sendSystemMessage("You now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.")
-	CreatureObject(pPlayer):sendSystemMessage("Location: Dathomir (5306, -4145)")
+	-- Create popup message using the same pattern as Jedi trials
+	local sui = SuiMessageBox.new("Glowing", "emptyCallback")
+	sui.setTitle("Force Sensitivity Awakened")
+	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
+	sui.sendTo(pPlayer)
+end
+
+-- Callback function for the Village popup (does nothing, like Jedi trials)
+function Glowing:emptyCallback(pPlayer)
+	-- Do nothing.
 end
 
 -- Register observer on the player for observing badge awards.
