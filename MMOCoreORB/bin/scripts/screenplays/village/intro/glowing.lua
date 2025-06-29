@@ -120,10 +120,16 @@ end
 -- Function to show popup notification about Village access
 function Glowing:showVillageAccessPopup(pPlayer)
 	if (pPlayer == nil) then
+		print("Glowing: showVillageAccessPopup - pPlayer is nil")
 		return
 	end
 
-	-- Create a delayed event to show the popup after any helper droid popups
+	print("Glowing: showVillageAccessPopup called for " .. CreatureObject(pPlayer):getFirstName())
+	
+	-- Try immediate popup first, then delayed as backup
+	self:showVillagePopupImmediate(pPlayer)
+	
+	-- Also create a delayed event as backup
 	createEvent(3000, "Glowing", "showVillagePopupDelayed", pPlayer)
 	
 	-- Also create a waypoint to the Village immediately
@@ -133,22 +139,52 @@ function Glowing:showVillageAccessPopup(pPlayer)
 	end
 end
 
--- Delayed function to show the popup
-function Glowing:showVillagePopupDelayed(pPlayer)
+-- Immediate popup function
+function Glowing:showVillagePopupImmediate(pPlayer)
 	if (pPlayer == nil) then
+		print("Glowing: showVillagePopupImmediate - pPlayer is nil")
 		return
 	end
 
-	-- Create popup message using the same pattern as Jedi trials
-	local sui = SuiMessageBox.new("Glowing", "emptyCallback")
+	print("Glowing: showVillagePopupImmediate called for " .. CreatureObject(pPlayer):getFirstName())
+	
+	-- Send a system message first to confirm the function is called
+	CreatureObject(pPlayer):sendSystemMessage("DEBUG: Force sensitivity popup function called!")
+	
+	-- Create popup message using a simpler approach
+	local sui = SuiMessageBox.new("Glowing", "popupCallback")
 	sui.setTitle("Force Sensitivity Awakened")
 	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
 	sui.sendTo(pPlayer)
+	
+	print("Glowing: Immediate popup sent to " .. CreatureObject(pPlayer):getFirstName())
 end
 
--- Callback function for the Village popup (does nothing, like Jedi trials)
-function Glowing:emptyCallback(pPlayer)
-	-- Do nothing.
+-- Delayed function to show the popup
+function Glowing:showVillagePopupDelayed(pPlayer)
+	if (pPlayer == nil) then
+		print("Glowing: showVillagePopupDelayed - pPlayer is nil")
+		return
+	end
+
+	print("Glowing: showVillagePopupDelayed called for " .. CreatureObject(pPlayer):getFirstName())
+
+	-- Send a system message first to confirm the function is called
+	CreatureObject(pPlayer):sendSystemMessage("DEBUG: Delayed Force sensitivity popup function called!")
+
+	-- Create popup message using a simpler approach
+	local sui = SuiMessageBox.new("Glowing", "popupCallback")
+	sui.setTitle("Force Sensitivity Awakened")
+	sui.setPrompt("You feel the Force awaken within you! Your mastery of your profession has revealed your connection to the Force.\n\nYou now have access to the Village of Aurilia on Dathomir, where you can begin your Jedi training. Seek out the Village Elder to continue your journey.\n\nLocation: Dathomir (5306, -4145)")
+	sui.sendTo(pPlayer)
+	
+	print("Glowing: Delayed popup sent to " .. CreatureObject(pPlayer):getFirstName())
+end
+
+-- Callback function for the Village popup
+function Glowing:popupCallback(pPlayer, pSui, eventIndex, args)
+	print("Glowing: popupCallback called for " .. CreatureObject(pPlayer):getFirstName())
+	-- Do nothing, just log that it was called
 end
 
 -- Register observer on the player for observing badge awards.
@@ -178,5 +214,8 @@ function Glowing:checkForceStatusCommand(pPlayer)
 
 	CreatureObject(pPlayer):sendSystemMessage(progress)
 end
+
+-- Register the screenplay
+registerScreenPlay("Glowing", true)
 
 return Glowing
