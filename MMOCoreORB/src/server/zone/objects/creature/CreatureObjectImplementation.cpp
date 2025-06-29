@@ -1431,7 +1431,7 @@ void CreatureObjectImplementation::addSkill(Skill* skill, bool notifyClient) {
 		if (shouldSpawnHelper) {
 			PlayerObject* ghost = getPlayerObject();
 
-			if (ghost != nullptr && ghost->getCharacterAgeInDays() < 1) {
+			if (ghost != nullptr && ghost->getCharacterAgeInDays() < (1.0/1440.0)) { // Changed from 1 day to 1 minute
 				bool helperDroidSpawned = false;
 
 				Locker lock(ghost);
