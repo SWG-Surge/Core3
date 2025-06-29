@@ -118,9 +118,9 @@ dathomir_regions = {
 	{"worship_shrine", -6949, -3034, {CIRCLE, 30}, NOSPAWNAREA + NOBUILDZONEAREA},
 
 	-- FS Village
-	--{"@dathomir_region_names:fs_village", 5306, -4145, {CIRCLE, 250}, UNDEFINEDAREA},
-	{"dathomir_fs_village_unpassable", 5306, -4145, {CIRCLE, 512}, NOSPAWNAREA + NAVAREA},
-	{"dathomir_fs_village_unpassable_nobuild", 5306, -4145, {CIRCLE, 1024}, NOBUILDZONEAREA},
+	{"@dathomir_region_names:fs_village", 5306, -4145, {CIRCLE, 250}, UNDEFINEDAREA},
+	--{"dathomir_fs_village_unpassable", 5306, -4145, {CIRCLE, 512}, NOSPAWNAREA},
+	--{"dathomir_fs_village_unpassable_nobuild", 5306, -4145, {CIRCLE, 1024}, NOBUILDZONEAREA},
 
 	-- Phase 3 camp spawns
 	{ "dathomir_fs_combat_camp1", 5939, -2030, {CIRCLE, 150}, NOSPAWNAREA + NOBUILDZONEAREA + NAVAREA},
