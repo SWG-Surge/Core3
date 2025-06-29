@@ -77,36 +77,6 @@ function setupForceSensitiveState(pPlayer)
 
 	print("setupForceSensitiveState: Setting up Force-sensitive state for " .. CreatureObject(pPlayer):getFirstName())
 
-	-- Set Jedi state to 1 (Force sensitive)
-	if (not PlayerObject(pGhost):isJedi()) then
-		PlayerObject(pGhost):setJediState(1)
-		print("setupForceSensitiveState: Set Jedi state to 1")
-	else
-		print("setupForceSensitiveState: Player already has Jedi state")
-	end
-
-	-- Try to set Village progression states and quest completion
-	local success, result = pcall(function()
-		-- Try to require the module with correct path
-		local VillageJediManagerCommon = require("screenplays.village.village_jedi_manager_common")
-		local QuestManager = require("managers.quest.quest_manager")
-		
-		-- Set progression states as if intro is completed
-		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 1) -- VILLAGE_JEDI_PROGRESSION_GLOWING
-		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 2) -- VILLAGE_JEDI_PROGRESSION_HAS_CRYSTAL
-		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 4) -- VILLAGE_JEDI_PROGRESSION_HAS_VILLAGE_ACCESS
-		
-		-- Complete the FS_VILLAGE_ELDER quest to set the quest bit
-		QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_VILLAGE_ELDER)
-		
-		print("setupForceSensitiveState: Set Village progression states and quest completion")
-		return true
-	end)
-	
-	if not success then
-		print("setupForceSensitiveState: Could not set Village progression states: " .. tostring(result))
-	end
-
 	-- Give Force crystal
 	local pInventory = SceneObject(pPlayer):getSlottedObject("inventory")
 	if (pInventory ~= nil) then

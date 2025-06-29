@@ -58,8 +58,12 @@ function Glowing:badgeAwardedEventHandler(pPlayer, pPlayer2, badgeNumber)
 	end
 
 	if self:hasRequiredBadgeCount(pPlayer) and not CreatureObject(pPlayer):hasSkill("force_title_jedi_novice") then
+		-- Set glowing state
 		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, VILLAGE_JEDI_PROGRESSION_GLOWING)
+		
+		-- AUTO-COMPLETE THE ENTIRE INTRO SEQUENCE
 		self:completeVillageIntro(pPlayer)
+		
 		return 1
 	end
 
