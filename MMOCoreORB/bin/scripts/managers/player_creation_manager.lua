@@ -85,17 +85,21 @@ function setupForceSensitiveState(pPlayer)
 		print("setupForceSensitiveState: Player already has Jedi state")
 	end
 
-	-- Try to set Village progression states
+	-- Try to set Village progression states and quest completion
 	local success, result = pcall(function()
-		-- Try to require the module
-		local VillageJediManagerCommon = require("managers.jedi.village_jedi_manager_common")
+		-- Try to require the module with correct path
+		local VillageJediManagerCommon = require("screenplays.village.village_jedi_manager_common")
+		local QuestManager = require("managers.quest.quest_manager")
 		
 		-- Set progression states as if intro is completed
 		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 1) -- VILLAGE_JEDI_PROGRESSION_GLOWING
 		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 2) -- VILLAGE_JEDI_PROGRESSION_HAS_CRYSTAL
 		VillageJediManagerCommon.setJediProgressionScreenPlayState(pPlayer, 4) -- VILLAGE_JEDI_PROGRESSION_HAS_VILLAGE_ACCESS
 		
-		print("setupForceSensitiveState: Set Village progression states")
+		-- Complete the FS_VILLAGE_ELDER quest to set the quest bit
+		QuestManager.completeQuest(pPlayer, QuestManager.quests.FS_VILLAGE_ELDER)
+		
+		print("setupForceSensitiveState: Set Village progression states and quest completion")
 		return true
 	end)
 	
