@@ -885,4 +885,25 @@ trainerSkills = {
 		"force_discipline_defender_preternatural_defense_03",
 		"force_discipline_defender_preternatural_defense_04"
 	},
+
+	trainer_gcw = {
+		"gcw_profession_novice",
+		"gcw_profession_master",
+		"gcw_profession_ranged_01",
+		"gcw_profession_ranged_02",
+		"gcw_profession_ranged_03",
+		"gcw_profession_ranged_04",
+		"gcw_profession_melee_01",
+		"gcw_profession_melee_02",
+		"gcw_profession_melee_03",
+		"gcw_profession_melee_04",
+		"gcw_profession_defense_01",
+		"gcw_profession_defense_02",
+		"gcw_profession_defense_03",
+		"gcw_profession_defense_04",
+		"gcw_profession_toughness_01",
+		"gcw_profession_toughness_02",
+		"gcw_profession_toughness_03",
+		"gcw_profession_toughness_04"
+	},
 }
