@@ -40,11 +40,13 @@
 --gives permission to release a modified version without this exception; 
 --this exception also makes it possible to release a modified version 
 
+object_building_dathomir_shuttleport_dathomir = object_building_dathomir_shared_shuttleport_dathomir:new {
+	planetMapCategory = "shuttleport",
+	childObjects = {
+		{templateFile = "object/tangible/terminal/terminal_travel.iff", x = -13, z = 0.6, y = -9, ox = 0, oy = -0.707107, oz = 0, ow = 0.707107, cellid = -1, containmentType = -1},
+		{templateFile = "object/tangible/travel/ticket_collector/ticket_collector.iff", x = -13, z = 0.6, y = 10, ox = 0, oy = -0.707107, oz = 0, ow = 0.707107, cellid = -1, containmentType = -1},
+		{templateFile = "object/creature/npc/theme_park/player_shuttle.iff", x = 0, z = 0.6, y = 0, ox = 0, oy = 1, oz = 0, ow = 0, cellid = -1, containmentType = -1}
+	}
+}
 
-
---Children folder includes
-
--- Server Objects
-includeFile("building/dathomir/mtn_clan_stronghold.lua")
-includeFile("building/dathomir/night_sister_stronghold.lua")
-includeFile("building/dathomir/shuttleport_dathomir.lua")
+ObjectTemplates:addTemplate(object_building_dathomir_shuttleport_dathomir, "object/building/dathomir/shuttleport_dathomir.iff") 
