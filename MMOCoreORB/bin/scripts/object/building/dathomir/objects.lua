@@ -166,15 +166,15 @@ object_building_dathomir_shared_night_sister_stronghold = SharedBuildingObjectTe
 ObjectTemplates:addClientTemplate(object_building_dathomir_shared_night_sister_stronghold, "object/building/dathomir/shared_night_sister_stronghold.iff")
 
 object_building_dathomir_shared_shuttleport_dathomir = SharedBuildingObjectTemplate:new {
-	clientTemplateFileName = "object/building/dathomir/shared_shuttleport_dathomir.iff"
+	clientTemplateFileName = "object/building/general/shared_shuttleport_general.iff"
 	--Data below here is deprecated and loaded from the tres, keeping for easy lookups
 --[[
-	appearanceFilename = "appearance/mun_dath_shuttleport_s01.apt",
+	appearanceFilename = "appearance/mun_all_shuttleport_s01.apt",
 	arrangementDescriptorFilename = "",
 
 	certificationsRequired = {},
 	clearFloraRadius = 0,
-	clientDataFile = "clientdata/building/shared_shuttleport.cdf",
+	clientDataFile = "",
 	clientGameObjectType = 512,
 	collisionActionBlockFlags = 255,
 	collisionActionFlags = 255,
@@ -186,18 +186,18 @@ object_building_dathomir_shared_shuttleport_dathomir = SharedBuildingObjectTempl
 	containerVolumeLimit = 0,
 	customizationVariableMapping = {},
 
-	detailedDescription = "@building_detail:shuttleport_dathomir",
+	detailedDescription = "@building_detail:shuttleport_general",
 
 	gameObjectType = 512,
 
 	interiorLayoutFileName = "",
 
 	locationReservationRadius = 0,
-	lookAtText = "@building_lookat:shuttleport_dathomir",
+	lookAtText = "@building_lookat:shuttleport_general",
 
 	noBuildRadius = 0,
 
-	objectName = "@building_name:shuttleport_dathomir",
+	objectName = "@building_name:shuttleport_general",
 	onlyVisibleInTools = 0,
 
 	paletteColorCustomizationVariables = {},
@@ -220,9 +220,9 @@ object_building_dathomir_shared_shuttleport_dathomir = SharedBuildingObjectTempl
 
 	useStructureFootprintOutline = 0,
 
-	clientObjectCRC = 3818763165,
+	clientObjectCRC = 3656969600,
 	derivedFromTemplates = {"object/object/base/shared_base_object.iff", "object/tangible/base/shared_tangible_base.iff", "object/building/base/shared_base_building.iff", "object/building/base/shared_base_starport.iff"}
 ]]
 }
 
-ObjectTemplates:addClientTemplate(object_building_dathomir_shared_shuttleport_dathomir, "object/building/dathomir/shared_shuttleport_dathomir.iff")
+ObjectTemplates:addClientTemplate(object_building_dathomir_shared_shuttleport_dathomir, "object/building/general/shared_shuttleport_general.iff")
