@@ -329,6 +329,14 @@ void ChatManagerImplementation::initiateRooms() {
 		pvpBroadcastRoom->setTitle("PvP death broadcasts.");
 		pvpBroadcastRoom->setChatRoomType(ChatRoom::CUSTOM);
 	}
+
+	// Create global galaxy-wide chat room
+	globalChatRoom = createRoom("Surge Global", galaxyRoom);
+	globalChatRoom->setCanEnter(true);
+	globalChatRoom->setAllowSubrooms(false);
+	globalChatRoom->setModerated(false);
+	globalChatRoom->setTitle("Galaxy-wide chat channel for all players.");
+	globalChatRoom->setChatRoomType(ChatRoom::CUSTOM);
 }
 
 void ChatManagerImplementation::initiatePlanetRooms() {
