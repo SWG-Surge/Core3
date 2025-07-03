@@ -1776,8 +1776,20 @@ void PlayerObjectImplementation::notifyOnline() {
 
 	playerCreature->schedulePersonalEnemyFlagTasks();
 
-	if (ConfigManager::instance()->isPvpBroadcastChannelEnabled() && playerCreature->getFactionStatus() == FactionStatus::OVERT) {
-		addChatRoom(chatManager->getPvpBroadcastRoom()->getRoomID());
+	// Join global chat channel automatically
+	ManagedReference<ChatRoom*> globalChatRoom = chatManager->getGlobalChatRoom();
+	if (globalChatRoom != nullptr) {
+		globalChatRoom->sendTo(creature);
+		chatManager->handleChatEnterRoomById(creature, globalChatRoom->getRoomID(), -1, true);
+	}
+
+	// Join PvP broadcast channel automatically for all players
+	if (ConfigManager::instance()->isPvpBroadcastChannelEnabled()) {
+		ManagedReference<ChatRoom*> pvpBroadcastRoom = chatManager->getPvpBroadcastRoom();
+		if (pvpBroadcastRoom != nullptr) {
+			pvpBroadcastRoom->sendTo(creature);
+			chatManager->handleChatEnterRoomById(creature, pvpBroadcastRoom->getRoomID(), -1, true);
+		}
 	}
 }
 
