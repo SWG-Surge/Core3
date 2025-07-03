@@ -1465,6 +1465,21 @@ void GCWManagerImplementation::awardSlicingXP(CreatureObject* creature, const St
 	playerManager->awardExperience(creature, xpType, val, true);
 }
 
+bool GCWManagerImplementation::isValidGcwBattle(CreatureObject* attacker, CreatureObject* victim) {
+	if (attacker == nullptr || victim == nullptr)
+		return false;
+
+	// Must be opposing factions
+	if (!areOpposingFactions(attacker->getFaction(), victim->getFaction()))
+		return false;
+
+	// Must be proper faction status
+	if (!isProperFactionStatus(attacker) || !isProperFactionStatus(victim))
+		return false;
+
+	return true;
+}
+
 void GCWManagerImplementation::sendJamUplinkMenu(CreatureObject* creature, BuildingObject* building, TangibleObject* uplinkTerminal) {
 	ManagedReference<PlayerObject*> ghost = creature->getPlayerObject();
 	DestructibleBuildingDataComponent* baseData = getDestructibleBuildingData(building);

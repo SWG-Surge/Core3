@@ -6762,6 +6762,16 @@ void PlayerManagerImplementation::doPvpDeathRatingUpdate(CreatureObject* player,
 			}
 		}
 
+		// GCW XP handling
+		GCWManager* gcwManager = server->getGCWManager();
+		if (gcwManager != nullptr && gcwManager->isValidGcwBattle(attackerCreo, player)) {
+			// Award XP to killer (250 XP)
+			awardExperience(attackerCreo, "gcw_xp", 250, true);
+			
+			// Penalize victim (-150 XP)
+			awardExperience(player, "gcw_xp", -150, true);
+		}
+
 		attackerGhost->addToVictimList(victimId);
 		throttleOnly = false;
 

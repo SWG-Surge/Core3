@@ -340,3 +340,10 @@ squadFormations = {
 		{"novatrooper_squad_leader", "elite_novatrooper", "elite_novatrooper", "elite_novatrooper", "elite_novatrooper", "elite_novatrooper", "elite_novatrooper", "elite_novatrooper", "elite_novatrooper", "dark_trooper_novatrooper", "dark_trooper_novatrooper", "novatrooper_medic", "novatrooper_ensign"},
 	},
 }
+
+-- GCW XP Configuration
+-- XP awarded for killing an opposing faction player
+gcwKillXp = 250
+
+-- XP penalty for dying to an opposing faction player
+gcwDeathXpPenalty = -150
