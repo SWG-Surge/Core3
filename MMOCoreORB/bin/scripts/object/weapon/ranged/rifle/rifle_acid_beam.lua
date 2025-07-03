@@ -74,7 +74,7 @@ object_weapon_ranged_rifle_rifle_acid_beam = object_weapon_ranged_rifle_shared_r
 	damageType = ACID,
 
 	-- NONE, LIGHT, MEDIUM, HEAVY
-	armorPiercing = NONE,
+	armorPiercing = MEDIUM,
 
 	-- combat_rangedspecialize_bactarifle, combat_rangedspecialize_rifle, combat_rangedspecialize_pistol, combat_rangedspecialize_heavy, combat_rangedspecialize_carbine
 	-- combat_meleespecialize_unarmed, combat_meleespecialize_twohand, combat_meleespecialize_polearm, combat_meleespecialize_onehand, combat_general,
@@ -108,11 +108,11 @@ object_weapon_ranged_rifle_rifle_acid_beam = object_weapon_ranged_rifle_shared_r
 	pointBlankRange = 0,
 	pointBlankAccuracy = -10,
 
-	idealRange = 16,
-	idealAccuracy = -40,
+	idealRange = 24,
+	idealAccuracy = 50,
 
 	maxRange = 48,
-	maxRangeAccuracy = -120,
+	maxRangeAccuracy = 0,
 
 	minDamage = 60,
 	maxDamage = 160,

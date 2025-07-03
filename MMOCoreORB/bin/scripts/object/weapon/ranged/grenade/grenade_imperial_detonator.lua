@@ -96,7 +96,7 @@ object_weapon_ranged_grenade_grenade_imperial_detonator = object_weapon_ranged_g
 	-- Leave blank for now
 	damageModifiers = { },
 
-	useCount = 5,
+	useCount = 25,
 
 	combatSpam = "throw_imperial_detonator",
 	animationType = "imperial_detonator",
@@ -105,29 +105,29 @@ object_weapon_ranged_grenade_grenade_imperial_detonator = object_weapon_ranged_g
 	actionAttackCost = 125,
 	mindAttackCost = 50,
 
-	pointBlankRange = 0,
-	pointBlankAccuracy = -10,
+	pointBlankRange = 6,
+	pointBlankAccuracy = 40,
 
-	idealRange = 20,
-	idealAccuracy = 15,
+	idealRange = 24,
+	idealAccuracy = 80,
 
-	maxRange = 64,
-	maxRangeAccuracy = -30,
+	maxRange = 48,
+	maxRangeAccuracy = 0,
 
 	minDamage = 100,
 	maxDamage = 550,
 
 	attackSpeed = 6,
 
-	woundsRatio = 10,
+	woundsRatio = 50,
 
 	numberExperimentalProperties = {1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2},
 	experimentalProperties = {"XX", "XX", "OQ", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "XX", "OQ", "SR", "OQ", "SR", "OQ", "SR"},
 	experimentalWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage", "expDamage", "expDamage", "null", "expRange", "expRange", "expRange", "expRange", "null", "expEffeciency", "expEffeciency", "expEffeciency"},
 	experimentalSubGroupTitles = {"null", "null", "mindamage", "maxdamage", "attackspeed", "woundchance", "hitpoints", "zerorangemod", "maxrangemod", "midrangemod", "midrange", "maxrange", "attackhealthcost", "attackactioncost", "attackmindcost"},
-	experimentalMin = {0, 0, 645, 1300, 6, 7, 1000, -16, -45, 0, 10, 64, 163, 163, 65},
-	experimentalMax = {0, 0, 989, 2000, 2.5, 13, 1000, 14, -15, 30, 30, 64, 88, 88, 35},
+	experimentalMin = {0, 0, 774, 1560, 6, 7, 1000, -16, -45, 0, 10, 64, 163, 163, 65},
+	experimentalMax = {0, 0, 1187, 2400, 2.5, 13, 1000, 14, -15, 30, 30, 64, 88, 88, 35},
 	experimentalPrecision = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	experimentalCombineType = {0, 0, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1},
 }

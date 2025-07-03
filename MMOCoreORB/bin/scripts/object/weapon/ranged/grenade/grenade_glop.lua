@@ -74,7 +74,7 @@ object_weapon_ranged_grenade_grenade_glop = object_weapon_ranged_grenade_shared_
 	damageType = ACID,
 
 	-- NONE, LIGHT, MEDIUM, HEAVY
-	armorPiercing = NONE,
+	armorPiercing = LIGHT,
 
 	-- combat_rangedspecialize_bactarifle, combat_rangedspecialize_rifle, combat_rangedspecialize_pistol, combat_rangedspecialize_heavy, combat_rangedspecialize_carbine
 	-- combat_meleespecialize_unarmed, combat_meleespecialize_twohand, combat_meleespecialize_polearm, combat_meleespecialize_onehand, combat_general,
@@ -96,7 +96,7 @@ object_weapon_ranged_grenade_grenade_glop = object_weapon_ranged_grenade_shared_
 	-- Leave blank for now
 	damageModifiers = { },
 
-	useCount = 5,
+	useCount = 25,
 
 	combatSpam = "throw_glop",
 	animationType = "glop",
@@ -105,29 +105,29 @@ object_weapon_ranged_grenade_grenade_glop = object_weapon_ranged_grenade_shared_
 	actionAttackCost = 40,
 	mindAttackCost = 15,
 
-	pointBlankRange = 0,
-	pointBlankAccuracy = -10,
+	pointBlankRange = 6,
+	pointBlankAccuracy = 40,
 
-	idealRange = 20,
-	idealAccuracy = 15,
+	idealRange = 24,
+	idealAccuracy = 80,
 
-	maxRange = 64,
-	maxRangeAccuracy = -30,
+	maxRange = 48,
+	maxRangeAccuracy = 0,
 
 	minDamage = 100,
 	maxDamage = 350,
 
 	attackSpeed = 5,
 
-	woundsRatio = 10,
+	woundsRatio = 50,
 
 	numberExperimentalProperties = {1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2},
 	experimentalProperties = {"XX", "XX", "OQ", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "XX", "OQ", "SR", "OQ", "SR", "OQ", "SR"},
 	experimentalWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage", "expDamage", "expDamage", "null", "expRange", "expRange", "expRange", "expRange", "null", "expEffeciency", "expEffeciency", "expEffeciency"},
 	experimentalSubGroupTitles = {"null", "null", "mindamage", "maxdamage", "attackspeed", "woundchance", "hitpoints", "zerorangemod", "maxrangemod", "midrangemod", "midrange", "maxrange", "attackhealthcost", "attackactioncost", "attackmindcost"},
-	experimentalMin = {0, 0, 200, 460, 5.8, 7, 1000, -16, -45, 0, 10, 64, 130, 52, 20},
-	experimentalMax = {0, 0, 340, 1780, 3.4, 13, 1000, 14, -15, 30, 30, 64, 70, 28, 11},
+	experimentalMin = {0, 0, 240, 1696, 5.8, 7, 1000, -16, -45, 0, 10, 64, 130, 52, 20},
+	experimentalMax = {0, 0, 408, 2136, 3.4, 13, 1000, 14, -15, 30, 30, 64, 70, 28, 11},
 	experimentalPrecision = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	experimentalCombineType = {0, 0, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1},
 }

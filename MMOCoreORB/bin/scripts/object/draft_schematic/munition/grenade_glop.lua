@@ -67,7 +67,7 @@ object_draft_schematic_munition_grenade_glop = object_draft_schematic_munition_s
    ingredientTitleNames = {"body_shell", "chem_jet_assembly", "shield_doors", "gel_canister", "warhead_assembly", "chemical_diffusion_assembly", "warhead_fusing", "warhead_booster"},
    ingredientSlotType = {0, 0, 0, 0, 1, 1, 1, 3},
    resourceTypes = {"metal", "steel", "metal_ferrous", "petrochem_inert_polymer", "object/tangible/component/munition/shared_warhead_light.iff", "object/tangible/component/weapon/shared_chemical_dispersion_mechanism.iff", "object/tangible/component/munition/shared_warhead_fusing_mechanism.iff", "object/tangible/component/munition/shared_enhanced_charge_composition.iff"},
-   resourceQuantities = {12, 6, 8, 5, 1, 1, 1, 1},
+   resourceQuantities = {17, 11, 13, 10, 6, 6, 6, 6},
    contribution = {100, 100, 100, 100, 100, 100, 100, 100},
 
 

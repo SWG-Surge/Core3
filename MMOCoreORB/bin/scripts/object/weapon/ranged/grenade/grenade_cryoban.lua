@@ -96,7 +96,7 @@ object_weapon_ranged_grenade_grenade_cryoban = object_weapon_ranged_grenade_shar
 	-- Leave blank for now
 	damageModifiers = { },
 
-	useCount = 5,
+	useCount = 25,
 
 	combatSpam = "throw_cryoban",
 

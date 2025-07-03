@@ -96,7 +96,7 @@ object_weapon_ranged_grenade_grenade_thermal_detonator = object_weapon_ranged_gr
 	-- Leave blank for now
 	damageModifiers = { },
 
-	useCount = 5,
+	useCount = 25,
 
 	combatSpam = "throw_thermal_detonator",
 	animationType = "thermal_detonator",
@@ -105,29 +105,29 @@ object_weapon_ranged_grenade_grenade_thermal_detonator = object_weapon_ranged_gr
 	actionAttackCost = 75,
 	mindAttackCost = 35,
 
-	pointBlankRange = 0,
-	pointBlankAccuracy = -10,
+	pointBlankRange = 6,
+	pointBlankAccuracy = 40,
 
-	idealRange = 20,
-	idealAccuracy = 15,
+	idealRange = 24,
+	idealAccuracy = 80,
 
-	maxRange = 64,
-	maxRangeAccuracy = -30,
+	maxRange = 48,
+	maxRangeAccuracy = 0,
 
 	minDamage = 100,
 	maxDamage = 400,
 
 	attackSpeed = 5,
 
-	woundsRatio = 10,
+	woundsRatio = 50,
 
 	numberExperimentalProperties = {1, 1, 2, 2, 2, 2, 1, 2, 2, 2, 2, 1, 2, 2, 2},
 	experimentalProperties = {"XX", "XX", "OQ", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "OQ", "SR", "XX", "OQ", "SR", "OQ", "SR", "OQ", "SR"},
 	experimentalWeights = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1},
 	experimentalGroupTitles = {"null", "null", "expDamage", "expDamage", "expDamage", "expDamage", "null", "expRange", "expRange", "expRange", "expRange", "null", "expEffeciency", "expEffeciency", "expEffeciency"},
 	experimentalSubGroupTitles = {"null", "null", "mindamage", "maxdamage", "attackspeed", "woundchance", "hitpoints", "zerorangemod", "maxrangemod", "midrangemod", "midrange", "maxrange", "attackhealthcost", "attackactioncost", "attackmindcost"},
-	experimentalMin = {0, 0, 570, 1334, 5.4, 7, 1000, -16, -45, 0, 10, 64, 98, 98, 46},
-	experimentalMax = {0, 0, 870, 1690, 2.4, 13, 1000, 14, 15, 30, 30, 64, 53, 53, 25},
+	experimentalMin = {0, 0, 684, 1601, 5.4, 7, 1000, -16, -45, 0, 10, 64, 98, 98, 46},
+	experimentalMax = {0, 0, 1044, 2028, 2.4, 13, 1000, 14, 15, 30, 30, 64, 53, 53, 25},
 	experimentalPrecision = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 	experimentalCombineType = {0, 0, 1, 1, 1, 1, 4, 1, 1, 1, 1, 1, 1, 1, 1},
 }

@@ -111,11 +111,11 @@ object_weapon_ranged_heavy_heavy_lightning_beam = object_weapon_ranged_heavy_sha
 	pointBlankRange = 0,
 	pointBlankAccuracy = -20,
 
-	idealRange = 16,
-	idealAccuracy = -20,
+	idealRange = 64,
+	idealAccuracy = 50,
 
-	maxRange = 64,
-	maxRangeAccuracy = -80,
+	maxRange = 80,
+	maxRangeAccuracy = 10,
 
 	minDamage = 10,
 	maxDamage = 400,
