@@ -6767,11 +6767,11 @@ void PlayerManagerImplementation::doPvpDeathRatingUpdate(CreatureObject* player,
 		if (zone != nullptr) {
 			GCWManager* gcwManager = zone->getGCWManager();
 			if (gcwManager != nullptr && gcwManager->isValidGcwBattle(attackerCreo, player)) {
-				// Award XP to killer (250 XP)
-				awardExperience(attackerCreo, "gcw_xp", 250, true);
+				// Award XP to killer (250 XP) - no modifiers applied
+				awardExperience(attackerCreo, "gcw_xp", 250, true, 1.0f, false);
 				
-				// Penalize victim (-150 XP)
-				awardExperience(player, "gcw_xp", -150, true);
+				// Penalize victim (-150 XP) - no modifiers applied
+				awardExperience(player, "gcw_xp", -150, true, 1.0f, false);
 			}
 		}
 
