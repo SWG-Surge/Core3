@@ -57,28 +57,31 @@ public:
 				return GENERALERROR;
 			}
 
-			ManagedReference<SceneObject*> targetObject = zoneServer->getObject(target);
+					ManagedReference<SceneObject*> targetObject = zoneServer->getObject(target);
 
-			if (targetObject == nullptr || !targetObject->isCreatureObject()) {
-				return INVALIDTARGET;
-			}
+		if (targetObject == nullptr || !targetObject->isAiAgent()) {
+			return INVALIDTARGET;
+		}
 
-			// Get trap target creature
-			auto targetCreature = targetObject->asCreatureObject();
+		// Get trap target agent
+		auto targetAgent = targetObject->asAiAgent();
 
-			if (targetCreature == nullptr) {
-				return GENERALERROR;
-			}
+		if (targetAgent == nullptr) {
+			return GENERALERROR;
+		}
 
-			if (targetCreature->isDead() || !targetCreature->isAttackableBy(creature)) {
-				return INVALIDTARGET;
-			}
+		if (targetAgent->isDead() || !targetAgent->isAttackableBy(creature)) {
+			return INVALIDTARGET;
+		}
 
-			// Check for validity of target - allow players and monsters, but not pets
-			if (targetCreature->isPet()) {
-				creature->sendSystemMessage("@trap/trap:sys_no_pets");
-				return GENERALERROR;
-			}
+		// Check for validity of target
+		if (targetAgent->isPet()) {
+			creature->sendSystemMessage("@trap/trap:sys_no_pets");
+			return GENERALERROR;
+		} else if (!targetAgent->isCreature() || !targetAgent->isMonster()) {
+			creature->sendSystemMessage("@trap/trap:sys_creatures_only");
+			return GENERALERROR;
+		}
 
 			// Trapping skill mod check
 			int trappingSkill = creature->getSkillMod("trapping");
@@ -104,7 +107,7 @@ public:
 			}
 
 			// Check Range
-			if (!checkDistance(creature, targetCreature, trapData->getMaxRange())) {
+			if (!checkDistance(creature, targetAgent, trapData->getMaxRange())) {
 				StringIdChatParameter tooFar("cmd_err", "target_range_prose");
 				tooFar.setTO("Throw Trap");
 
@@ -118,7 +121,7 @@ public:
 				return GENERALERROR;
 			}
 
-			Reference<ThrowTrapTask*> trapTask = new ThrowTrapTask(creature, targetCreature, trap);
+			Reference<ThrowTrapTask*> trapTask = new ThrowTrapTask(creature, targetAgent, trap);
 
 			if (trapTask == nullptr) {
 				return GENERALERROR;

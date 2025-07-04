@@ -147,41 +147,27 @@ public:
 					continue;
 				}
 
-				// Allow both players and monsters, but not pets
-				if (!objectCreature->isAttackableBy(attacker)) {
+				auto targetAgent = objectCreature->asAiAgent();
+
+				if (targetAgent == nullptr || !targetAgent->isAttackableBy(attacker) || !targetAgent->isCreature() || !targetAgent->isMonster()) {
 					continue;
 				}
 
-				Locker creatureLock(objectCreature, attacker);
+				Locker agentLock(targetAgent, attacker);
 
-				if (!objectCreature->isInRange(target, 5.f)) {
+				if (!targetAgent->isInRange(target, 5.f)) {
 					continue;
 				}
 
 				// Handle combat start
-				combatManager->startCombat(attacker, attacker->getWeapon(), objectCreature, false);
+				combatManager->startCombat(attacker, attacker->getWeapon(), targetAgent, false);
 
-				// Trap-specific hit calculation - simpler and more reliable than weapon combat
-				int targetDefense = objectCreature->getSkillMod(trapData->getDefenseMod());
-				
-				// Add base defense from level (reduced for traps)
-				targetDefense += objectCreature->getLevel() / 4;
-				
-				// Add player-specific defenses (reduced for traps)
-				if (objectCreature->isPlayerCreature()) {
-					targetDefense += objectCreature->getSkillMod("private_defense") / 2;
-					targetDefense += objectCreature->getSkillMod("dodge_attack") / 2;
-				}
+				int targetDefense = targetAgent->getSkillMod(trapData->getDefenseMod());
 
 				int attackRoll = System::random(199) + 1;
 				int defendRoll = System::random(199) + 1;
 
-				// Trap-specific hit chance calculation
-				float attackAccuracy = trappingSkill + attackRoll;
-				float defenseTotal = targetDefense + defendRoll;
-				
-				// Simple trap hit calculation: base 80% chance, modified by skill difference
-				float hitChance = 80.0f + (attackAccuracy - defenseTotal) * 0.5f;
+				float hitChance = combatManager->hitChanceEquation(trappingSkill + attackRoll, targetDefense + defendRoll);
 
 				if (hitChance > 100) {
 					hitChance = 100.f;
@@ -194,7 +180,7 @@ public:
 
 				// Broadcast combat action for main target
 				if (isPrimaryTarget) {
-					auto action = new CombatAction(attacker, objectCreature, trapCrc, hit, 0L);
+					auto action = new CombatAction(attacker, targetAgent, trapCrc, hit, 0L);
 
 					if (action != nullptr) {
 						attacker->broadcastMessage(action, true, false);
@@ -204,14 +190,14 @@ public:
 				if (hit) {
 					// Calculate and apply damage
 					float damage = System::random(maxDamage - minDamage) + minDamage;
-					objectCreature->inflictDamage(attacker, hamPool, damage, true, true);
+					targetAgent->inflictDamage(attacker, hamPool, damage, true, true);
 
 					// Check the creature does not have the state
-					if ((state > CreatureState::INVALID && objectCreature->hasState(state)) || objectCreature->hasBuff(trapCrc)) {
+					if ((state > CreatureState::INVALID && targetAgent->hasState(state)) || targetAgent->hasBuff(trapCrc)) {
 						continue;
 					}
 
-					ManagedReference<TrapBuff*> buff = new TrapBuff(objectCreature, trapCrc, state, debuffDuration);
+					ManagedReference<TrapBuff*> buff = new TrapBuff(targetAgent, trapCrc, state, debuffDuration);
 
 					if (buff != nullptr) {
 						if (isPrimaryTarget) {
@@ -238,11 +224,11 @@ public:
 						}
 
 						// Add buff to the target
-						objectCreature->addBuff(buff);
+						targetAgent->addBuff(buff);
 
 						// Only award XP for non-player targets (monsters)
-						if (!objectCreature->isPlayerCreature()) {
-							totalXP += objectCreature->getLevel() * 15;
+						if (!targetAgent->isPlayerCreature()) {
+							totalXP += targetAgent->getLevel() * 15;
 						}
 					}
 				}
