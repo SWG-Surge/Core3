@@ -26,23 +26,11 @@ public:
 			return false;
 		}
 
-		if (zone->getZoneName() == "dungeon1") {
-			creature->sendSystemMessage("@combat_effects:burst_run_space_dungeon"); //The artificial gravity makes burst running impossible here.
-			return false;
-		}
-
 		uint32 burstCRC = STRING_HASHCODE("burstrun");
-		uint32 forceRun1CRC = BuffCRC::JEDI_FORCE_RUN_1;
-		uint32 forceRun2CRC = BuffCRC::JEDI_FORCE_RUN_2;
-		uint32 forceRun3CRC = BuffCRC::JEDI_FORCE_RUN_3;
+		uint32 forceRunCRC = STRING_HASHCODE("forcerun");
 
-		if (creature->hasBuff(burstCRC) || creature->hasBuff(forceRun1CRC) || creature->hasBuff(forceRun2CRC) || creature->hasBuff(forceRun3CRC)) {
-			creature->sendSystemMessage("@combat_effects:burst_run_no"); //You cannot burst run right now.
-			return false;
-		}
-
-		if (!creature->checkCooldownRecovery("retreat")) {
-			creature->sendSystemMessage("@combat_effects:burst_run_no"); //You cannot burst run right now.
+		if (creature->hasBuff(burstCRC) || creature->hasBuff(forceRunCRC)) {
+			creature->sendSystemMessage("@cbt_spam:no_burst"); // You cannot burst-run while mounted on a creature or vehicle.
 			return false;
 		}
 
@@ -84,7 +72,7 @@ public:
 		if (!inflictHAM(player, 0, actionCost, mindCost))
 			return GENERALERROR;
 
-		for (int i = 1; i < group->getGroupSize(); ++i) {
+		for (int i = 0; i < group->getGroupSize(); ++i) {
 			ManagedReference<CreatureObject*> member = group->getGroupMember(i);
 
 			if (member == nullptr || !member->isPlayerCreature())

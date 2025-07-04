@@ -147,22 +147,21 @@ public:
 					continue;
 				}
 
-				auto targetAgent = objectCreature->asAiAgent();
-
-				if (targetAgent == nullptr || !targetAgent->isAttackableBy(attacker) || !targetAgent->isCreature() || !targetAgent->isMonster()) {
+				// Allow both players and monsters, but not pets
+				if (!objectCreature->isAttackableBy(attacker)) {
 					continue;
 				}
 
-				Locker agentLock(targetAgent, attacker);
+				Locker creatureLock(objectCreature, attacker);
 
-				if (!targetAgent->isInRange(target, 5.f)) {
+				if (!objectCreature->isInRange(target, 5.f)) {
 					continue;
 				}
 
 				// Handle combat start
-				combatManager->startCombat(attacker, attacker->getWeapon(), targetAgent, false);
+				combatManager->startCombat(attacker, attacker->getWeapon(), objectCreature, false);
 
-				int targetDefense = targetAgent->getSkillMod(trapData->getDefenseMod());
+				int targetDefense = objectCreature->getSkillMod(trapData->getDefenseMod());
 
 				int attackRoll = System::random(199) + 1;
 				int defendRoll = System::random(199) + 1;
@@ -180,7 +179,7 @@ public:
 
 				// Broadcast combat action for main target
 				if (isPrimaryTarget) {
-					auto action = new CombatAction(attacker, targetAgent, trapCrc, hit, 0L);
+					auto action = new CombatAction(attacker, objectCreature, trapCrc, hit, 0L);
 
 					if (action != nullptr) {
 						attacker->broadcastMessage(action, true, false);
@@ -190,14 +189,14 @@ public:
 				if (hit) {
 					// Calculate and apply damage
 					float damage = System::random(maxDamage - minDamage) + minDamage;
-					targetAgent->inflictDamage(attacker, hamPool, damage, true, true);
+					objectCreature->inflictDamage(attacker, hamPool, damage, true, true);
 
 					// Check the creature does not have the state
-					if ((state > CreatureState::INVALID && targetAgent->hasState(state)) || targetAgent->hasBuff(trapCrc)) {
+					if ((state > CreatureState::INVALID && objectCreature->hasState(state)) || objectCreature->hasBuff(trapCrc)) {
 						continue;
 					}
 
-					ManagedReference<TrapBuff*> buff = new TrapBuff(targetAgent, trapCrc, state, debuffDuration);
+					ManagedReference<TrapBuff*> buff = new TrapBuff(objectCreature, trapCrc, state, debuffDuration);
 
 					if (buff != nullptr) {
 						if (isPrimaryTarget) {
@@ -224,10 +223,11 @@ public:
 						}
 
 						// Add buff to the target
-						targetAgent->addBuff(buff);
+						objectCreature->addBuff(buff);
 
-						if (!targetAgent->isEventMob()) {
-							totalXP += targetAgent->getLevel() * 15;
+						// Only award XP for non-player targets (monsters)
+						if (!objectCreature->isPlayerCreature() && !objectCreature->isEventMob()) {
+							totalXP += objectCreature->getLevel() * 15;
 						}
 					}
 				}

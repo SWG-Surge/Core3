@@ -1167,6 +1167,19 @@ float CombatManager::calculateDamage(CreatureObject* attacker, WeaponObject* wea
 	if (attacker->isPlayerCreature() && defender->isPlayerCreature() && !data.isForceAttack())
 		damage *= 0.25;
 
+	// Creature Handler Pet Damage Bonus
+	if (attacker->isPet() && attacker->isCreatureObject()) {
+		CreatureObject* pet = attacker->asCreatureObject();
+		if (pet != nullptr) {
+			// Check if pet owner has creature handler skills
+			CreatureObject* owner = pet->getLinkedCreature().get();
+			if (owner != nullptr && owner->hasSkill("outdoors_creaturehandler_novice")) {
+				// Apply 25% damage increase for creature handlers
+				damage *= 1.25f;
+			}
+		}
+	}
+
 	if (damage < 1)
 		damage = 1;
 

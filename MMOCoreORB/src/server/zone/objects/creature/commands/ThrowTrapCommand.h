@@ -59,27 +59,24 @@ public:
 
 			ManagedReference<SceneObject*> targetObject = zoneServer->getObject(target);
 
-			if (targetObject == nullptr || !targetObject->isAiAgent()) {
+			if (targetObject == nullptr || !targetObject->isCreatureObject()) {
 				return INVALIDTARGET;
 			}
 
-			// Get trap target agent
-			auto targetAgent = targetObject->asAiAgent();
+			// Get trap target creature
+			auto targetCreature = targetObject->asCreatureObject();
 
-			if (targetAgent == nullptr) {
+			if (targetCreature == nullptr) {
 				return GENERALERROR;
 			}
 
-			if (targetAgent->isDead() || !targetAgent->isAttackableBy(creature)) {
+			if (targetCreature->isDead() || !targetCreature->isAttackableBy(creature)) {
 				return INVALIDTARGET;
 			}
 
-			// Check for validity of target
-			if (targetAgent->isPet()) {
+			// Check for validity of target - allow players and monsters, but not pets
+			if (targetCreature->isPet()) {
 				creature->sendSystemMessage("@trap/trap:sys_no_pets");
-				return GENERALERROR;
-			} else if (!targetAgent->isCreature() || !targetAgent->isMonster()) {
-				creature->sendSystemMessage("@trap/trap:sys_creatures_only");
 				return GENERALERROR;
 			}
 
@@ -107,7 +104,7 @@ public:
 			}
 
 			// Check Range
-			if (!checkDistance(creature, targetAgent, trapData->getMaxRange())) {
+			if (!checkDistance(creature, targetCreature, trapData->getMaxRange())) {
 				StringIdChatParameter tooFar("cmd_err", "target_range_prose");
 				tooFar.setTO("Throw Trap");
 
@@ -121,7 +118,7 @@ public:
 				return GENERALERROR;
 			}
 
-			Reference<ThrowTrapTask*> trapTask = new ThrowTrapTask(creature, targetAgent, trap);
+			Reference<ThrowTrapTask*> trapTask = new ThrowTrapTask(creature, targetCreature, trap);
 
 			if (trapTask == nullptr) {
 				return GENERALERROR;
