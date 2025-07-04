@@ -161,12 +161,30 @@ public:
 				// Handle combat start
 				combatManager->startCombat(attacker, attacker->getWeapon(), objectCreature, false);
 
-				int targetDefense = objectCreature->getSkillMod(trapData->getDefenseMod());
+				// Calculate target defense - include base level and any specific defense mods
+				int targetDefense = objectCreature->getLevel() / 2; // Base defense from level
+				targetDefense += objectCreature->getSkillMod(trapData->getDefenseMod());
+				
+				// Add additional defenses for players
+				if (objectCreature->isPlayerCreature()) {
+					// Add general defensive bonuses
+					targetDefense += objectCreature->getSkillMod("private_defense");
+					targetDefense += objectCreature->getSkillMod("dodge_attack");
+					targetDefense += objectCreature->getSkillMod("private_dodge_attack");
+				}
 
 				int attackRoll = System::random(199) + 1;
 				int defendRoll = System::random(199) + 1;
 
-				float hitChance = combatManager->hitChanceEquation(trappingSkill + attackRoll, targetDefense + defendRoll);
+				// Calculate hit chance with trap-specific bonuses
+				float attackAccuracy = trappingSkill + attackRoll;
+				
+				// Add bonus accuracy for traps against players to make them more effective
+				if (objectCreature->isPlayerCreature()) {
+					attackAccuracy += 25; // Bonus accuracy against players
+				}
+				
+				float hitChance = combatManager->hitChanceEquation(attackAccuracy, targetDefense + defendRoll);
 
 				if (hitChance > 100) {
 					hitChance = 100.f;
