@@ -226,7 +226,7 @@ public:
 						objectCreature->addBuff(buff);
 
 						// Only award XP for non-player targets (monsters)
-						if (!objectCreature->isPlayerCreature() && !objectCreature->isEventMob()) {
+						if (!objectCreature->isPlayerCreature()) {
 							totalXP += objectCreature->getLevel() * 15;
 						}
 					}
