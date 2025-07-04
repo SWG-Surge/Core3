@@ -161,30 +161,27 @@ public:
 				// Handle combat start
 				combatManager->startCombat(attacker, attacker->getWeapon(), objectCreature, false);
 
-				// Calculate target defense - include base level and any specific defense mods
-				int targetDefense = objectCreature->getLevel() / 2; // Base defense from level
-				targetDefense += objectCreature->getSkillMod(trapData->getDefenseMod());
+				// Trap-specific hit calculation - simpler and more reliable than weapon combat
+				int targetDefense = objectCreature->getSkillMod(trapData->getDefenseMod());
 				
-				// Add additional defenses for players
+				// Add base defense from level (reduced for traps)
+				targetDefense += objectCreature->getLevel() / 4;
+				
+				// Add player-specific defenses (reduced for traps)
 				if (objectCreature->isPlayerCreature()) {
-					// Add general defensive bonuses
-					targetDefense += objectCreature->getSkillMod("private_defense");
-					targetDefense += objectCreature->getSkillMod("dodge_attack");
-					targetDefense += objectCreature->getSkillMod("private_dodge_attack");
+					targetDefense += objectCreature->getSkillMod("private_defense") / 2;
+					targetDefense += objectCreature->getSkillMod("dodge_attack") / 2;
 				}
 
 				int attackRoll = System::random(199) + 1;
 				int defendRoll = System::random(199) + 1;
 
-				// Calculate hit chance with trap-specific bonuses
+				// Trap-specific hit chance calculation
 				float attackAccuracy = trappingSkill + attackRoll;
+				float defenseTotal = targetDefense + defendRoll;
 				
-				// Add bonus accuracy for traps against players to make them more effective
-				if (objectCreature->isPlayerCreature()) {
-					attackAccuracy += 25; // Bonus accuracy against players
-				}
-				
-				float hitChance = combatManager->hitChanceEquation(attackAccuracy, targetDefense + defendRoll);
+				// Simple trap hit calculation: base 80% chance, modified by skill difference
+				float hitChance = 80.0f + (attackAccuracy - defenseTotal) * 0.5f;
 
 				if (hitChance > 100) {
 					hitChance = 100.f;
