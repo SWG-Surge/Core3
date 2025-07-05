@@ -1158,7 +1158,16 @@ void MissionManagerImplementation::randomizeGenericBountyMission(CreatureObject*
 			mission->setMissionDescription(stfFile, "m" + String::valueOf(randTexts) + "d");
 		}
 	} else {
-		mission->setMissionTargetName(nm->makeCreatureName());
+		// NEW: Get actual target name for NPC targets
+		String targetName = "a creature";
+		String targetTemplate = bhTargetsAtMissionLevel.get((unsigned int)level).get(System::random(bhTargetsAtMissionLevel.get((unsigned int)level).size() - 1));
+		
+		CreatureTemplate* creoTemplate = CreatureTemplateManager::instance()->getTemplate(targetTemplate);
+		if (creoTemplate != nullptr) {
+			targetName = creoTemplate->getObjectName();
+		}
+		
+		mission->setMissionTargetName(targetName);
 
 		String planet = playerZone->getZoneName();
 		if (level == 3 && bhTargetZones.size() > 0) {
@@ -1168,10 +1177,7 @@ void MissionManagerImplementation::randomizeGenericBountyMission(CreatureObject*
 		Vector3 endPos = getRandomBountyTargetPosition(player, planet);
 		mission->setEndPosition(endPos.getX(), endPos.getY(), planet, true);
 
-		String targetTemplate = bhTargetsAtMissionLevel.get((unsigned int)level).get(System::random(bhTargetsAtMissionLevel.get((unsigned int)level).size() - 1));
 		mission->setTargetOptionalTemplate(targetTemplate);
-
-		CreatureTemplate* creoTemplate = CreatureTemplateManager::instance()->getTemplate(mission->getTargetOptionalTemplate());
 
 		int reward = 1000;
 		int creoLevel = 1;
@@ -2118,6 +2124,10 @@ bool MissionManagerImplementation::isBountyValidForPlayer(CreatureObject* player
 	ManagedReference<CreatureObject*> creature = server->getObject(targetId).castTo<CreatureObject*>();
 
 	if (creature == nullptr)
+		return false;
+
+	// NEW: Filter out Jedi Padawans (rank 02) from bounty terminals
+	if (creature->hasSkill("force_title_jedi_rank_02"))
 		return false;
 
 	auto targetGhost = creature->getPlayerObject();

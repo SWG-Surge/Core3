@@ -38,7 +38,7 @@ basePlacementDelay = 10
 placeInCombat = true
 
 -- allow the placement of PvE Faction bases. Setting this false will begin the destruction task for PvE bases when the GCW runs its sanity checks after server loading
-allowPveBases = true
+allowPveBases = false
 
 -- Allow bases to be placed together
 allowBaseComplex = true
