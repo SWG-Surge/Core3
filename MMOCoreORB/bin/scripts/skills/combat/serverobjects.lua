@@ -40,6 +40,22 @@
 --this exception also makes it possible to release a modified version
 --which carries forward this exception.
 
-includeFile("language/serverobjects.lua")
-includeFile("staff/serverobjects.lua")
-includeFile("combat/serverobjects.lua")
+-- GCW Profession Skills
+includeFile("combat/gcw_profession_novice.lua")
+includeFile("combat/gcw_profession_master.lua")
+includeFile("combat/gcw_profession_ranged_01.lua")
+includeFile("combat/gcw_profession_ranged_02.lua")
+includeFile("combat/gcw_profession_ranged_03.lua")
+includeFile("combat/gcw_profession_ranged_04.lua")
+includeFile("combat/gcw_profession_melee_01.lua")
+includeFile("combat/gcw_profession_melee_02.lua")
+includeFile("combat/gcw_profession_melee_03.lua")
+includeFile("combat/gcw_profession_melee_04.lua")
+includeFile("combat/gcw_profession_defense_01.lua")
+includeFile("combat/gcw_profession_defense_02.lua")
+includeFile("combat/gcw_profession_defense_03.lua")
+includeFile("combat/gcw_profession_defense_04.lua")
+includeFile("combat/gcw_profession_toughness_01.lua")
+includeFile("combat/gcw_profession_toughness_02.lua")
+includeFile("combat/gcw_profession_toughness_03.lua")
+includeFile("combat/gcw_profession_toughness_04.lua") 
