@@ -15,135 +15,71 @@
 		
 		class ThrowGrenadeCommand : public CombatQueueCommand {
 		public:
-			ThrowGrenadeCommand(const String& name, ZoneProcessServer* server) : CombatQueueCommand(name, server) {
+			ThrowGrenadeCommand(const String& name, ZoneProcessServer* server) : CombatQueueCommand(name, server) {}
+		
+			Reference<WeaponObject*> findGrenade(CreatureObject* creature) const {
+				SceneObject* inventory = creature->getSlottedObject("inventory");
+				if (inventory == nullptr) return nullptr;
+		
+				for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
+					SceneObject* item = inventory->getContainerObject(i);
+					if (!item->isWeaponObject()) continue;
+		
+					WeaponObject* weapon = cast<WeaponObject*>(item);
+					if (weapon != nullptr && weapon->isThrownWeapon()) {
+						return weapon;
+					}
+				}
+				return nullptr;
 			}
 		
-			int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const {
-				if (!checkStateMask(creature))
-					return INVALIDSTATE;
+			int doQueueCommand(CreatureObject* creature, const uint64& target, const UnicodeString& arguments) const override {
+				if (!checkStateMask(creature)) return INVALIDSTATE;
+				if (!checkInvalidLocomotions(creature)) return INVALIDLOCOMOTION;
 		
-				if (!checkInvalidLocomotions(creature))
-					return INVALIDLOCOMOTION;
+				ManagedReference<TangibleObject*> targetObject = server->getZoneServer()->getObject(target).castTo<TangibleObject*>();
+				if (targetObject == nullptr) return INVALIDTARGET;
 		
-				StringTokenizer tokenizer(arguments.toString());
-		
-				if (!tokenizer.hasMoreTokens())
-					return INVALIDPARAMETERS;
-		
-				try {
-					uint64 weaponID = tokenizer.getLongToken();
-		
-					Reference<WeaponObject*> grenade = server->getZoneServer()->getObject(weaponID).castTo<WeaponObject*>();
-		
-					if (grenade == nullptr || !grenade->isThrownWeapon())
-						return INVALIDPARAMETERS;
-		
-					// Check if grenade is in inventory (grenades are not equipped)
-					bool hasAccess = false;
-					SceneObject* inventory = creature->getSlottedObject("inventory");
-					if (inventory != nullptr) {
-						for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
-							SceneObject* object = inventory->getContainerObject(i);
-							
-							// Skip factory crates
-							if (object->isFactoryCrate())
-								continue;
-							
-							if (object->getObjectID() == weaponID) {
-								hasAccess = true;
-								break;
-							}
-						}
-					}
-		
-					if (!hasAccess)
-						return GENERALERROR;
-		
-					ManagedReference<TangibleObject*> targetObject = server->getZoneServer()->getObject(target).castTo<TangibleObject*>();
-		
-					if (targetObject == nullptr)
-						return GENERALERROR;
-		
-					SharedObjectTemplate* templateData = TemplateManager::instance()->getTemplate(grenade->getServerObjectCRC());
-		
-					if (templateData == nullptr)
-						return GENERALERROR;
-		
-					SharedWeaponObjectTemplate* grenadeData = cast<SharedWeaponObjectTemplate*>(templateData);
-		
-					if (grenadeData == nullptr)
-						return GENERALERROR;
-		
-					UnicodeString args = "combatSpam=" + grenadeData->getCombatSpam() + ";";
-		
-					int result = doCombatAction(creature, target, args, grenade);
-		
-					if (result == SUCCESS) {
-						// We need to give some time for the combat animation to start playing before destroying the tano
-						// otherwise our character will play the wrong animations
-		
-						Core::getTaskManager()->scheduleTask([grenade] {
-							Locker lock(grenade);
-							grenade->decreaseUseCount();
-						}, "ThrowGrenadeTanoDecrementTask", 100);
-					}
-		
-					return result;
-		
-				} catch (Exception& e) {
+				Reference<WeaponObject*> grenade = findGrenade(creature);
+				if (grenade == nullptr) {
+					creature->sendSystemMessage("You do not have a usable grenade.");
+					return GENERALERROR;
 				}
 		
-				return GENERALERROR;
+				if (!grenade->isASubChildOf(creature)) return GENERALERROR;
+		
+				SharedWeaponObjectTemplate* grenadeData = cast<SharedWeaponObjectTemplate*>(grenade->getObjectTemplate());
+				if (grenadeData == nullptr) return GENERALERROR;
+		
+				UnicodeString args = "combatSpam=" + grenadeData->getCombatSpam() + ";";
+				int result = doCombatAction(creature, target, args, grenade);
+		
+				if (result == SUCCESS) {
+					Core::getTaskManager()->scheduleTask([grenade] {
+						Locker lock(grenade);
+						grenade->decreaseUseCount();
+					}, "ThrowGrenadeTanoDecrementTask", 100);
+		
+				// 	creature->setNextAllowedMoveTime(3000); // prevent animation break
+				}
+		
+				return result;
 			}
 		
-			String getAnimation(TangibleObject* attacker, TangibleObject* defender, WeaponObject* weapon, uint8 hitLocation, int damage) const {
+			String getAnimation(TangibleObject* attacker, TangibleObject* defender, WeaponObject* weapon, uint8 hitLocation, int damage) const override {
 				SharedWeaponObjectTemplate* weaponData = cast<SharedWeaponObjectTemplate*>(weapon->getObjectTemplate());
-		
-				if (weaponData == nullptr) {
-					warning("Null weaponData in ThrowGrenadeCommand::getAnimation");
-					return "";
-				}
+				if (weaponData == nullptr) return "throw_grenade";
 		
 				String type = weaponData->getAnimationType();
-		
-				if (type.isEmpty())
-					return "throw_grenade";
-		
 				int range = attacker->getWorldPosition().distanceTo(defender->getWorldPosition());
 		
-				String distance = "";
-		
-				if (range < 10) {
-					distance = "_near_";
-				} else if (range < 20) {
-					distance = "_medium_";
-				} else {
-					distance = "_far_";
-				}
-		
+				String distance = (range < 10) ? "_near_" : (range < 20) ? "_medium_" : "_far_";
 				return "throw_grenade" + distance + type;
 			}
 		
-			float getCommandDuration(CreatureObject* object, const UnicodeString& arguments) const {
-				StringTokenizer tokenizer(arguments.toString());
-		
-				if (!tokenizer.hasMoreTokens()) {
-					return 10.f;
-				}
-		
-				uint64 weaponID = tokenizer.getLongToken();
-		
-				auto zoneServer = server->getZoneServer();
-		
-				if (zoneServer == nullptr) {
-					return 10.f;
-				}
-		
-				Reference<WeaponObject*> grenade = zoneServer->getObject(weaponID).castTo<WeaponObject*>();
-		
-				if (grenade == nullptr) {
-					return 10.f;
-				}
+			float getCommandDuration(CreatureObject* object, const UnicodeString& arguments) const override {
+				Reference<WeaponObject*> grenade = findGrenade(object);
+				if (grenade == nullptr) return 10.f;
 		
 				return CombatManager::instance()->calculateWeaponAttackSpeed(object, grenade, speedMultiplier);
 			}
