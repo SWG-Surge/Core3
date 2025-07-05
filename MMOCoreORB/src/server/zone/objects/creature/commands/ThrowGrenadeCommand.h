@@ -38,7 +38,25 @@
 					if (grenade == nullptr || !grenade->isThrownWeapon())
 						return INVALIDPARAMETERS;
 		
-					if (!grenade->isASubChildOf(creature))
+					// Check if grenade is equipped (sub-child) or in inventory
+					bool hasAccess = false;
+					if (grenade->isASubChildOf(creature)) {
+						hasAccess = true;
+					} else {
+						// Search in inventory
+						SceneObject* inventory = creature->getSlottedObject("inventory");
+						if (inventory != nullptr) {
+							for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
+								SceneObject* object = inventory->getContainerObject(i);
+								if (object->getObjectID() == weaponID) {
+									hasAccess = true;
+									break;
+								}
+							}
+						}
+					}
+		
+					if (!hasAccess)
 						return GENERALERROR;
 		
 					ManagedReference<TangibleObject*> targetObject = server->getZoneServer()->getObject(target).castTo<TangibleObject*>();
