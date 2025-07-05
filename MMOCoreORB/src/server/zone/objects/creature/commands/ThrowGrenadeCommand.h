@@ -6,7 +6,7 @@
 		#define THROWGRENADECOMMAND_H_
 		
 		#include "server/zone/objects/creature/commands/CombatQueueCommand.h"
-		#include "server/zone/objects/weapon/WeaponObject.h"
+		#include "server/zone/objects/tangible/weapon/WeaponObject.h"
 		#include "server/zone/objects/tangible/TangibleObject.h"
 		#include "templates/SharedWeaponObjectTemplate.h"
 		#include "templates/SharedObjectTemplate.h"
@@ -38,20 +38,20 @@
 					if (grenade == nullptr || !grenade->isThrownWeapon())
 						return INVALIDPARAMETERS;
 		
-					// Check if grenade is equipped (sub-child) or in inventory
+					// Check if grenade is in inventory (grenades are not equipped)
 					bool hasAccess = false;
-					if (grenade->isASubChildOf(creature)) {
-						hasAccess = true;
-					} else {
-						// Search in inventory
-						SceneObject* inventory = creature->getSlottedObject("inventory");
-						if (inventory != nullptr) {
-							for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
-								SceneObject* object = inventory->getContainerObject(i);
-								if (object->getObjectID() == weaponID) {
-									hasAccess = true;
-									break;
-								}
+					SceneObject* inventory = creature->getSlottedObject("inventory");
+					if (inventory != nullptr) {
+						for (int i = 0; i < inventory->getContainerObjectsSize(); ++i) {
+							SceneObject* object = inventory->getContainerObject(i);
+							
+							// Skip factory crates
+							if (object->isFactoryCrate())
+								continue;
+							
+							if (object->getObjectID() == weaponID) {
+								hasAccess = true;
+								break;
 							}
 						}
 					}
