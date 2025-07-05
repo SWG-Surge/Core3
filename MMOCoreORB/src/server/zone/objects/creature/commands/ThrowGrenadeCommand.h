@@ -10,7 +10,7 @@
 		#include "server/zone/objects/tangible/TangibleObject.h"
 		#include "templates/tangible/SharedWeaponObjectTemplate.h"
 		#include "templates/SharedObjectTemplate.h"
-		#include "server/zone/managers/template/TemplateManager.h"
+		#include "templates/manager/TemplateManager.h"
 		#include "server/ServerCore.h"
 		
 		class ThrowGrenadeCommand : public CombatQueueCommand {
