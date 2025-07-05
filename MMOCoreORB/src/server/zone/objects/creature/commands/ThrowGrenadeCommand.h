@@ -8,7 +8,7 @@
 		#include "server/zone/objects/creature/commands/CombatQueueCommand.h"
 		#include "server/zone/objects/tangible/weapon/WeaponObject.h"
 		#include "server/zone/objects/tangible/TangibleObject.h"
-		#include "templates/SharedWeaponObjectTemplate.h"
+		#include "templates/tangible/SharedWeaponObjectTemplate.h"
 		#include "templates/SharedObjectTemplate.h"
 		#include "server/zone/managers/template/TemplateManager.h"
 		#include "server/ServerCore.h"
