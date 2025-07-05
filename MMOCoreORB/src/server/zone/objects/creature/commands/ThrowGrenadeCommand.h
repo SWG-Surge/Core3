@@ -5,7 +5,13 @@
 		#ifndef THROWGRENADECOMMAND_H_
 		#define THROWGRENADECOMMAND_H_
 		
-		#include "engine/core/TaskManager.h"
+		#include "server/zone/objects/creature/commands/CombatQueueCommand.h"
+		#include "server/zone/objects/weapon/WeaponObject.h"
+		#include "server/zone/objects/tangible/TangibleObject.h"
+		#include "templates/SharedWeaponObjectTemplate.h"
+		#include "templates/SharedObjectTemplate.h"
+		#include "server/zone/managers/template/TemplateManager.h"
+		#include "server/ServerCore.h"
 		
 		class ThrowGrenadeCommand : public CombatQueueCommand {
 		public:
