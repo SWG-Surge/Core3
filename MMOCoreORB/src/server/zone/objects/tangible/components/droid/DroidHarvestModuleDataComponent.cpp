@@ -240,6 +240,12 @@ String DroidHarvestModuleDataComponent::toString() const {
 }
 
 void DroidHarvestModuleDataComponent::onCall() {
+	// Restore the active state from stored attributes
+	DroidComponent* droidComponent = cast<DroidComponent*>(getParent());
+	if (droidComponent != nullptr && droidComponent->hasKey("harvest_active")) {
+		active = droidComponent->getAttributeValue("harvest_active") > 0.0;
+	}
+
 	if (active) {
 		activate();
 	} else {
