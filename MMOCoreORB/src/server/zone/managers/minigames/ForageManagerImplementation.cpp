@@ -403,6 +403,12 @@ bool ForageManagerImplementation::forageGiveResource(TransactionLog& trx, Creatu
 	}
 
 	int quantity = System::random(30) + 10;
+	
+	// NEW: Double egg harvest for Rangers
+	if (resType.contains("meat_egg") && player->hasSkill("outdoors_ranger_novice")) {
+		quantity = quantity * 2;
+	}
+	
 	resourceManager->harvestResourceToPlayer(trx, player, resource, quantity);
 	return true;
 }
