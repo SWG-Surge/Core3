@@ -1,12 +1,12 @@
 gcw_profession_master = {
 	skillName = "gcw_profession_master",
 	parentName = "gcw_profession_novice",
-	graphType = 0,
+	graphType = 4,
 	godOnly = 0,
 	title = 0,
-	profession = 1,
+	profession = 0,
 	hidden = 0,
-	moneyRequired = 0,
+	moneyRequired = 1000000,
 	pointsRequired = 0,
 	skillsRequiredCount = 4,
 	skillsRequired = {
@@ -16,7 +16,7 @@ gcw_profession_master = {
 		"gcw_profession_toughness_04"
 	},
 	preclusionSkills = {},
-	xpType = "combat_general",
+	xpType = "",
 	xpCost = 0,
 	xpCap = 0,
 	missionsRequired = {},
