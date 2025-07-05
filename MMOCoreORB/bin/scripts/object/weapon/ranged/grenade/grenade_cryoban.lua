@@ -100,9 +100,9 @@ object_weapon_ranged_grenade_grenade_cryoban = object_weapon_ranged_grenade_shar
 
 	combatSpam = "throw_cryoban",
 
-	healthAttackCost = 40,
-	actionAttackCost = 100,
-	mindAttackCost = 15,
+	healthAttackCost = 15,
+	actionAttackCost = 25,
+	mindAttackCost = 10,
 
 	pointBlankRange = 0,
 	pointBlankAccuracy = -10,

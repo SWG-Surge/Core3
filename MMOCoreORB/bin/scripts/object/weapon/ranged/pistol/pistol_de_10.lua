@@ -81,7 +81,7 @@ object_weapon_ranged_pistol_pistol_de_10 = object_weapon_ranged_pistol_shared_pi
 	xpType = "combat_rangedspecialize_pistol",
 	
 	-- See http://www.ocdsoft.com/files/certifications.xls
-	certificationsRequired = { "multiTargetPistolShot" },
+	certificationsRequired = { "combat_pistol_novice" },
 	-- See http://www.ocdsoft.com/files/accuracy.xls
 	creatureAccuracyModifiers = { "pistol_accuracy" },
 

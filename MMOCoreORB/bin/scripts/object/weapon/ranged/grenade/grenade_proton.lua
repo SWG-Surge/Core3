@@ -101,9 +101,9 @@ object_weapon_ranged_grenade_grenade_proton = object_weapon_ranged_grenade_share
 	combatSpam = "throw_proton",
 	animationType = "proton",
 
-	healthAttackCost = 30,
-	actionAttackCost = 75,
-	mindAttackCost = 65,
+	healthAttackCost = 15,
+	actionAttackCost = 30,
+	mindAttackCost = 25,
 
 	pointBlankRange = 6,
 	pointBlankAccuracy = 40,
